@@ -141,7 +141,7 @@ function fetchDataCases() {
 fetchDataCases();
 
 function visualiseChart(data) {
-  //console.log(nestData(data));
+  var formattedData = groupData(data);
   var margin = {
     top: 10,
     right: 30,
@@ -160,13 +160,13 @@ function visualiseChart(data) {
   })).range([0, width]);
   svg.append("g").attr("transform", "translate(0, ".concat(height, ")")).call(d3.axisBottom(xAxis));
   var yAxis = d3.scaleLinear().domain([0, d3.max(data, function (item) {
-    return Number(total);
+    return Number(3000);
   })]).range([height, 0]);
   svg.append("g").call(d3.axisLeft(yAxis));
   var curve = svg.append("path").datum(data).attr("fill", "none").attr("stroke", "turquoise").attr("stroke-width", 3).attr("d", d3.line().x(function (item) {
     return xAxis(parseDate(item.Meldedatum));
   }).y(function (item) {
-    return yAxis(10000);
+    return yAxis(formattedData.get(item.Meldedatum).length);
   }));
   d3.select("#mySlider").on("change", function (d) {
     selectedValue = this.value;
@@ -175,19 +175,19 @@ function visualiseChart(data) {
     })]).range([0, width]);
     svg.select("g").attr("transform", "translate(0, ".concat(height, ")")).call(d3.axisBottom(xAxis));
     curve.datum(data).attr("fill", "none").attr("stroke", "red").attr("stroke-width", 3).attr("d", d3.line().x(function (item) {
-      return xAxis(Number(parseDate(item.Meldedatum)));
+      return xAxis(Number(12));
     }).y(function (item) {
-      return yAxis(Number(total));
+      return yAxis(Number(3000));
     }));
   });
 }
 
-function nestData(data) {
-  console.log(data);
-  var dataPerDate = d3.nest().key(function (d) {
-    return d.Datenstand;
-  }).entries(data);
-  return dataPerDate;
+function groupData(data) {
+  var formattedData = [];
+  casesPerDay = d3.group(data, function (d) {
+    return d.Meldedatum;
+  });
+  return casesPerDay;
 }
 
 function parseDate(date) {
@@ -224,7 +224,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57090" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49290" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

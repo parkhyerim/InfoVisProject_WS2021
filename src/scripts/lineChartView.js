@@ -28,8 +28,8 @@ fetchDataCases();
   
 function visualiseChart(data) {
 
-
-    //console.log(nestData(data));
+    var formattedData = groupData(data);
+    
     var margin = {top:10, right: 30, bottom: 30, left: 60},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
@@ -57,7 +57,7 @@ function visualiseChart(data) {
 
   
   var yAxis = d3.scaleLinear()
-      .domain([0, d3.max(data, item => Number(total))])
+      .domain([0, d3.max(data, item => Number(3000))])
       .range([height, 0]);
   
   svg.append("g")
@@ -71,7 +71,7 @@ function visualiseChart(data) {
                   .attr("stroke-width", 3)
                   .attr("d", d3.line()
                       .x(item => xAxis(parseDate(item.Meldedatum)) )
-                      .y(item => yAxis (10000))
+                      .y(item => yAxis (formattedData.get(item.Meldedatum).length))
                   );
 
   d3.select("#mySlider").on("change", function(d){
@@ -88,23 +88,23 @@ function visualiseChart(data) {
           .attr("stroke", "red")
           .attr("stroke-width", 3)
           .attr("d", d3.line()
-              .x(item => xAxis(Number(parseDate(item.Meldedatum))))
-              .y(item => yAxis(Number(total)))
+              .x(item => xAxis(Number(12)))
+              .y(item => yAxis(Number(3000)))
           );
 
   })
 
-
+  
 
 }
 
-function nestData(data){
-    console.log(data);
-    var dataPerDate = d3.nest()
-    .key(function(d) { return d.Datenstand; })
-    .entries(data);
-    return dataPerDate;
+
+function groupData(data){
+    var formattedData= [];
+    casesPerDay = d3.group(data, d => d.Meldedatum);
+    return casesPerDay;
 }
+
 
 function parseDate(date){
     var parseTime = d3.timeParse("%Y-%m-%d");
