@@ -29,13 +29,16 @@ fetchDataCases();
 function visualiseChart(data) {
 
     var formattedData = groupData(data);
-    
+
+    console.log(formattedData);
     var margin = {top:10, right: 30, bottom: 30, left: 60},
-    width = 460 - margin.left - margin.right,
+    width = 800 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
     var total= d3.count(data, d => d.AnzahlFall);
-    console.log(total);
+
+    console.log(data[0].Meldedatum);
+    console.log(getDate(data[data.length-1]));
 
   
   var svg = d3.select("#visualisationContainer")
@@ -45,8 +48,12 @@ function visualiseChart(data) {
               .append("g")
               .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-  var xAxis = d3.scaleLinear()
-                  .domain(d3.extent(data, item => Number(parseDate(item.Meldedatum))))
+
+
+  var xAxis = d3.scaleTime()
+                  .domain(d3.extent(data, function(d) { 
+                    return getDate(d)
+                  }))
                   .range([0, width]);
   
                   
@@ -68,10 +75,10 @@ function visualiseChart(data) {
                   .datum(data)
                   .attr("fill", "none")
                   .attr("stroke", "turquoise")
-                  .attr("stroke-width", 3)
+                  .attr("stroke-width", 1)
                   .attr("d", d3.line()
-                      .x(item => xAxis(parseDate(item.Meldedatum)) )
-                      .y(item => yAxis (formattedData.get(item.Meldedatum).length))
+                      .x(item => xAxis(getDate(item)) )
+                      .y(item => yAxis (getCasesPerDay(formattedData, item)))
                   );
 
   d3.select("#mySlider").on("change", function(d){
@@ -86,7 +93,7 @@ function visualiseChart(data) {
       curve.datum(data)
           .attr("fill", "none")
           .attr("stroke", "red")
-          .attr("stroke-width", 3)
+          .attr("stroke-width", 1)
           .attr("d", d3.line()
               .x(item => xAxis(Number(12)))
               .y(item => yAxis(Number(3000)))
@@ -94,15 +101,24 @@ function visualiseChart(data) {
 
   })
 
-  
 
 }
 
-
 function groupData(data){
-    var formattedData= [];
     casesPerDay = d3.group(data, d => d.Meldedatum);
-    return casesPerDay;
+    console.log(casesPerDay.keys().next());
+    var mapAsc = new Map([...casesPerDay.entries()].sort());
+    return mapAsc;
+}
+
+
+function getCasesPerDay(formattedData, item){
+    return formattedData.get(item.Meldedatum).length;
+
+}
+
+function getDate(d) {
+    return new Date(d.Meldedatum);
 }
 
 

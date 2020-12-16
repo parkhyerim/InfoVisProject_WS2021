@@ -118,6 +118,18 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"scripts/lineChartView.js":[function(require,module,exports) {
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 // Set the dimensions of the canvas / graph
 var casesData = [];
 
@@ -142,31 +154,33 @@ fetchDataCases();
 
 function visualiseChart(data) {
   var formattedData = groupData(data);
+  console.log(formattedData);
   var margin = {
     top: 10,
     right: 30,
     bottom: 30,
     left: 60
   },
-      width = 460 - margin.left - margin.right,
+      width = 800 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
   var total = d3.count(data, function (d) {
     return d.AnzahlFall;
   });
-  console.log(total);
+  console.log(data[0].Meldedatum);
+  console.log(getDate(data[data.length - 1]));
   var svg = d3.select("#visualisationContainer").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(".concat(margin.left, ", ").concat(margin.top, ")"));
-  var xAxis = d3.scaleLinear().domain(d3.extent(data, function (item) {
-    return Number(parseDate(item.Meldedatum));
+  var xAxis = d3.scaleTime().domain(d3.extent(data, function (d) {
+    return getDate(d);
   })).range([0, width]);
   svg.append("g").attr("transform", "translate(0, ".concat(height, ")")).call(d3.axisBottom(xAxis));
   var yAxis = d3.scaleLinear().domain([0, d3.max(data, function (item) {
     return Number(3000);
   })]).range([height, 0]);
   svg.append("g").call(d3.axisLeft(yAxis));
-  var curve = svg.append("path").datum(data).attr("fill", "none").attr("stroke", "turquoise").attr("stroke-width", 3).attr("d", d3.line().x(function (item) {
-    return xAxis(parseDate(item.Meldedatum));
+  var curve = svg.append("path").datum(data).attr("fill", "none").attr("stroke", "turquoise").attr("stroke-width", 1).attr("d", d3.line().x(function (item) {
+    return xAxis(getDate(item));
   }).y(function (item) {
-    return yAxis(formattedData.get(item.Meldedatum).length);
+    return yAxis(getCasesPerDay(formattedData, item));
   }));
   d3.select("#mySlider").on("change", function (d) {
     selectedValue = this.value;
@@ -174,7 +188,7 @@ function visualiseChart(data) {
       return Number(parseDate(item.Meldedatum));
     })]).range([0, width]);
     svg.select("g").attr("transform", "translate(0, ".concat(height, ")")).call(d3.axisBottom(xAxis));
-    curve.datum(data).attr("fill", "none").attr("stroke", "red").attr("stroke-width", 3).attr("d", d3.line().x(function (item) {
+    curve.datum(data).attr("fill", "none").attr("stroke", "red").attr("stroke-width", 1).attr("d", d3.line().x(function (item) {
       return xAxis(Number(12));
     }).y(function (item) {
       return yAxis(Number(3000));
@@ -183,11 +197,20 @@ function visualiseChart(data) {
 }
 
 function groupData(data) {
-  var formattedData = [];
   casesPerDay = d3.group(data, function (d) {
     return d.Meldedatum;
   });
-  return casesPerDay;
+  console.log(casesPerDay.keys().next());
+  var mapAsc = new Map(_toConsumableArray(casesPerDay.entries()).sort());
+  return mapAsc;
+}
+
+function getCasesPerDay(formattedData, item) {
+  return formattedData.get(item.Meldedatum).length;
+}
+
+function getDate(d) {
+  return new Date(d.Meldedatum);
 }
 
 function parseDate(date) {
@@ -224,7 +247,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49290" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51934" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
