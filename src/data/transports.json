@@ -1,0 +1,84 @@
+{ "children":[
+    
+    { 
+            "name":  "Baden-Württemberg", 
+            "transport": "fahrrad", 
+            "percentage": 60
+        },
+     { 
+            "name":   "Bayern", 
+            "transport": "fahrrad", 
+            "percentage": 48
+        },
+      { 
+            "name":   "Berlin", 
+            "transport": "fahrrad", 
+            "percentage": 55
+        },
+       { 
+            "name":   "Brandenburg", 
+            "transport": "fahrrad", 
+            "percentage": 59
+        },
+     { 
+            "name":   "Bremen", 
+            "transport": "fahrrad", 
+            "percentage": 68
+        },
+ { 
+            "name":  "Hamburg", 
+            "transport": "fahrrad", 
+            "percentage": 66
+        },
+  { 
+            "name":  "Hessen", 
+            "transport": "fahrrad", 
+            "percentage": 70
+        },
+ { 
+            "name":  "Rheinland-Pfalz", 
+            "transport": "fahrrad", 
+            "percentage": 55
+        },
+      { 
+            "name":  "Mecklenburg-Vorpommern", 
+            "transport": "fahrrad", 
+            "percentage": 65
+        },
+       { 
+            "name":   "Niedersachsen", 
+            "transport": "fahrrad", 
+            "percentage": 48
+        },
+    { 
+            "name": "Nordrhein-Westfalen", 
+            "transport": "fahrrad", 
+            "percentage": 78
+        },
+  { 
+            "name": "Saarland", 
+            "transport": "fahrrad", 
+            "percentage": 71
+        },
+    { 
+            "name":   "Sachsen", 
+            "transport": "fahrrad", 
+            "percentage": 64
+        },
+    { 
+            "name":   "Sachsen-Anhalt", 
+            "transport": "fahrrad", 
+            "percentage": 65
+        },
+       { 
+            "name":  "Schleswig-Holstein", 
+            "transport": "fahrrad", 
+            "percentage": 55
+        },
+   { 
+            "name":  "Thüringen", 
+            "transport": "fahrrad", 
+            "percentage": 50
+        }
+    ]
+}
