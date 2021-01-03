@@ -2,17 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <link rel="icon" href="data:,"> <!-- so that dev tools are quiet -->
     <title>InfoVis Project</title>
     <link rel="stylesheet" href="styles.css">
      <!-- Compiled and minified CSS -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
    
 </head>
+
 <body class="teal lighten-5">
     <header class="teal section">
-    <h2 class="center white-text">First Prototype</h2>
-    <p class="flow text grey-text center text-lighten-2">Auswirkung der Covid 19-Pandemie auf die Nutzung verschiedener Verkehrsmittel (%)</p>
-</header>
+        <h2 class="center white-text">First Prototype</h2>
+        <p class="flow text grey-text center text-lighten-2">Auswirkung der Covid 19-Pandemie auf die Nutzung verschiedener Verkehrsmittel (%)</p>
+    </header>
 
     <div class="container section">
         <div class="row">
@@ -23,25 +25,36 @@
                 </div>
             </div>
             <div class="col s6">    
+                <div id = "dataWrapper">
+                    <p>Line Chart</p>
                     <div id = "dataWrapper">
-                        <p>Line Chart</p>
                         <div id = "visualisationContainer"></div>
                     </div>
-                    
-            </div>
-            <div class="col s12">
-                <p>Slider</p>
-                <input type="range" name="mySlider" id="mySlider" min="2000" max="2018" value ="2007">
+                </div>    
             </div>
         </div>
+    <div class="row align-items-center">
+        <div class="col-sm-2"><p id="value-step"></p></div>
+        <div class="col-sm"><div id="slider-step"></div></div>
     </div>
+    <p></p>
+    <label for="bundesländer">Wähle ein Bundesland aus</label>
+        <select name="bundesländer" id="bundesländer"> 
+            <option value="Bayern">Bayern</option>
+            <option value="Schleswig-Holstein">Schleswig-Holstein</option>
+            <option value="Sachsen">Sachsen</option>
+            <option value="Brandenburg">Brandenburg</option>
+        </select>
+    
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script><script type="text/javascript" src="main.js" ></script>
      <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
-    <script type="text/javascript" src="scripts/values.js" ></script>
-    <script type="text/javascript" src="scripts/lineChartView.js" ></script>
+
+    <script type="module" src="scripts/values.js" ></script>
+    <script type="module" src="scripts/lineChartView.js" ></script>
    
-    <script type="text/javascript" src="scripts/treeMapView.js"></script>
+    <script type="module" src="scripts/treeMapView.js"></script>
+
 </body>
 </html>
