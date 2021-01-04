@@ -2,24 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <link rel="icon" href="data:,"> <!-- so that dev tools are quiet -->
     <title>InfoVis Project</title>
     <link rel="stylesheet" href="/styles.8986bff4.css">
+     <!-- Compiled and minified CSS -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
    
 <script src="/styles.8986bff4.js"></script></head>
-<body>
-	<h1>First Protoyp</h1>
-    <div>
-        <div id="dataWrapper">
-            <div id="visualisationContainer"></div>
-        </div>
-            <p></p>
-            <input type="range" name="mySlider" id="mySlider" min="2000" max="2018" value="2007">
-    </div>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script><script type="text/javascript" src="/main.1f19ae8e.js"></script>
 
-    <script src="https://d3js.org/d3.v6.min.js"></script>
-    <script type="text/javascript" src="/values.843755d3.js"></script>
-    <script type="text/javascript" src="/lineChartView.1ec88a83.js"></script>
-    
+<body class="teal lighten-5">
+    <header class="teal section">
+        <h2 class="center white-text">First Prototype</h2>
+        <p class="flow text grey-text center text-lighten-2">Auswirkung der Covid 19-Pandemie auf die Nutzung verschiedener Verkehrsmittel (%)</p>
+    </header>
+
+    <div class="container section" id="chartContainer">
+        <div class="row">
+            <div class="col s6">
+                <!-- Create a div where the treemap-graph take place -->
+                <div id="treemap_Viz">
+                    <p>Treemap</p>
+                </div>
+            </div>
+            <div class="col s6">    
+                <div id="dataWrapper">
+                    <p>Line Chart</p>
+                    <div id="visualisationContainer"></div>
+
+                    <label for="bundesländer">Wähle ein Bundesland aus</label>
+                        <!-- The class `browser-default` is necessary for the options to being shown -->
+                        <select name="bundesländer" class="browser-default" id="bundesländer"> 
+                            <option value="Bayern">Bayern</option>
+                            <option value="Schleswig-Holstein">Schleswig-Holstein</option>
+                            <option value="Sachsen">Sachsen</option>
+                            <option value="Brandenburg">Brandenburg</option>
+                        </select>
+                </div>    
+            </div>
+        </div>
+    </div>
+    <p></p>
 </body>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script><script type="text/javascript" src="/main.1f19ae8e.js"></script>
+     <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <script type="module" src="/values.843755d3.js"></script>
+    <script type="module" src="/lineChartView.1ec88a83.js"></script>
+   
+    <!-- <script type="module" src="scripts/treeMapView.js"></script> -->
+
 </html>

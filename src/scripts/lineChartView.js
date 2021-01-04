@@ -86,18 +86,34 @@ function groupDataByDate(casesData){
 
 
 function visualiseChart(data) {
+  var w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName('body')[0],
+    c = d.getElementById('chartContainer'),
+    x = c.innerWidth || e.clientWidth || g.clientWidth,
+    y = c.innerHeight|| e.clientHeight|| g.clientHeight;
 
   var margin = {top:10, right: 30, bottom: 60, left: 60},
-  width = 800 - margin.left - margin.right,
+  width = 600 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
   
   var svg = d3.select("#visualisationContainer")
-              .append("svg")
-              .attr("width", width + margin.left + margin.right)
-              .attr("height", height + margin.top + margin.bottom)
-              .append("g")
-              .attr("transform", `translate(${margin.left}, ${margin.top})`);
+          .append("div")
+          .classed("svg-container", true) 
+          .append("svg")
+          .attr("preserveAspectRatio", "xMinYMin meet")
+          .attr("viewBox", "0 0 600 400")
+          .classed("svg-content-responsive", true)
+          // .attr("width", width + margin.left + margin.right)
+          // .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+              
+
+             
 
 
   /** The next 7 lines initialize and format the labels of the xAxis nicely.    
@@ -117,7 +133,7 @@ function visualiseChart(data) {
   svg.append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(xA)
-    .selectAll("text")
+      .selectAll("text")
       .attr("transform", "rotate(330)") //rotates the labels of the x axis by 
       .style("text-anchor", "end"); //makes sure that the end of the text string is anchored to the ticks
 
