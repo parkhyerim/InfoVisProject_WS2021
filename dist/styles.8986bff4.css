@@ -12,11 +12,35 @@ h1 {
     position: center;
 }
 
+#chartContainer{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+
+}
+
+#bundesländerSelector{
+  grid-column: 1 / 2;
+  grid-row: 1;
+}
+
+
+#dataWrapper{
+  grid-column: 2;
+  grid-row: 2;
+}
+
+#treemap_Viz{
+  grid-column: 1;
+  grid-row: 2;
+}
+
 .svg-container {
   display: inline-block;
   position: relative;
   width: 100%;
-	padding-bottom: 100%; 
+	padding-bottom: 70%; 
 	vertical-align: middle; 
 	overflow: hidden; 
 }
@@ -27,6 +51,7 @@ h1 {
 	left: 0;
 
 }
+
 
 
 /*# sourceMappingURL=/styles.8986bff4.css.map */

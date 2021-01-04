@@ -229,13 +229,6 @@ function groupDataByDate(casesData) {
 }
 
 function visualiseChart(data) {
-  var w = window,
-      d = document,
-      e = d.documentElement,
-      g = d.getElementsByTagName('body')[0],
-      c = d.getElementById('chartContainer'),
-      x = c.innerWidth || e.clientWidth || g.clientWidth,
-      y = c.innerHeight || e.clientHeight || g.clientHeight;
   var margin = {
     top: 10,
     right: 30,
@@ -244,9 +237,7 @@ function visualiseChart(data) {
   },
       width = 600 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
-  var svg = d3.select("#visualisationContainer").append("div").classed("svg-container", true).append("svg").attr("preserveAspectRatio", "xMinYMin meet").attr("viewBox", "0 0 600 400").classed("svg-content-responsive", true) // .attr("width", width + margin.left + margin.right)
-  // .attr("height", height + margin.top + margin.bottom)
-  .append("g").attr("transform", "translate(".concat(margin.left, ", ").concat(margin.top, ")"));
+  var svg = d3.select("#visualisationContainer").append("div").classed("svg-container", true).append("svg").attr("preserveAspectRatio", "xMinYMin meet").attr("viewBox", "0 0 600 400").classed("svg-content-responsive", true).append("g").attr("transform", "translate(".concat(margin.left, ", ").concat(margin.top, ")"));
   /** The next 7 lines initialize and format the labels of the xAxis nicely.    
     If there are too less dates will be repeated on the x-axis. To avoid that we have to create a function 
     for that edge case and work with xa.tickValues to set the labels manually.

@@ -17,29 +17,27 @@
     </header>
 
     <div class="container section" id="chartContainer">
-        <div class="row">
-            <div class="col s6">
-                <!-- Create a div where the treemap-graph take place -->
-                <div id = "treemap_Viz">
-                    <p>Treemap</p>
-                </div>
+        <!-- Create a div where the treemap-graph take place -->
+            <div id = "treemap_Viz">
+                <p>Treemap</p>
             </div>
-            <div class="col s6">    
-                <div id = "dataWrapper">
-                    <p>Line Chart</p>
-                    <div id = "visualisationContainer"></div>
 
-                    <label for="bundesländer">Wähle ein Bundesland aus</label>
-                        <!-- The class `browser-default` is necessary for the options to being shown -->
-                        <select name="bundesländer" class="browser-default" id="bundesländer"> 
-                            <option value="Bayern">Bayern</option>
-                            <option value="Schleswig-Holstein">Schleswig-Holstein</option>
-                            <option value="Sachsen">Sachsen</option>
-                            <option value="Brandenburg">Brandenburg</option>
-                        </select>
-                </div>    
+            <div id = "dataWrapper">
+                <p>Line Chart</p>
+                <div id = "visualisationContainer"></div>
+                
+                
+            </div> 
+            <div id="bundesländerSelector">
+                <label for="bundesländer">Wähle ein Bundesland aus</label>
+                <!-- The class `browser-default` is necessary for the options to being shown -->
+                <select name="bundesländer" class="browser-default" id="bundesländer"> 
+                    <option value="Bayern">Bayern</option>
+                    <option value="Schleswig-Holstein">Schleswig-Holstein</option>
+                    <option value="Sachsen">Sachsen</option>
+                    <option value="Brandenburg">Brandenburg</option>
+                </select>
             </div>
-        </div>
     </div>
     <p></p>
 </body>
