@@ -86,7 +86,7 @@ function groupDataByDate(casesData){
 
 
 function visualiseChart(data) {
-  
+
   var margin = {top:10, right: 30, bottom: 60, left: 60},
   width = 600 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
@@ -178,3 +178,5 @@ function appendVerticalLine(svg, xAxis, date, height){
     .style("stroke", "darkblue")
     .style("fill", "none");
 }
+
+

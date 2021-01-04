@@ -52,3 +52,50 @@ h1 {
 
 }
 
+
+
+.popover {
+  background-color: 	#fef9f9;
+  padding: 0px;
+
+}
+.popover-header {
+  background-color: 	#3f0f0f;
+  color: #FFFFFF;
+  margin: 0px;
+
+}
+.popover-title {
+  font-size: 22px;
+  margin-left: 15px;;
+
+}
+.close{
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  font-size: 36px;
+  color: #FFFFFF;
+}
+.popover-content {
+  color: black;
+  padding: 15px;
+}
+.arrow {
+ /* Position at the bottom center */
+ bottom: -16px;
+ position: absolute;
+ left: 50%;
+
+ /* Border */
+ background-color: #fef9f9;
+ border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+ border-right: 1px solid rgba(0, 0, 0, 0.3);
+ transform: translate(-50%, -50%) rotate(45deg);
+
+ /* Size */
+ height: 16px;
+ width: 16px;
+
+}
+
