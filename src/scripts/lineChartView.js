@@ -122,11 +122,14 @@ function visualiseChosenBL(){
 
 function initializeSVG(){
   svg = d3.select("#visualisationContainer")
+          .append("div")
+          .classed("svg-container", true) 
           .append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
+          .attr("preserveAspectRatio", "xMinYMin meet")
+          .attr("viewBox", "0 0 600 400")
+          .classed("svg-content-responsive", true)
           .append("g")
-          .attr("transform", `translate(${margin.left}, ${margin.top})`);
+          .attr("transform", `translate(${margin.left}, ${margin.top})`);             
 }
 
 
@@ -196,7 +199,6 @@ function groupDataByDate(casesData){
 }
 
 
-
 function addAxes(data){
   /** The next 7 lines initialize and format the labels of the xAxis nicely.    
     If there are too less dates will be repeated on the x-axis. To avoid that we have to create a function 
@@ -216,7 +218,7 @@ function addAxes(data){
       .attr("transform", `translate(0, ${height})`)
       .attr("class", "x-axis")
       .call(xA)
-    .selectAll("text")
+      .selectAll("text")
       .attr("transform", "rotate(330)") //rotates the labels of the x axis by 
       .style("text-anchor", "end"); //makes sure that the end of the text string is anchored to the ticks
 
