@@ -73,7 +73,7 @@ h1 {
 .close{
   position: absolute;
   right: 10px;
-  top: 0px;
+  top: -5px;
   font-size: 36px;
   color: #FFFFFF;
 }
@@ -81,7 +81,7 @@ h1 {
   color: black;
   padding: 15px;
 }
-.arrow {
+.bs-popover-top .arrow {
  /* Position at the bottom center */
  bottom: -16px;
  position: absolute;
@@ -89,8 +89,6 @@ h1 {
 
  /* Border */
  background-color: #fef9f9;
- border-bottom: 1px solid rgba(0, 0, 0, 0.3);
- border-right: 1px solid rgba(0, 0, 0, 0.3);
  transform: translate(-50%, -50%) rotate(45deg);
 
  /* Size */
@@ -98,4 +96,20 @@ h1 {
  width: 16px;
 
 }
+
+.bs-popover-left .arrow {
+  /* Position at the right center */
+  right: -16px;
+  position: absolute;
+  top: 50%;
+ 
+  /* Border */
+  background-color: #fef9f9;
+  transform: translate(-50%, -50%) rotate(45deg);
+ 
+  /* Size */
+  height: 16px;
+  width: 16px;
+ 
+ }
 
