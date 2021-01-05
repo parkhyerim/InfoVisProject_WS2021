@@ -25,19 +25,42 @@
                 </div>
             </div>
             <div class="col s6">    
-                <div id = "dataWrapper">
-                    <p>Line Chart</p>
-                    <div id = "visualisationContainer"></div>
+                <p>Line Chart</p>
+                <div id = "visualisationContainer"></div>
 
-                    <label for="bundesländer">Wähle ein Bundesland aus</label>
-                        <!-- The class `browser-default` is necessary for the options to being shown -->
-                        <select name="bundesländer" class="browser-default" id="bundesländer"> 
-                            <option value="Bayern">Bayern</option>
-                            <option value="Schleswig-Holstein">Schleswig-Holstein</option>
-                            <option value="Sachsen">Sachsen</option>
-                            <option value="Brandenburg">Brandenburg</option>
-                        </select>
-                </div>    
+                <div id="bundesländer">Wähle ein Bundesland aus
+                    <!-- The class `browser-default` is necessary for the options to being shown -->
+                    <!--<select name="bundesländer" class="browser-default" id="bundesländer"> 
+                        <option value="Bayern">Bayern</option>
+                        <option value="Schleswig-Holstein">Schleswig-Holstein</option>
+                        <option value="Sachsen">Sachsen</option>
+                        <option value="Brandenburg">Brandenburg</option>
+                    </select> -->
+                    <p>
+                      <label>
+                        <input id="Schleswig-Holstein" class="checkbox" type="checkbox" value="Schleswig-Holstein"/>
+                        <span>Schleswig-Holstein</span>
+                      </label>  
+                    </p>
+                    <p>
+                      <label>
+                        <input id="Bayern" class="checkbox" type="checkbox" value="Bayern"/>
+                        <span>Bayern</span>
+                      </label>
+                    </p>
+                    <p>
+                      <label>
+                        <input id="Sachsen" class="checkbox" type="checkbox" value="Sachsen"/>
+                        <span>Sachsen</span>
+                      </label>  
+                    </p>
+                    <p>
+                      <label>
+                        <input id="Saarland" class="checkbox" type="checkbox" value="Saarland"/>
+                        <span>Saarland</span>
+                      </label>  
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -52,6 +75,6 @@
     <script type="module" src="scripts/values.js" ></script>
     <script type="module" src="scripts/lineChartView.js" ></script>
    
-    <script type="module" src="scripts/treeMapView.js"></script>
+    <!--<script type="module" src="scripts/treeMapView.js"></script>
 
 </html>

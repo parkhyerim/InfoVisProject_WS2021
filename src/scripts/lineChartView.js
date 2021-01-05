@@ -7,19 +7,172 @@
 let exportDate = new Date();
 export default exportDate;
 
-const choosen_bl  = document.getElementById("bundesländer");
-const bl = choosen_bl.value;
+let svg, xAxis, yAxis;
 
-//TODO replace the eventListener
-let sel = document.getElementById('bundesländer');
-sel.addEventListener ("change", function () {
-   window.location.reload();
-});
+const margin = {top:10, right: 30, bottom: 60, left: 60},
+  width = 800 - margin.left - margin.right,
+  height = 400 - margin.top - margin.bottom;
 
 
-function fetchDataCases(){
-    fetch(
-      `https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query?where=Meldedatum%20%3E%3D%20TIMESTAMP%20%272020-12-01%2000%3A00%3A00%27%20AND%20Meldedatum%20%3C%3D%20TIMESTAMP%20%272020-12-15%2000%3A00%3A00%27%20AND%20Bundesland%20%3D%20%27${bl}%27&outFields=Bundesland,AnzahlFall,Meldedatum,IdBundesland&outSR=4326&f=json`,
+const checkboxes = document.getElementsByClassName('checkbox')
+
+
+/** Necessary to know which x axis should be kept when paths are removed. 
+  The one with the highest case numbers is necessary.
+*/
+const blDomainStorage = [];
+
+for (let checkbox of checkboxes){
+  checkbox.addEventListener('change', visualiseChosenBL) 
+}
+
+/** Saves the checked checkboxes to the array `blDomainStorage` 
+  and visualises the chosen Bundesland.
+*/
+function visualiseChosenBL(){
+
+  // Pushes the names of the chosen Bundesland into the array `blDomainStorage`
+  for (let checkbox of checkboxes){
+    
+    
+    let found = false;
+    blDomainStorage.forEach(arr => {
+      if(checkbox.value == arr[0]) found = true;
+    })
+
+    // As long as the chosen Bundesland is not yet in the `selectedBL` array
+    if(checkbox.checked && found == false){
+
+      // Fetching the data of the newly selected Bundesland
+      fetchData(checkbox.value).then((data) => {
+
+  
+        if(blDomainStorage.length == 0){
+          svg.select(".y-axis").remove(); // instead of deleting they should be updated,
+          svg.select(".x-axis").remove(); // but that seems more complicated
+          addYAxis(data);
+          addXAxis(data);     
+
+        } else {
+         
+          /** Sorts the array in increasing order.
+            The Bundesland with the smallest needed y-value comes first and the one with the highest comes last.
+          */
+          blDomainStorage.sort((a,b) => {
+            return a[1] - b[1];
+          })
+
+          /** Checks whether the last Bundesland in `blDomainStorage` still obtains the highest 
+            y-value compared to the newly selected Bundesland. If the newly checked Bundesland has
+            more Covid cases and therefore needs a higher y-value the current axis are removed 
+            and the updated ones are added.
+          */
+          if(blDomainStorage[blDomainStorage.length-1][1] < data[0].Infos.AnzahlFall){
+            svg.select(".y-axis").remove(); // instead of deleting they should be updated,
+            svg.select(".x-axis").remove(); // but that seems more complicated
+            addYAxis(data);
+            addXAxis(data);   
+          }
+   
+        } 
+
+        // Stores the Bundesland and the corresponding domain  
+        blDomainStorage.push([data[0].Infos.Bundesland, yAxis.domain()[1]]);   
+
+        /** The curve of the newly selected Bundesland is added.
+          `blClassN` is necessary to give each curve a distinguishable class name.
+          It will be used to select the d3 element and then to update and delete it.
+        */
+        const blClassN = data[0].Infos.Bundesland
+        visualiseCurve(svg, data, xAxis, yAxis, blClassN, "turquoise");
+          
+        /** Within the for loop the lines and circles of the already displayed Bundesländer 
+        are updated according to the new axis. The newly selected Bundesland is always the 
+        last one in the array. The for loop stops before that.
+        */
+         blDomainStorage.forEach(arr => {
+            svg.select(".curve."+ arr[0])
+              .attr("d", d3.line()
+              .x(item => xAxis(new Date(item.Meldedatum)))
+              .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
+            );
+
+            svg.selectAll(".circles."+ arr[0])
+              .attr("cx", item => xAxis(new Date(item.Meldedatum)))
+              .attr("cy", item => yAxis(new Date(item.Infos.AnzahlFall))
+            );
+          })
+      }) 
+      
+    } else if(!checkbox.checked && found == true) {
+
+        svg.select(".curve."+checkbox.value).remove();
+        svg.selectAll(".circles."+checkbox.value).remove();
+
+        if(yAxis.domain()[1] == blDomainStorage[blDomainStorage.length-1][1]){
+
+          blDomainStorage.forEach((arr, i) => {
+            if(arr[0] == checkbox.value) {
+              blDomainStorage.splice(i,1)
+            }
+          })
+
+          console.log(blDomainStorage)
+
+          fetchData(blDomainStorage[blDomainStorage.length-1][0]).then((data) => {
+
+            // 1. SH 2. Bayern 3. Sachsen 4 uncheck SH --> Domains are saved incorrectly 
+            console.log(blDomainStorage[blDomainStorage.length-1][0])
+            svg.select(".y-axis").remove(); // instead of deleting they should be updated,
+            svg.select(".x-axis").remove(); // but that seems more complicated
+
+            addYAxis(data)
+            addXAxis(data)
+
+            blDomainStorage.forEach((arr, i) => {
+              svg.select(".curve."+ arr[0])
+                .attr("d", d3.line()
+                .x(item => xAxis(new Date(item.Meldedatum)))
+                .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
+              );
+
+              svg.selectAll(".circles."+ arr[0])
+                .attr("cx", item => xAxis(new Date(item.Meldedatum)))
+                .attr("cy", item => yAxis(new Date(item.Infos.AnzahlFall))
+              );
+            })
+          }) 
+        } else {
+
+          blDomainStorage.forEach((arr, i) => {
+            if(arr[0] == checkbox.value) {
+              blDomainStorage.splice(i,1)
+            }
+          }) 
+        }
+
+      }
+  }
+}
+
+
+
+
+initializeSVG();
+
+function initializeSVG(){
+  svg = d3.select("#visualisationContainer")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", `translate(${margin.left}, ${margin.top})`);
+}
+
+
+function fetchData(bundesland){
+    return fetch(
+      `https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query?where=Meldedatum%20%3E%3D%20TIMESTAMP%20%272020-11-01%2000%3A00%3A00%27%20AND%20Meldedatum%20%3C%3D%20TIMESTAMP%20%272020-12-15%2000%3A00%3A00%27%20AND%20Bundesland%20%3D%20%27${bundesland}%27&outFields=Bundesland,AnzahlFall,Meldedatum,IdBundesland&outSR=4326&f=json`,
         {
             method: 'GET'
         })
@@ -37,12 +190,10 @@ function fetchDataCases(){
             feed.forEach(elem => {
               casesData.push(elem.attributes);
             });
-
-            visualiseChart(groupDataByDate(casesData));
+            return groupDataByDate(casesData)
         });
 };
 
-fetchDataCases();
   
 /** Groups the received data by date. After the grouping the data is sorted
   datewise and returned as an array
@@ -85,29 +236,16 @@ function groupDataByDate(casesData){
 }
 
 
-function visualiseChart(data) {
 
-  var margin = {top:10, right: 30, bottom: 60, left: 60},
-  width = 800 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
-
-  
-  var svg = d3.select("#visualisationContainer")
-              .append("svg")
-              .attr("width", width + margin.left + margin.right)
-              .attr("height", height + margin.top + margin.bottom)
-              .append("g")
-              .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-
+function addXAxis(data){
   /** The next 7 lines initialize and format the labels of the xAxis nicely.    
     If there are too less dates will be repeated on the x-axis. To avoid that we have to create a function 
     for that edge case and work with xa.tickValues to set the labels manually.
     xA.tickValues([new Date(data[0].Meldedatum), new Date(data[1].Meldedatum), new Date(data[2].Meldedatum)])
   */
-  const xAxis = d3.scaleTime()
-                  .domain(d3.extent(data, item => new Date(item.Meldedatum)))
-                  .range([0, width]);
+  xAxis = d3.scaleTime()
+              .domain(d3.extent(data, item => new Date(item.Meldedatum)))
+              .range([0, width]);
   const xA = d3.axisBottom(xAxis);
   xA.tickSizeOuter(0); // removes the last tick on the xAxis
   const parseDate = d3.timeFormat("%B %d, %Y") //https://d3-wiki.readthedocs.io/zh_CN/master/Time-Scales/
@@ -116,32 +254,13 @@ function visualiseChart(data) {
   // Appends the xAxis
   svg.append("g")
       .attr("transform", `translate(0, ${height})`)
+      .attr("class", "x-axis")
       .call(xA)
     .selectAll("text")
       .attr("transform", "rotate(330)") //rotates the labels of the x axis by 
       .style("text-anchor", "end"); //makes sure that the end of the text string is anchored to the ticks
 
-  // Initializes and formats the yAxis
-  const yAxis = d3.scaleLinear()
-      .domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
-      .range([height, 0])
-      .nice(); //without that the highest tick of the y axis wouldn't be labelled
-  
-  // Appends the yAxis
-  svg.append("g")
-      .call(d3.axisLeft(yAxis));
-
-  const curve = svg.append("path")
-                  .datum(data)
-                  .attr("fill", "none")
-                  .attr("stroke", "turquoise")
-                  .attr("stroke-width", 1)
-                  .attr("d", d3.line()
-                      .x(item => xAxis(new Date(item.Meldedatum)))
-                      .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
-                  );
-
-  /** Selects all the labels on the xAxis. 
+   /** Selects all the labels on the xAxis. 
     The cursor becomes a pointer when moving the mouse over the xAxis labels.
     When clicking on one label the function `appendVerticalLine` is being called 
     and the selected `date` set so it can be exported. (See top of this file)
@@ -149,12 +268,60 @@ function visualiseChart(data) {
   const labels = d3.selectAll('g.tick') 
   
   labels.on("mouseover", (mouseEvent) => {
-    d3.select(mouseEvent.target).style("cursor", "pointer"); 
+    d3.select(mouseEvent.target).style("cursor", "pointer"); // the pointer isn't visible anymore for some reason
   });
   labels.on("click", (mouseEvent, date) => {
     appendVerticalLine(svg, xAxis, date, height)
     exportDate = date;
   })  
+}
+
+function addYAxis(data) {
+  // Initializes and formats the yAxis
+  yAxis = d3.scaleLinear()
+      .domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
+      .range([height, 0])
+      .nice(); //without that the highest tick of the y axis wouldn't be labelled
+  
+  // Appends the yAxis
+  svg.append("g")
+      .call(d3.axisLeft(yAxis))
+      .attr("class", "y-axis"); // Class added to be able to remove the axis;
+
+}
+
+function visualiseCurve(svg, formattedData, xAxis, yAxis, classN, color){
+  svg.append("path")
+    .datum(formattedData)
+    .attr("fill", "none")
+    .attr("id", classN)
+    .attr("stroke", color)
+    .attr("stroke-width", 1)
+    .attr("class", "curve" + " " + classN) //necessary to add a specific class for every Bundesland shown
+    .attr("d", d3.line()
+        .x(item => xAxis(new Date(item.Meldedatum)))
+        .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
+    );
+
+  // Appends name of the Bundesland to the corresponding path
+  svg.append("text")
+    .attr("x", 5) // move the text from the start of the path
+    .attr("dy", 15) // move the text down
+    .append("textPath")
+      .attr("xlink:href","#"+classN)
+      .text(formattedData[0].Infos.Bundesland);
+
+  // Appends circles to the path at the dates where data is returned
+  svg.selectAll("circles")
+      .data(formattedData)
+      .enter()
+      .append("circle")
+        .attr("class", "circles" + " " + classN)
+        .attr("fill", "darkblue")
+        .attr("stroke", "none")
+        .attr("cx", item => xAxis(new Date(item.Meldedatum)))
+        .attr("cy", item => yAxis(new Date(item.Infos.AnzahlFall)))
+        .attr("r", 2)
 }
 
 // Appends a vertical line at the selected date
