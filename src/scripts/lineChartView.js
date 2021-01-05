@@ -1,4 +1,4 @@
-/** `date` is set in the event handler added to the ticks of the xAxis. 
+/** `exportDate` is set in the event handler added to the ticks of the xAxis. 
   It contains the selected date which should be used for the treemap.
   To import the clicked date use `import date from './lineChartView.js' in the treemap file`.
   Make sure that the type of the treemap file is set to `module` in the index.html file, e.g.:
