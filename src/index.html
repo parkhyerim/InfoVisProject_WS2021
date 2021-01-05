@@ -17,7 +17,6 @@
         <p class="flow text grey-text center text-lighten-2">Auswirkung der Covid 19-Pandemie auf die Nutzung verschiedener Verkehrsmittel (%)</p>
     </header>
 
-<<<<<<< HEAD
     <div class="container section" id="chartContainer" >
         <div class="row">
             <div class="col s6">
@@ -27,49 +26,40 @@
                 </div>
             </div>
             <div class="col s6">    
-                <p>Line Chart</p>
-                <div id = "visualisationContainer"></div>
+                <div id = "dataWrapper" data-toggle="popover">
 
-                    <div id="bundesländerSelector" data-toggle="popover">
-                    <p>
-                      <label>
-                        <input id="Schleswig-Holstein" class="checkbox" type="checkbox" value="Schleswig-Holstein"/>
-                        <span>Schleswig-Holstein</span>
-                      </label>  
-                    </p>
-                    <p>
-                      <label>
-                        <input id="Bayern" class="checkbox" type="checkbox" value="Bayern"/>
-                        <span>Bayern</span>
-                      </label>
-                    </p>
-                    <p>
-                      <label>
-                        <input id="Sachsen" class="checkbox" type="checkbox" value="Sachsen"/>
-                        <span>Sachsen</span>
-                      </label>  
-                    </p>
-                    <p>
-                      <label>
-                        <input id="Saarland" class="checkbox" type="checkbox" value="Saarland"/>
-                        <span>Saarland</span>
-                      </label>  
-                    </p>
+                    <p>Line Chart</p>
+                    <div id = "visualisationContainer"></div>
+
+                        <div id="bundesländerSelector" data-toggle="popover">
+                        <p>
+                          <label>
+                            <input id="Schleswig-Holstein" class="checkbox" type="checkbox" value="Schleswig-Holstein"/>
+                            <span>Schleswig-Holstein</span>
+                          </label>  
+                        </p>
+                        <p>
+                          <label>
+                            <input id="Bayern" class="checkbox" type="checkbox" value="Bayern"/>
+                            <span>Bayern</span>
+                          </label>
+                        </p>
+                        <p>
+                          <label>
+                            <input id="Sachsen" class="checkbox" type="checkbox" value="Sachsen"/>
+                            <span>Sachsen</span>
+                          </label>  
+                        </p>
+                        <p>
+                          <label>
+                            <input id="Saarland" class="checkbox" type="checkbox" value="Saarland"/>
+                            <span>Saarland</span>
+                          </label>  
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Create a div where the treemap-graph take place -->
-            <div id = "treemap_Viz">
-                <p>Treemap</p>
-            </div>
-
-            <div id = "dataWrapper" data-toggle="popover">
-                <p>Line Chart</p>
-                <div id = "visualisationContainer"></div>
-                
-            </div> 
-
     </div>
     <p></p>
 </body>
