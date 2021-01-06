@@ -19,28 +19,47 @@
 
     <div class="container section" id="chartContainer">
       
-        <div id="bundesländerSelector" data-toggle="popover">
-            <label for="bundesländer">Wähle ein Bundesland aus</label>
-            <!-- The class `browser-default` is necessary for the options to being shown -->
-            <select name="bundesländer" class="browser-default" id="bundesländer"> 
-                <option value="Bayern">Bayern</option>
-                <option value="Schleswig-Holstein">Schleswig-Holstein</option>
-                <option value="Sachsen">Sachsen</option>
-                <option value="Brandenburg">Brandenburg</option>
-            </select>
-        </div>
+            
+                <!-- Create a div where the treemap-graph take place -->
+                <div id="treemap_Viz">
+                    <p>Treemap</p>
+                </div>
+            
+               
+                <div id="dataWrapper" data-toggle="popover">
 
-        <!-- Create a div where the treemap-graph take place -->
-            <div id="treemap_Viz">
-                <p>Treemap</p>
-            </div>
+                    <p>Line Chart</p>
+                    <div id="visualisationContainer"></div>
 
-            <div id="dataWrapper" data-toggle="popover">
-                <p>Line Chart</p>
-                <div id="visualisationContainer"></div>
-                
-            </div> 
-
+                        <div id="bundesländerSelector" data-toggle="popover">
+                        <p>
+                          <label>
+                            <input id="Schleswig-Holstein" class="checkbox" type="checkbox" value="Schleswig-Holstein">
+                            <span>Schleswig-Holstein</span>
+                          </label>  
+                        </p>
+                        <p>
+                          <label>
+                            <input id="Bayern" class="checkbox" type="checkbox" value="Bayern">
+                            <span>Bayern</span>
+                          </label>
+                        </p>
+                        <p>
+                          <label>
+                            <input id="Sachsen" class="checkbox" type="checkbox" value="Sachsen">
+                            <span>Sachsen</span>
+                          </label>  
+                        </p>
+                        <p>
+                          <label>
+                            <input id="Saarland" class="checkbox" type="checkbox" value="Saarland">
+                            <span>Saarland</span>
+                          </label>  
+                        </p>
+                    </div>
+                </div>
+            
+      
     </div>
     <p></p>
 </body>
@@ -57,11 +76,5 @@
     <script type="module" src="/values.843755d3.js"></script>
     <script type="module" src="/lineChartView.1ec88a83.js"></script> 
     <!-- <script type="module" src="scripts/treeMapView.js"></script> -->
-    <script type="module" src="/main.1f19ae8e.js"></script>
-
-
-
-   
-   
-   
+    <script type="module" src="/main.1f19ae8e.js"></script>   
 </html>
