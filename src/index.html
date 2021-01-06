@@ -18,7 +18,7 @@
     <div class="container section" id="chartContainer" >
 
         <!-- Create a div where the treemap-graph take place -->
-        <div id = "treemap_Viz">
+        <!-- <div id = "treemap_Viz">
             <p>Treemap</p>
             <button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover" >Info</button>
             
@@ -28,7 +28,20 @@
                 <img alt="walking" src="../src/img/transit.png" onclick="displaymobilitydata('transit');">
                 <br>
             </div>
-        </div>
+        </div> -->
+
+        <!-- Container for Treemap with Mobility -->
+        <div id = "treemap_mobility_Viz">
+          <p>Treemap</p>
+          <button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover" >Info</button>
+          
+          <div id="treemapMobilitywrapper">
+              <!-- <img alt="car" src="../src/img/car.png" onclick="displaymobilitydata('driving');">
+              <img alt="walking" src="../src/img/walking.png" onclick="displaymobilitydata('walking');">
+              <img alt="walking" src="../src/img/transit.png" onclick="displaymobilitydata('transit');">
+              <br> -->
+          </div>
+      </div>
     
         
         <div id = "dataWrapper">
@@ -40,25 +53,25 @@
                   <button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover" >Info</button>
                 <p>
                   <label>
-                    <input id="Schleswig-Holstein" class="checkbox" type="checkbox" value="Schleswig-Holstein"/>
+                    <input id="Schleswig-Holstein" class="checkbox" type="checkbox" value="Schleswig-Holstein" name="Schleswig-Holstein"/>
                     <span>Schleswig-Holstein</span>
                   </label>  
                 </p>
                 <p>
                   <label>
-                    <input id="Bayern" class="checkbox" type="checkbox" value="Bayern"/>
+                    <input id="Bayern" class="checkbox" type="checkbox" value="Bayern" name="Bavaria"/>
                     <span>Bayern</span>
                   </label>
                 </p>
                 <p>
                   <label>
-                    <input id="Sachsen" class="checkbox" type="checkbox" value="Sachsen"/>
+                    <input id="Sachsen" class="checkbox" type="checkbox" value="Sachsen" name="Saxony"/>
                     <span>Sachsen</span>
                   </label>  
                 </p>
                 <p>
                   <label>
-                    <input id="Saarland" class="checkbox" type="checkbox" value="Saarland"/>
+                    <input id="Saarland" class="checkbox" type="checkbox" value="Saarland" name="Saarland"/>
                     <span>Saarland</span>
                   </label>  
                 </p>
@@ -78,6 +91,7 @@
     <script type="module" src="scripts/values.js" ></script>
     <script type="module" src="scripts/lineChartView.js" ></script> 
     <script type="text/javascript" src="scripts/treeChartView.js" ></script>
+    <script type="text/javascript" src="scripts/treemapMobilityView.js" ></script>
     <script type="module" src="main.js" ></script>   
 
 </body>
