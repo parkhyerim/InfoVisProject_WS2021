@@ -119,26 +119,15 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"main.js":[function(require,module,exports) {
 document.onreadystatechange = function () {
-  $('#bundesländerSelector').popover({
-    placement: 'top',
-    html: true,
-    trigger: "focus",
-    title: '<div class="popover-header"><div class="popover-title">First Step</div><a href="#" class="close" data-dismiss="alert">&times;</a></div>',
-    content: '<div class="popover-content"><p>Excellent Bootstrap popover! I really love it.</p></div>'
-  }).addClass($(this).data("class"));
-  $('#bundesländerSelector').popover('show');
-  $(document).on("click", ".popover .close", function () {
-    $(this).parents(".popover").not(this).popover('hide');
-    $('#dataWrapper').popover({
-      placement: 'left',
+  $(function () {
+    $('[data-toggle="popover"]').popover({
+      placement: 'top',
       html: true,
-      trigger: "focus",
-      title: '<div class="popover-header"><div class="popover-title">Second Step</div><a href="#" class="close" data-dismiss="alert">&times;</a></div>',
+      title: '<div class="popover-header"><div class="popover-title">First Step</div><a href="#" class="close" data-dismiss="alert">&times;</a></div>',
       content: '<div class="popover-content"><p>Excellent Bootstrap popover! I really love it.</p></div>'
-    });
-    $('#dataWrapper').popover('show');
+    }).addClass($(this).data("class"));
     $(document).on("click", ".popover .close", function () {
-      $('#dataWrapper').popover('hide');
+      $('[data-toggle="popover"]').popover('hide');
     });
   });
 };
@@ -170,7 +159,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57107" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57481" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

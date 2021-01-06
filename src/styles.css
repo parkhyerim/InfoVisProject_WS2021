@@ -7,7 +7,10 @@ h1 {
     padding-top: 40px;
   }
 
-
+.jumbotron{
+    background-color: red;
+    color:#fff;
+}
 #visualisationContainer{
     position: center;
 }
