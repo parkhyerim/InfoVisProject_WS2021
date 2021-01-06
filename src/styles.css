@@ -5,11 +5,16 @@ h1 {
     font-size: 38px;
     color: darkslategrey;
     padding-top: 40px;
+}
+body {
+  margin: 0;
+  padding: 0;
   }
 
-.jumbotron{
-    background-color: red;
-    color:#fff;
+header{
+    background-color: teal;
+    margin: 0;
+    padding: 0;
 }
 #visualisationContainer{
     position: center;
