@@ -10,7 +10,6 @@ export default exportDate;
 let svg, xAxis, yAxis;
 const blDomainStorage = [];
 
-
 const margin = {top:10, right: 30, bottom: 60, left: 60},
   width = 800 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;

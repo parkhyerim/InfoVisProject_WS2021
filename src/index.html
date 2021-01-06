@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="styles.css">
      <!-- Compiled and minified CSS -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-   
-   
 </head>
 
 <body class="teal lighten-5">
@@ -23,6 +21,13 @@
         <div id = "treemap_Viz">
             <p>Treemap</p>
             <button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover" >Info</button>
+            
+            <div id="treemapwrapper">
+                <img alt="car" src="../src/img/car.png" onclick="displaymobilitydata('driving');">
+                <img alt="walking" src="../src/img/walking.png" onclick="displaymobilitydata('walking');">
+                <img alt="walking" src="../src/img/transit.png" onclick="displaymobilitydata('transit');">
+                <br>
+            </div>
         </div>
     
         
@@ -58,11 +63,8 @@
                   </label>  
                 </p>
             </div>
-        </div>
-
+        </div>   
     </div>
-    <p></p>
-</body>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script><script type="text/javascript" src="main.js" ></script>
      <!-- Compiled and minified JavaScript -->
@@ -75,6 +77,8 @@
 
     <script type="module" src="scripts/values.js" ></script>
     <script type="module" src="scripts/lineChartView.js" ></script> 
-    <!-- <script type="module" src="scripts/treeMapView.js"></script> -->
+    <script type="text/javascript" src="scripts/treeChartView.js" ></script>
     <script type="module" src="main.js" ></script>   
+
+</body>
 </html>
