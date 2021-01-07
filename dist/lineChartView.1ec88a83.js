@@ -157,45 +157,32 @@ var margin = {
   left: 60
 },
     width = 800 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom; // This is the entry point for the Bundesländer select via the treemap later on
-
-var checkboxes = document.getElementsByClassName('checkbox');
-
-var _iterator = _createForOfIteratorHelper(checkboxes),
-    _step;
-
-try {
-  for (_iterator.s(); !(_step = _iterator.n()).done;) {
-    var checkbox = _step.value;
-    checkbox.addEventListener('change', visualiseChosenBL);
-  }
-} catch (err) {
-  _iterator.e(err);
-} finally {
-  _iterator.f();
-}
-
-initializeSVG();
+    height = 400 - margin.top - margin.bottom;
+var selectedMonth;
 /** Saves the checked checkboxes to the array `blDomainStorage` 
   and visualises the chosen Bundesland.
 */
 
-function visualiseChosenBL() {
+function visualiseChosenBL(checkboxes, selectedMonth) {
+  var _this = this;
+
   // Pushes the names of the chosen Bundesland into the array `blDomainStorage`
-  var _iterator2 = _createForOfIteratorHelper(checkboxes),
-      _step2;
+  var _iterator = _createForOfIteratorHelper(checkboxes),
+      _step;
 
   try {
     var _loop = function _loop() {
-      var checkbox = _step2.value;
-      var found = false;
+      var checkbox = _step.value;
+      var foundBL = false;
+      var foundDate = false;
       blDomainStorage.forEach(function (arr) {
-        if (checkbox.value == arr[0]) found = true;
-      }); // Checks if Bundesland is newly checked or if it already exists in blDomainStorage
+        if (checkbox.value == arr[0]) foundBL = true;
+      });
+      if (_this.selectedMonth == selectedMonth) foundDate = true; // Checks if Bundesland is newly checked or if it already exists in blDomainStorage
 
-      if (checkbox.checked && found == false) {
+      if (checkbox.checked && foundBL == false) {
         // Fetching the data of the newly selected Bundesland
-        fetchData(checkbox.value).then(function (data) {
+        fetchData(checkbox.value, selectedMonth).then(function (data) {
           // To figure out the max y-value which is necessary to correctly display the data
           var neededYValue = d3.scaleLinear().domain([0, d3.max(data, function (item) {
             return item.Infos.AnzahlFall;
@@ -235,7 +222,7 @@ function visualiseChosenBL() {
 
           updateExistingCurvesCircles(blDomainStorage);
         });
-      } else if (!checkbox.checked && found == true) {
+      } else if (!checkbox.checked && foundBL == true) {
         // Removes the curve and circles of the recently unselected Bundesland.
         svg.select(".curve." + checkbox.value).remove();
         svg.selectAll(".circles." + checkbox.value).remove();
@@ -258,7 +245,7 @@ function visualiseChosenBL() {
         */
 
         if (yAxis.domain()[1] > blDomainStorage[blDomainStorage.length - 1][1]) {
-          fetchData(blDomainStorage[blDomainStorage.length - 1][0]).then(function (data) {
+          fetchData(blDomainStorage[blDomainStorage.length - 1][0], selectedMonth).then(function (data) {
             svg.select(".y-axis").remove();
             svg.select(".x-axis").remove();
             svg.select(".case-line").remove(); //removes existing vertical line
@@ -270,22 +257,23 @@ function visualiseChosenBL() {
       }
     };
 
-    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
       _loop();
     }
   } catch (err) {
-    _iterator2.e(err);
+    _iterator.e(err);
   } finally {
-    _iterator2.f();
+    _iterator.f();
   }
 }
 
 function initializeSVG() {
+  console.log("in initialize");
   svg = d3.select("#visualisationContainer").append("div").classed("svg-container", true).append("svg").attr("preserveAspectRatio", "xMinYMin meet").attr("viewBox", "0 0 600 400").classed("svg-content-responsive", true).append("g").attr("transform", "translate(".concat(margin.left, ", ").concat(margin.top, ")"));
 }
 
-function fetchData(bundesland) {
-  return fetch("https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query?where=Meldedatum%20%3E%3D%20TIMESTAMP%20%272020-11-01%2000%3A00%3A00%27%20AND%20Meldedatum%20%3C%3D%20TIMESTAMP%20%272020-12-15%2000%3A00%3A00%27%20AND%20Bundesland%20%3D%20%27".concat(bundesland, "%27&outFields=Bundesland,AnzahlFall,Meldedatum,IdBundesland&outSR=4326&f=json"), {
+function fetchData(bundesland, selectedMonth) {
+  return fetch("https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query?where=Meldedatum%20%3E%3D%20TIMESTAMP%20%27".concat(selectedMonth[0], "%2000%3A00%3A00%27%20AND%20Meldedatum%20%3C%3D%20TIMESTAMP%20%27").concat(selectedMonth[1], "%2000%3A00%3A00%27%20AND%20Bundesland%20%3D%20%27").concat(bundesland, "%27&outFields=Bundesland,AnzahlFall,Meldedatum,IdBundesland&outSR=4326&f=json"), {
     method: 'GET'
   }).then(function (response) {
     return response.json();
@@ -441,6 +429,11 @@ function updateExistingCurvesCircles(storageArray) {
     });
   });
 }
+
+module.exports = {
+  initializeSVG: initializeSVG,
+  visualiseChosenBL: visualiseChosenBL
+};
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -469,7 +462,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49922" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50121" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

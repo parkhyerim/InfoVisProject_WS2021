@@ -14,35 +14,29 @@ const margin = {top:10, right: 30, bottom: 60, left: 60},
   width = 800 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
-
-// This is the entry point for the Bundesländer select via the treemap later on
-const checkboxes = document.getElementsByClassName('checkbox')
-for (let checkbox of checkboxes){
-  checkbox.addEventListener('change', visualiseChosenBL) 
-}
-
-initializeSVG();
-
-
+let selectedMonth;
 /** Saves the checked checkboxes to the array `blDomainStorage` 
   and visualises the chosen Bundesland.
 */
-function visualiseChosenBL(){
-
-  // Pushes the names of the chosen Bundesland into the array `blDomainStorage`
+function visualiseChosenBL(checkboxes, selectedMonth){
+  
+// Pushes the names of the chosen Bundesland into the array `blDomainStorage`
   for (let checkbox of checkboxes){
     
     
-    let found = false;
+    let foundBL = false;
+    let foundDate = false;
     blDomainStorage.forEach(arr => {
-      if(checkbox.value == arr[0]) found = true;
+      if(checkbox.value == arr[0]) foundBL = true;
     })
-
+   
+    if(this.selectedMonth == selectedMonth) foundDate = true;
     // Checks if Bundesland is newly checked or if it already exists in blDomainStorage
-    if(checkbox.checked && found == false){
+    if(checkbox.checked && foundBL == false ){
 
+     
       // Fetching the data of the newly selected Bundesland
-      fetchData(checkbox.value).then((data) => {
+      fetchData(checkbox.value, selectedMonth).then((data) => {
 
         // To figure out the max y-value which is necessary to correctly display the data
         const neededYValue = d3.scaleLinear().domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
@@ -80,7 +74,7 @@ function visualiseChosenBL(){
         updateExistingCurvesCircles(blDomainStorage);
       })
       
-    } else if(!checkbox.checked && found == true) {
+    } else if(!checkbox.checked && foundBL == true) {
 
         // Removes the curve and circles of the recently unselected Bundesland.
         svg.select(".curve."+checkbox.value).remove();
@@ -105,7 +99,7 @@ function visualiseChosenBL(){
           has changed after unselecting a Bundesland
         */
         if(yAxis.domain()[1] > blDomainStorage[blDomainStorage.length-1][1]){
-          fetchData(blDomainStorage[blDomainStorage.length-1][0]).then((data) => {
+          fetchData(blDomainStorage[blDomainStorage.length-1][0], selectedMonth).then((data) => {
             svg.select(".y-axis").remove(); 
             svg.select(".x-axis").remove(); 
             svg.select(".case-line").remove(); //removes existing vertical line
@@ -119,7 +113,9 @@ function visualiseChosenBL(){
 }
 
 
+
 function initializeSVG(){
+  console.log("in initialize");
   svg = d3.select("#visualisationContainer")
           .append("div")
           .classed("svg-container", true) 
@@ -132,9 +128,9 @@ function initializeSVG(){
 }
 
 
-function fetchData(bundesland){
+function fetchData(bundesland, selectedMonth){
     return fetch(
-      `https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query?where=Meldedatum%20%3E%3D%20TIMESTAMP%20%272020-11-01%2000%3A00%3A00%27%20AND%20Meldedatum%20%3C%3D%20TIMESTAMP%20%272020-12-15%2000%3A00%3A00%27%20AND%20Bundesland%20%3D%20%27${bundesland}%27&outFields=Bundesland,AnzahlFall,Meldedatum,IdBundesland&outSR=4326&f=json`,
+      `https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query?where=Meldedatum%20%3E%3D%20TIMESTAMP%20%27${selectedMonth[0]}%2000%3A00%3A00%27%20AND%20Meldedatum%20%3C%3D%20TIMESTAMP%20%27${selectedMonth[1]}%2000%3A00%3A00%27%20AND%20Bundesland%20%3D%20%27${bundesland}%27&outFields=Bundesland,AnzahlFall,Meldedatum,IdBundesland&outSR=4326&f=json`,
         {
             method: 'GET'
         })
@@ -313,3 +309,6 @@ function updateExistingCurvesCircles(storageArray){
     );
   })
 }
+
+
+module.exports = { initializeSVG, visualiseChosenBL };

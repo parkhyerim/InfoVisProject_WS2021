@@ -117,8 +117,80 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"scripts/values.js":[function(require,module,exports) {
-//wir könnten die Daten entweder in json in eine funktion schreiben oder über die API abrufen(?!)
+})({"scripts/datePicker.js":[function(require,module,exports) {
+function toggleDatePicker(event, cb) {
+  if (!event.target.matches('#datePickerButton')) {
+    var dropdowns = document.getElementsByClassName("dropdown");
+    var i;
+
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+
+      if (!openDropdown.classList.contains('hidden')) {
+        openDropdown.classList.add('hidden');
+      }
+    }
+
+    if (event.target.matches('.date')) {
+      datePicked(event.target.textContent);
+      cb();
+    }
+  } else {
+    document.getElementById("dateDropdown").classList.toggle("hidden");
+  }
+}
+
+function datePicked(month) {
+  document.getElementById('datePickerButton').textContent = month;
+}
+
+function getDateForFetch() {
+  switch (document.getElementById('datePickerButton').textContent) {
+    case "März 2020":
+      return ["2020-03-01", "2020-04-01"];
+
+    case "April 2020":
+      return ["2020-04-01", "2020-05-01"];
+
+    case "Mai 2020":
+      return ["2020-05-01", "2020-06-01"];
+
+    case "Juni 2020":
+      return ["2020-06-01", "2020-07-01"];
+
+    case "Juli 2020":
+      return ["2020-07-01", "2020-08-01"];
+
+    case "August 2020":
+      return ["2020-08-01", "2020-09-01"];
+
+    case "September 2020":
+      return ["2020-09-01", "2020-10-01"];
+
+    case "Oktober 2020":
+      return ["2020-10-01", "2020-11-01"];
+
+    case "November 2020":
+      return ["2020-11-01", "2020-12-01"];
+
+    case "Dezember 2020":
+      return ["2020-12-01", "2021-01-01"];
+
+    case "Januar 2021":
+      return ["2021-01-01", "2021-02-01"];
+
+    case "Februar 2021":
+      return ["2021-02-01", "2021-03-01"];
+
+    default:
+      return ["2020-03-01", "2020-04-01"];
+  }
+}
+
+module.exports = {
+  getDateForFetch: getDateForFetch,
+  toggleDatePicker: toggleDatePicker
+};
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -323,5 +395,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/values.js"], null)
-//# sourceMappingURL=/values.843755d3.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/datePicker.js"], null)
+//# sourceMappingURL=/datePicker.fc96bdc4.js.map

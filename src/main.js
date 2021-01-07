@@ -1,20 +1,31 @@
-document.onreadystatechange = function(){
- 
-    $(function(){
-        $('[data-toggle="popover"]').popover({
-            placement : 'top',
-            html : true,
-            title : '<div class="popover-header"><div class="popover-title">First Step</div><a href="#" class="close" data-dismiss="alert">&times;</a></div>',
-            content : '<div class="popover-content"><p>Excellent Bootstrap popover! I really love it.</p></div>'
-        })
-        .addClass($(this).data("class"));
+const lineChartView = require("./scripts/lineChartView.js");
+const datePicker = require("./scripts/datePicker.js");
+    // This is the entry point for the Bundesländer select via the treemap later on
+const checkboxes = document.getElementsByClassName('checkbox');
 
-        $(document).on("click", ".popover .close" , function(){
-            $('[data-toggle="popover"]').popover('hide');
-        })
 
-      });
-    
-};
+
+function initialiseEvents(){
+  window.onclick = function(event) {
+    datePicker.toggleDatePicker(event, updateLineChart);
+  }
+  for (let checkbox of checkboxes){
+    checkbox.addEventListener('change', () => {
+        updateLineChart();
+    });
+}
+}
+
+function updateLineChart(){
+    lineChartView.visualiseChosenBL(checkboxes, datePicker.getDateForFetch());
+}
+
+
+
+lineChartView.initializeSVG();
+initialiseEvents();
+
+
+
 
 
