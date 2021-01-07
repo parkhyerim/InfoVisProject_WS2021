@@ -18,7 +18,7 @@
 
     <script type="module" src="scripts/values.js" ></script>
     <script type="module" src="scripts/lineChartView.js" ></script> 
-    <script type="module" >import{loadMap, chosenBl} from "./scripts/mapGermany.js" 
+    <script type="module" >import{loadMap, clickedBl} from "./scripts/mapGermany.js" 
         document.querySelector("#mapButton").addEventListener("click", loadMap)
     </script> 
     <!--<script type="text/javascript" src="scripts/treeChartView.js" ></script>-->
@@ -32,7 +32,7 @@
     </header>
 
     <div id="mapGermany">
-        <button id="mapButton">Load map</button>
+        <button id="mapButton" class="btn btn-outline-info">Load map</button>
     </div>
     <div class="container section" id="chartContainer" >
 

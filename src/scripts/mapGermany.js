@@ -1,5 +1,13 @@
-let colorBackground, colorText, blSelected;
-export let chosenBl;
+let colorBackground, colorText, blHoovered;
+
+// `labelBlArray` stores the names of all the Bundesländer which are appended to the svg
+let labelBlArray = [];
+
+// `clickedBlArray` stores the names of all the Bundesländer which have been selected via click
+let clickedBlArray = [];
+
+
+export let clickedBl;
 
 export function loadMap(){
 
@@ -39,7 +47,6 @@ export function loadMap(){
 			.data(geojson.features)  
 			.enter()  
 			.append("text")  
-			//.attr("transform", d => `translate(${path.centroid(d)})`)  
 			.attr("text-anchor", "middle") 
 			.attr("font-size", 11)
 			.attr("id", d => d.properties.GEN) // Sets the name of the Bundesland as the ID
@@ -53,7 +60,20 @@ export function loadMap(){
 				const bl = d.properties.GEN;
 				if(offset[bl] != undefined) return projection(offset[bl])[1];
 			})
-			.text(d => d.properties.GEN)
+			.text(d => {
+				// Only fill the text if there is no text for the Bundesland yet
+				let textBool = false;
+				labelBlArray.forEach(bl => {
+					if(bl === d.properties.GEN) {
+						textBool = true; 
+					}
+				})
+				if(textBool === false) {
+					labelBlArray.push(d.properties.GEN)	
+					return d.properties.GEN;
+				}
+				
+			})
 			.on("mouseover", highlightBl)
 			.on("mouseout", resetBlColor)
 			.on("click", clickEvent)
@@ -61,30 +81,64 @@ export function loadMap(){
 	});
 }
 
+
 function highlightBl(){
 
 	// Get the name of the Bundesland currently hoovered over via the ID of the HTML element
-	blSelected = d3.select(this)._groups[0][0].id
+	blHoovered = d3.select(this)._groups[0][0].id
 	
 	// The name of the Bundesland was given as a class name to each path and with its help gets filled now
-	colorBackground = d3.select("."+blSelected).attr("fill");
-	d3.select("."+blSelected).attr("fill", "green");
+	colorBackground = d3.select("."+blHoovered).attr("fill");
+	d3.select("."+blHoovered).attr("fill", "green");
 
 	colorText = d3.select(this).attr("fill");
 	d3.select(this)
 		.attr("fill", "white")
-		.attr("font-weight", "bold");
+		.attr("font-weight", "bold");		
 }
 
 function resetBlColor(){
-	d3.select("."+blSelected).attr("fill", colorBackground);
+	d3.select("."+blHoovered).attr("fill", colorBackground);
 	d3.select(this)
 		.attr("fill", colorText)
 		.attr("font-weight", "normal");
 }
 
 function clickEvent(){
-	console.log(d3.select(this)._groups[0][0].id)
-	return chosenBl = d3.select(this)._groups[0][0].id;
+	clickedBl = d3.select(this)._groups[0][0].id;
+
+	// Check if a Bundesland has already been clicked
+	let clickedBool = false;
+	clickedBlArray.forEach( bl => {
+		if(bl === clickedBl){
+			clickedBool = true;
+		}
+	})
+
+	// If the clicked on Bundesland wasn't clicked, hence selected, before, it is marked and added to `clickedBlArray`
+	if(clickedBool === false & clickedBlArray.length <= 3) {
+		d3.select("."+d3.select(this)._groups[0][0].id)
+			.attr("stroke", "green")
+			.attr("stroke-width", 2.5) 
+
+		clickedBlArray.push(blHoovered);
+	} 
+	/** If it has been clicked before the selection is revoked by changing the stroke coloring and removing the 
+		Bundesland from the array.
+	*/
+	else if(clickedBool === true){
+		d3.select("."+d3.select(this)._groups[0][0].id)
+			.attr("stroke", "white")
+			.attr("stroke-width", 0.5) 
+
+		const index = clickedBlArray.indexOf(clickedBl);
+		clickedBlArray.splice(index, 1);
+	} 
+	// Alert when more when the user wants to select more than 4 Bundesländer. This would get too messy for the line chart.
+	else if(clickedBlArray.length == 4){
+		alert("Du hast bereits 5 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.")
+	}
+
+	return clickedBl;
 }
 
