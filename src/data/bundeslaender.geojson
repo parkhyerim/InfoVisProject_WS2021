@@ -9,12 +9,70 @@
   "source": "© GeoBasis-DE / BKG 2013 (Daten verändert)",
   "offset": {
   	"Schleswig-Holstein": [
-  		9.6961,
+  		9.9,
   		54.2194
   	],
   	"Bayern": [
   		11.4979,
   		48.7904
+  	],
+    "Nordrhein-Westfalen": [
+      7.783333,
+      51.6
+  	],
+    "Baden-Württemberg": [
+  		9.183333,
+      48.783333
+  	],
+    "Hessen": [
+  		9.1,
+      50.6
+  	],
+    "Niedersachsen": [
+      9.076019,
+      52.6
+  	],
+    "Mecklenburg-Vorpommern": [
+      12.575558,
+      53.551086
+  	],
+    "Saarland": [
+  		7.000000,
+      49.4
+  	],
+    "Rheinland-Pfalz": [
+      7.247253,
+      49.9
+  	],
+    "Sachsen": [
+  		13.5,
+      51.050407
+
+  	],
+    "Thüringen": [
+  		11.033333,
+      50.75
+  	],
+    "Sachsen-Anhalt": [
+  		11.8,
+      51.75
+  	],
+    "Brandenburg": [
+      13.7,
+      52
+      
+    ],
+    "Bremen": [
+      8.710585,
+      53.1
+  	],
+    "Berlin": [
+  		13.404954,
+      52.45
+  	],
+    "Hamburg": [
+  		9.993682,
+      53.54
   	]
   },
   "features": [
