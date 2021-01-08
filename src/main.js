@@ -1,20 +1,30 @@
-document.onreadystatechange = function(){
- 
-    $(function(){
-        $('[data-toggle="popover"]').popover({
-            placement : 'top',
-            html : true,
-            title : '<div class="popover-header"><div class="popover-title">First Step</div><a href="#" class="close" data-dismiss="alert">&times;</a></div>',
-            content : '<div class="popover-content"><p>Excellent Bootstrap popover! I really love it.</p></div>'
-        })
-        .addClass($(this).data("class"));
+import { InitializeSVG, VisualiseChosenBL } from './scripts/lineChartView.js';
+import { ToggleDatePicker, GetDateForFetch } from './scripts/datePicker.js';
 
-        $(document).on("click", ".popover .close" , function(){
-            $('[data-toggle="popover"]').popover('hide');
-        })
-
-      });
-    
-};
+const checkboxes = document.getElementsByClassName('checkbox');
 
 
+
+export function InitialiseEvents(){
+    window.onclick = function(event) {
+        ToggleDatePicker(event, updateLineChart);
+    }
+
+    for (let checkbox of checkboxes){
+        checkbox.addEventListener('change', () => {
+          updateLineChart();
+        });
+    }
+
+    // Also update when the month changes
+}
+
+
+function updateLineChart(){
+    VisualiseChosenBL(checkboxes, GetDateForFetch());
+}
+
+
+
+InitializeSVG();
+InitialiseEvents();

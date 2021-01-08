@@ -3,8 +3,8 @@ const checkboxes = document.getElementsByClassName('checkbox')
 for (let checkbox of checkboxes){
   checkbox.addEventListener('change', function() {
       if(this.checked){
-          displaymobilitydata(checkbox.name)
-        //   console.log("Checked and the function is called");
+        displaymobilitydata(checkbox.name)
+        console.log("Checked and the function is called");
       } else {
         //  console.log("unchecked");
       }

@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="styles.css">
      <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script><script type="text/javascript" src="main.js" ></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/jquery-ui.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+
     <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
     <script src="https://d3js.org/d3.v6.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -17,64 +19,80 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
     <script type="module" src="scripts/values.js" ></script>
-    <script type="module" src="scripts/lineChartView.js" ></script> 
-    <script type="module" >import{loadMap, clickedBl} from "./scripts/mapGermany.js" 
-        document.querySelector("#mapButton").addEventListener("click", loadMap)
-    </script> 
-    <script type="text/javascript" src="scripts/treemapMobilityView.js" ></script>
-    <script type="module" src="main.js" ></script>  
+    <script type="module" language="javascript" src="scripts/lineChartView.js" ></script> 
+    <script type="module" language="javascript" src="main.js"></script>
+    <script type="module" src="scripts/mapGermany.js"></script> 
+    <script type="module" src="scripts/datePicker.js" ></script>
+    <script type="text/JavaScript" src="scripts/treemapMobilityView.js"></script>
 </head>
 
 <body class="teal lighten-5">
     <header class="teal section">
-        <h2 class="center white-text">First Prototype</h2>
+        <h2 class="center white-text">Visualisierung der Fallzahlen und Mobilitätsdaten</h2>
         <p class="flow text grey-text center text-lighten-2">Auswirkung der Covid 19-Pandemie auf die Nutzung verschiedener Verkehrsmittel (%)</p>
     </header>
-
-    <div id="mapGermany">
-        <button id="mapButton" class="btn btn-outline-info">Load map</button>
-    </div>
-    <div class="container section" id="chartContainer" >
+    <button id="mapButton" class="btn btn-outline-info">Zeige Karte</button>
+    <div id="mapGermany"></div>
+        
+    <div class="container" id="chartContainer" >
         <!-- Container for Treemap with Mobility -->
-        <div id = "treemap_mobility_Viz">
-            <p>Treemap</p>
-            <button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover" >Info</button>
-            <div id="treemapMobilitywrapper"></div>
-        </div>
-           
-        <div id = "dataWrapper">
-          
-            <p>Line Chart</p>
-            <div id = "visualisationContainer"></div>
-
-                <div id="bundesländerSelector">
-                  <button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover" >Info</button>
-                <p>
-                  <label>
-                    <input id="Schleswig-Holstein" class="checkbox" type="checkbox" value="Schleswig-Holstein" name="Schleswig-Holstein"/>
-                    <span>Schleswig-Holstein</span>
-                  </label>  
-                </p>
-                <p>
-                  <label>
-                    <input id="Bayern" class="checkbox" type="checkbox" value="Bayern" name="Bavaria"/>
-                    <span>Bayern</span>
-                  </label>
-                </p>
-                <p>
-                  <label>
-                    <input id="Sachsen" class="checkbox" type="checkbox" value="Sachsen" name="Saxony"/>
-                    <span>Sachsen</span>
-                  </label>  
-                </p>
-                <p>
-                  <label>
-                    <input id="Saarland" class="checkbox" type="checkbox" value="Saarland" name="Saarland"/>
-                    <span>Saarland</span>
-                  </label>  
-                </p>
+        <div class="row">
+            <div id="treemapMobilitywrapper" class="col">
+                <p>Treemap</p>
+                <!--<button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover" >Info</button>-->
             </div>
-        </div>   
+           
+
+            <div id="datePicker">
+                <div>Wähle einen Monat</div>
+                <button id="datePickerButton" class="btn btn-outline-info dropbtn">März 2020</button>
+                <div id="dateDropdown" class=" dropdown hidden">
+                  <div class="date">März 2020</div>
+                  <div class="date">April 2020</div>
+                  <div class="date">Mai 2020</div>
+                  <div class="date">Juni 2020</div>
+                  <div class="date">Juli 2020</div>
+                  <div class="date">August 2020</div>
+                  <div class="date">September 2020</div>
+                  <div class="date">Oktober 2020</div>
+                  <div class="date">November 2020</div>
+                  <div class="date">Dezember 2020</div>
+                  <div class="date">Januar 2021</div>
+                  <div class="date">Februar 2021</div>
+                </div>
+            </div>
+            <div id="lineChartContainer" class="col">
+                <p>Line Chart</p>
+                
+                <div id="checkbox">
+                    <button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover" >Info</button>
+                    <p>
+                      <label>
+                        <input id="Schleswig-Holstein" class="checkbox" type="checkbox" value="Schleswig-Holstein" name="Schleswig-Holstein"/>
+                        <span>Schleswig-Holstein</span>
+                      </label>  
+                    </p>
+                    <p>
+                      <label>
+                        <input id="Bayern" class="checkbox" type="checkbox" value="Bayern" name="Bavaria"/>
+                        <span>Bayern</span>
+                      </label>
+                    </p>
+                    <p>
+                      <label>
+                        <input id="Sachsen" class="checkbox" type="checkbox" value="Sachsen" name="Saxony"/>
+                        <span>Sachsen</span>
+                      </label>  
+                    </p>
+                    <p>
+                      <label>
+                        <input id="Saarland" class="checkbox" type="checkbox" value="Saarland" name="Saarland"/>
+                        <span>Saarland</span>
+                      </label>  
+                    </p>
+                </div>
+            </div>
+        </div>
     </div> 
 </body>
 </html>

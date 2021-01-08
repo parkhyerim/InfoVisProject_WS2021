@@ -64,8 +64,8 @@ export function loadMap(){
 				// Only fill the text if there is no text for the Bundesland yet
 				let textBool = false;
 				labelBlArray.forEach(bl => {
-					if(bl === d.properties.GEN) {
-						textBool = true; 
+					if(bl === d.properties.GEN || d.properties.GEN.includes("Bodensee")) {
+						textBool = true; // Bodensee needs to be mentioned explicitly
 					}
 				})
 				if(textBool === false) {
