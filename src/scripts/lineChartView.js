@@ -115,7 +115,6 @@ function visualiseChosenBL(checkboxes, selectedMonth){
 
 
 function initializeSVG(){
-  console.log("in initialize");
   svg = d3.select("#visualisationContainer")
           .append("div")
           .classed("svg-container", true) 

@@ -268,7 +268,6 @@ function visualiseChosenBL(checkboxes, selectedMonth) {
 }
 
 function initializeSVG() {
-  console.log("in initialize");
   svg = d3.select("#visualisationContainer").append("div").classed("svg-container", true).append("svg").attr("preserveAspectRatio", "xMinYMin meet").attr("viewBox", "0 0 600 400").classed("svg-content-responsive", true).append("g").attr("transform", "translate(".concat(margin.left, ", ").concat(margin.top, ")"));
 }
 
@@ -462,7 +461,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65382" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52404" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
