@@ -140,7 +140,9 @@ function displaymobilitydata() {
     });
     temp.forEach(function (element) {
       if (element.country == "Germany" && element["sub-region"] == "" && element["transportation_type"] == param) mobilityData.push(element);
-    }); //calculate average value for every month
+    });
+    console.log(data);
+    console.log(temp); //calculate average value for every month
 
     var _loop = function _loop(m) {
       //since each month has a different number of days and the data has some gaps for two days we need to store the individual number of days each month in the variable div
@@ -183,8 +185,7 @@ function displaymobilitydata() {
   });
 }
 
-;
-displaymobilitydata();
+; //displaymobilitydata();
 
 function createTreeChart(data) {
   //in case new treemap shall be loaded, the one before gets removed
@@ -240,6 +241,8 @@ function createTreeChart(data) {
     return d.data.region + "" + d.data["05"] + "%";
   }).attr("font-size", "16px").attr("fill", "white");
 }
+
+exports.displaymobilitydata = displaymobilitydata;
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -268,7 +271,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52404" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55374" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

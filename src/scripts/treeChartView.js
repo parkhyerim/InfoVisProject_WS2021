@@ -6,7 +6,8 @@ function displaymobilitydata(param="driving"){
         temp.forEach(function(element) {
             if (element.country == "Germany" && element["sub-region"] == "" && element["transportation_type"]==param) mobilityData.push(element);
         });
-
+        console.log(data);
+        console.log(temp);
         //calculate average value for every month
         for (let m=1; m<13; m++){
 
@@ -49,7 +50,7 @@ function displaymobilitydata(param="driving"){
     });
 };
 
-displaymobilitydata();
+//displaymobilitydata();
 
 function createTreeChart(data){
 
@@ -116,3 +117,5 @@ function createTreeChart(data){
         .attr("font-size", "16px")
         .attr("fill", "white")
 }
+
+exports.displaymobilitydata = displaymobilitydata;

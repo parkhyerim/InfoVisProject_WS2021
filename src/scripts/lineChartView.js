@@ -310,4 +310,5 @@ function updateExistingCurvesCircles(storageArray){
 }
 
 
-module.exports = { initializeSVG, visualiseChosenBL };
+exports.initializeSVG = initializeSVG;
+exports.visualiseChosenBL = visualiseChosenBL;

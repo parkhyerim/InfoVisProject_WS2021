@@ -56,4 +56,6 @@
         return ["2020-03-01", "2020-04-01"]
     }
   }
-  module.exports  = { getDateForFetch, toggleDatePicker };
+
+  exports.getDateForFetch = getDateForFetch;
+  exports.toggleDatePicker = toggleDatePicker;
