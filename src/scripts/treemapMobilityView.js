@@ -94,7 +94,7 @@ function createTreeChart(data){
         }, {});
 
 
-    //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes
+    //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes)
     var hgroup = d3.hierarchy(groupedData, function(d){
                                 return d.Germany}
                                 )
@@ -105,15 +105,17 @@ function createTreeChart(data){
    const treemap= d3.treemap()
        .size([width, height])
        .padding(4)
+       .paddingInner(3)
       (hgroup)
 
 
     // Determine the color of each field
     // Explanation from https://stackoverflow.com/questions/42546344/how-to-apply-specific-colors-to-d3-js-map-based-on-data-values?rq=1
-    var color= d3.scale.linear()
+
+        //alte funktion
+   /*  var color= d3.scale.linear()
                 .domain([400, 1000])
                 .range(["Salmon", "IndianRed"]);
-
     // Add a opacity scale
     var opacity =d3.scaleLinear()
                 .domain([400, 1000])
@@ -134,8 +136,46 @@ function createTreeChart(data){
             return color(d.data["05"]);})
             .style("opacity", function(d) {
                 return opacity(d.data["05"])
-            });
+            }); */
 
+
+   var colorWalking= d3.scale.linear()
+                .domain([400, 1000])
+                .range(["Salmon", "IndianRed"]);
+
+    var colorTransit= d3.scale.linear()
+                .domain([400, 1000])
+                .range(["steelblue", "midnightblue"]);
+
+    var colorDriving= d3.scale.linear()
+                .domain([400, 1000])
+                .range(["gold", "darkorange"]);
+    // Add a opacity scale
+    var opacity =d3.scaleLinear()
+                .domain([400, 1000])
+                .range([.8,1])
+
+    // use this information to add rectangles:
+    svg
+        .selectAll("rect")
+        .data(treemap.leaves())
+        .enter()
+        .append("rect")
+        .attr("id", (d) =>{return d.id;})
+        .attr('x', function (d) { return d.x0; })
+        .attr('y', function (d) { return d.y0})
+        .attr('width', function (d) { return d.x1 - d.x0; })
+        .attr('height', function (d) { return d.y1 - d.y0})
+        .style("fill", function(d) {
+            if(d.data.transportation_type === "driving"){
+                return colorDriving(d.data["05"])}
+            else if(d.data.transportation_type === "walking"){
+                return colorWalking(d.data["05"])}
+            else if(d.data.transportation_type === "transit") {
+                return colorTransit(d.data["05"])}})
+        .style("opacity", function(d){ return opacity(d.data["05"])});
+
+        
     // and to add the text labels
     svg
         .selectAll("text")
