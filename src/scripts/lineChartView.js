@@ -1,12 +1,3 @@
-/** `exportDate` is set in the event handler added to the ticks of the xAxis. 
-  It contains the selected date which should be used for the treemap.
-  To import the clicked date use `import date from './lineChartView.js' in the treemap file`.
-  Make sure that the type of the treemap file is set to `module` in the index.html file, e.g.:
-   <script type="module" src="scripts/values.js" ></script>
-  */
-let exportDate = new Date();
-export default exportDate;
-
 let svg, xAxis, yAxis;
 const blDomainStorage = [];
 
@@ -205,21 +196,6 @@ function addAxes(data){
       .selectAll("text")
       .attr("transform", "rotate(330)") //rotates the labels of the x axis by 
       .style("text-anchor", "end"); //makes sure that the end of the text string is anchored to the ticks
-
-   /** Selects all the labels on the xAxis. 
-    The cursor becomes a pointer when moving the mouse over the xAxis labels.
-    When clicking on one label the function `appendVerticalLine` is being called 
-    and the selected `date` set so it can be exported. (See top of this file)
-  */
-  const labels = d3.selectAll('g.tick') 
-  
-  labels.on("mouseover", (mouseEvent) => {
-    d3.select(mouseEvent.target).style("cursor", "pointer"); // the pointer isn't visible anymore for some reason
-  });
-  labels.on("click", (mouseEvent, date) => {
-    appendVerticalLine(svg, xAxis, date, height)
-    exportDate = date;
-  })  
 
   // Initializes and formats the yAxis
   yAxis = d3.scaleLinear()

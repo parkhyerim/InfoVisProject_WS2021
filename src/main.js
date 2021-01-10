@@ -11,6 +11,7 @@ function InitialiseEvents(){
     // Initially load map. The map gets hidden in mapGermany.js 
     LoadMap();
 
+    // Adds and event listener to the Bundesländer Button
     eventListenerMap();
 
     // Can't be used like this anymore, because there are several onclicks
@@ -21,30 +22,33 @@ function InitialiseEvents(){
 
 
 function eventListenerMap(){
-    let mapButtonClicked = false;
+    let mapButtonClicked = true;
     mapButton.addEventListener('click', () => {
         
-        if(mapButtonClicked === false){
+        /** If the map button is clicked, one or more Bundesländer can be selected and will 
+            then be displayed
+        */
+        if(mapButtonClicked === true){
             visualizeSelectedBl()
             document.getElementById('mapGermany').style.display = 'inline';
-            mapButtonClicked = true;    
+            mapButtonClicked = false;    
         } 
-        else if(mapButtonClicked === true){
+        else if(mapButtonClicked === false){
             document.getElementById('mapGermany').style.display = 'none';
-            mapButtonClicked = false;
+            mapButtonClicked = true;
         }
                
     })
 }
 
 
-function updateLineChart(bl, checked){
-    VisualiseChosenBL(bl, checked, GetDateForFetch());
-}
-
 function visualizeSelectedBl(){
     const mapSelectedBl = document.getElementsByTagName('text');
 
+        /** MutationObserver looks at all the html text elements and has a look if their
+            attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
+            has been selected in the map
+        */
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if(mutation.attributeName === 'class'){
@@ -65,6 +69,13 @@ function visualizeSelectedBl(){
     }
 }
 
+function updateLineChart(bl, checked){
+    /** Adds the curve for the selected Bundesland to the line chart
+        `checked` indicates if the mutated element was a Bundesland selected on the map.
+        It is `false` if another element mutated somehow.
+    */
+    VisualiseChosenBL(bl, checked, GetDateForFetch());
+}
 
 
 

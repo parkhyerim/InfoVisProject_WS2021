@@ -153,6 +153,7 @@ function clickEvent(){
 
 		const index = clickedBlArray.indexOf(clickedBl);
 		clickedBlArray.splice(index, 1);
+		// Necessary to get the selected Bundesland in main.js
 		d3.select(this)._groups[0][0].classList.remove('selected-bl'); 
 	} 
 	// Alert when more when the user wants to select more than 4 Bundesländer. This would get too messy for the line chart.
