@@ -7,8 +7,6 @@ let labelBlArray = [];
 let clickedBlArray = [];
 
 
-export let clickedBl;
-
 export function LoadMap(){
 
 	// Source http://opendatalab.de/projects/geojson-utilities/
@@ -18,8 +16,13 @@ export function LoadMap(){
 		const height =500;
 
 		const svg = d3  
-			.select("#mapGermany")  
-			.append("svg")  
+			.select("#mapGermany")
+			.classed("svg-container", true)   
+			.append("svg")
+			.attr("class", "map-germany")
+			//.attr("preserveAspectRatio", "xMinYMin meet")
+          	//.attr("viewBox", "0 0 600 400")
+          	//.classed("svg-content-responsive", true)
 			.attr("id", "svgMap")
 			.attr("width", width)  
 			.attr("height", height);
@@ -109,7 +112,8 @@ function resetBlColor(){
 }
 
 function clickEvent(){
-	clickedBl = d3.select(this)._groups[0][0].id;
+	const clickedBl = d3.select(this)._groups[0][0].id;
+
 
 	// Check if a Bundesland has already been clicked
 	let clickedBool = false;
@@ -126,6 +130,8 @@ function clickEvent(){
 			.attr("stroke-width", 2.5) 
 
 		clickedBlArray.push(blHoovered);
+		// Necessary to get the selected Bundesland in main.js
+		d3.select(this)._groups[0][0].classList.add('selected-bl'); 
 	} 
 	/** If it has been clicked before the selection is revoked by changing the stroke coloring and removing the 
 		Bundesland from the array.
@@ -137,11 +143,10 @@ function clickEvent(){
 
 		const index = clickedBlArray.indexOf(clickedBl);
 		clickedBlArray.splice(index, 1);
+		d3.select(this)._groups[0][0].classList.remove('selected-bl'); 
 	} 
 	// Alert when more when the user wants to select more than 4 Bundesländer. This would get too messy for the line chart.
 	else if(clickedBlArray.length == 4){
 		alert("Du hast bereits 5 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.")
 	}
-	return clickedBl;
 }
-
