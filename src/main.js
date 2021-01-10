@@ -12,7 +12,6 @@ function InitialiseEvents(){
     LoadMap();
 
     eventListenerMap();
-    eventListenerDropdown();
 
     // Can't be used like this anymore, because there are several onclicks
     window.onclick = function(event) {
