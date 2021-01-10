@@ -9,7 +9,7 @@ let clickedBlArray = [];
 
 export let clickedBl;
 
-export function loadMap(){
+export function LoadMap(){
 
 	// Source http://opendatalab.de/projects/geojson-utilities/
 	d3.json('../src/data/bundeslaender.geojson').then((geojson)=>{
@@ -20,6 +20,7 @@ export function loadMap(){
 		const svg = d3  
 			.select("#mapGermany")  
 			.append("svg")  
+			.attr("id", "svgMap")
 			.attr("width", width)  
 			.attr("height", height);
 
@@ -79,6 +80,9 @@ export function loadMap(){
 			.on("click", clickEvent)
 			.style("cursor", "pointer");  
 	});
+
+	// Hide map
+	document.getElementById('mapGermany').style.display = 'none'
 }
 
 
@@ -138,7 +142,6 @@ function clickEvent(){
 	else if(clickedBlArray.length == 4){
 		alert("Du hast bereits 5 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.")
 	}
-
 	return clickedBl;
 }
 

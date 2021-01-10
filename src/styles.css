@@ -15,29 +15,20 @@ h1 {
     position: center;
 }
 
-#chartContainer{
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 10px;
-  grid-auto-rows: minmax(100px, auto);
-
-}
-
-#bundesländerSelector{
-  grid-column: 1 / 2;
-  grid-row: 2;
+.date-picker{
+  width: 40%;
+  margin: auto;
 }
 
 
-#dataWrapper{
-  grid-column: 2;
-  grid-row: 1;
+.side-bar{
+  height: 100vh !important;
 }
 
-#treemap_Viz{
-  grid-column: 1;
-  grid-row: 1;
+.button-width{
+  display: table !important;
 }
+
 
 .svg-container {
   display: inline-block;

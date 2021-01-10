@@ -1,17 +1,16 @@
-export function ToggleDatePicker(event, cb) {
-  
+export function ToggleDatePicker(event, updateChart) {
+
   if (!event.target.matches('#datePickerButton')) {
-    var dropdowns = document.getElementsByClassName("dropdown");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
+    const dropdowns = document.getElementsByClassName("dropdown");
+    for (let i = 0; i < dropdowns.length; i++) {
+      let openDropdown = dropdowns[i];
       if (!openDropdown.classList.contains('hidden')) {
         openDropdown.classList.add('hidden');
       }
     }
     if(event.target.matches('.date')){
       datePicked(event.target.textContent);
-      cb();
+      updateChart();
     }
 
   } else {
