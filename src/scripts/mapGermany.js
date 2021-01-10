@@ -96,7 +96,7 @@ function highlightBl(){
 	
 	// The name of the Bundesland was given as a class name to each path and with its help gets filled now
 	colorBackground = d3.select("."+blHoovered).attr("fill");
-	d3.select("."+blHoovered).attr("fill", "green");
+	d3.select("."+blHoovered).attr("fill", "#009688");
 
 	colorText = d3.select(this).attr("fill");
 	d3.select(this)
@@ -105,29 +105,38 @@ function highlightBl(){
 }
 
 function resetBlColor(){
-	d3.select("."+blHoovered).attr("fill", colorBackground);
-	d3.select(this)
+	// Check if the hovered over Bundesland was clicked
+	let isBlClicked = false;
+	clickedBlArray.forEach( bl => {
+		if(this.id === bl){
+			isBlClicked = true;
+		}
+	})
+	// If it wasn't clicked its color is reset
+	if(isBlClicked === false){
+		d3.select("."+blHoovered).attr("fill", colorBackground);
+		d3.select(this)
 		.attr("fill", colorText)
-		.attr("font-weight", "normal");
+		.attr("font-weight", "normal");	
+	}
 }
 
 function clickEvent(){
 	const clickedBl = d3.select(this)._groups[0][0].id;
 
-
 	// Check if a Bundesland has already been clicked
 	let clickedBool = false;
+	
 	clickedBlArray.forEach( bl => {
 		if(bl === clickedBl){
 			clickedBool = true;
 		}
 	})
 
-	// If the clicked on Bundesland wasn't clicked, hence selected, before, it is marked and added to `clickedBlArray`
+	// If the clicked on Bundesland wasn't clicked before, it is marked and added to `clickedBlArray`
 	if(clickedBool === false & clickedBlArray.length <= 3) {
 		d3.select("."+d3.select(this)._groups[0][0].id)
-			.attr("stroke", "green")
-			.attr("stroke-width", 2.5) 
+			.attr("fill", "#009688")
 
 		clickedBlArray.push(blHoovered);
 		// Necessary to get the selected Bundesland in main.js
@@ -136,9 +145,10 @@ function clickEvent(){
 	/** If it has been clicked before the selection is revoked by changing the stroke coloring and removing the 
 		Bundesland from the array.
 	*/
-	else if(clickedBool === true){
+	else if(clickedBool === true){	
 		d3.select("."+d3.select(this)._groups[0][0].id)
 			.attr("stroke", "white")
+			.attr("fill", colorBackground)
 			.attr("stroke-width", 0.5) 
 
 		const index = clickedBlArray.indexOf(clickedBl);

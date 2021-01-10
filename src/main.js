@@ -2,9 +2,7 @@ import { InitializeSVG, VisualiseChosenBL } from './scripts/lineChartView.js';
 import { ToggleDatePicker, GetDateForFetch } from './scripts/datePicker.js';
 import { LoadMap } from './scripts/mapGermany.js';
 
-const checkboxes = document.getElementsByClassName('checkbox');
 const mapButton = document.getElementById('mapButton');
-
 
 
 function InitialiseEvents(){
@@ -18,33 +16,33 @@ function InitialiseEvents(){
     window.onclick = function(event) {
         ToggleDatePicker(event, updateLineChart);
     }
-
-    for (let checkbox of checkboxes){
-        checkbox.addEventListener('change', () => {
-          updateLineChart();
-        });
-    }
 }
 
 
-function updateLineChart(){
-    VisualiseChosenBL(checkboxes, GetDateForFetch());
+function updateLineChart(bl, checked){
+    VisualiseChosenBL(bl, checked, GetDateForFetch());
 }
 
 function returnSelectedBl(){
-    const blLabels = document.getElementsByTagName('text');
+    const mapSelectedBl = document.getElementsByTagName('text');
 
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                if(mutation.attributeName == 'class'){
-                    console.log(mutation.target.id)
+                if(mutation.attributeName === 'class'){
+                    let checked;
+                    if(mutation.target.classList[0] === 'selected-bl'){
+                        checked = true;
+                    } else {
+                        checked = false;
+                    } 
+                    updateLineChart(mutation.target.id, checked)            
                 }
             })  
         }) 
     const config = { attributes: true };
     
-    for (let blLabel of blLabels){
-        observer.observe(blLabel, config);    
+    for (let blMap of mapSelectedBl){
+        observer.observe(blMap, config);    
     }
 }
 

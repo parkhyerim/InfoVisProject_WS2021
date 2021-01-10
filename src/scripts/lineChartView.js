@@ -14,98 +14,93 @@ const margin = {top:10, right: 30, bottom: 60, left: 60},
   width = 800 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
-/** Saves the checked checkboxes to the array `blDomainStorage` 
+/** Saves the checked Bundesländer to the array `blDomainStorage` 
   and visualises the chosen Bundesland.
 */
-export function VisualiseChosenBL(checkboxes, selectedMonth){
+export function VisualiseChosenBL(selectedBl, checked, selectedMonth){      
+    
+  let foundBL = false;
+  blDomainStorage.forEach(arr => {
+    if(selectedBl == arr[0]) foundBL = true;
+  })
+  
+  // Checks if Bundesland is newly checked or if it already exists in blDomainStorage
+  if(foundBL == false){
 
-  // Pushes the names of the chosen Bundesland into the array `blDomainStorage`
-  for (let checkbox of checkboxes){
+    // Fetching the data of the newly selected Bundesland
+    fetchData(selectedBl, selectedMonth).then((data) => {
+
+      // To figure out the max y-value which is necessary to correctly display the data
+      const neededYValue = d3.scaleLinear().domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
+
+      /** Sorts the array in increasing order.
+        The Bundesland with the smallest needed y-value comes first and the one with the highest comes last.
+      */
+      blDomainStorage.sort((a,b) => {
+        return a[1] - b[1];
+      })
+
+      /** Checks whether the last Bundesland in `blDomainStorage` still obtains the highest needed
+        y-value compared to the newly selected Bundesland. If the newly checked Bundesland has
+        more Covid cases and therefore needs a higher y-value the current axes are removed 
+        and the updated ones are added.
+      */
+      if(blDomainStorage.length == 0 || blDomainStorage[blDomainStorage.length-1][1] < neededYValue.domain()[1]){
+        svg.select(".y-axis").remove(); // instead of deleting they should be updated,
+        svg.select(".x-axis").remove(); // but that seems more complicated
+        svg.select(".case-line").remove(); //removes existing vertical line
+        addAxes(data);
+      }
     
-    
-    let foundBL = false;
-    blDomainStorage.forEach(arr => {
-      if(checkbox.value == arr[0]) foundBL = true;
+      // Stores the Bundesland and the highest y-value needed for that Bundesland
+      blDomainStorage.push([data[0].Infos.Bundesland, neededYValue.domain()[1]]);   
+
+      /** The curve of the newly selected Bundesland is added.
+        `blClassN` is necessary to give each curve a distinguishable class name.
+        It will be used to select the d3 element and then to update and delete it.
+      */
+      const blClassN = data[0].Infos.Bundesland
+      visualiseCurve(svg, data, xAxis, yAxis, blClassN, "turquoise");
+        
+      // Circles of the already displayed Bundesländer are updated according to the new axis. 
+      updateExistingCurvesCircles(blDomainStorage);
     })
     
-    // Checks if Bundesland is newly checked or if it already exists in blDomainStorage
-    if(checkbox.checked && foundBL == false){
+  } else if(!checked && foundBL == true) { // If Bundesland isn't selected but found in `blDomainStorage`
 
-      // Fetching the data of the newly selected Bundesland
-      fetchData(checkbox.value, selectedMonth).then((data) => {
+      // Removes the curve and circles of the recently unselected Bundesland.
+      svg.select(".curve."+selectedBl).remove();
+      svg.selectAll(".circles."+selectedBl).remove();
 
-        // To figure out the max y-value which is necessary to correctly display the data
-        const neededYValue = d3.scaleLinear().domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
- 
-        /** Sorts the array in increasing order.
-          The Bundesland with the smallest needed y-value comes first and the one with the highest comes last.
-        */
-        blDomainStorage.sort((a,b) => {
-          return a[1] - b[1];
-        })
-
-        /** Checks whether the last Bundesland in `blDomainStorage` still obtains the highest needed
-          y-value compared to the newly selected Bundesland. If the newly checked Bundesland has
-          more Covid cases and therefore needs a higher y-value the current axes are removed 
-          and the updated ones are added.
-        */
-        if(blDomainStorage.length == 0 || blDomainStorage[blDomainStorage.length-1][1] < neededYValue.domain()[1]){
-          svg.select(".y-axis").remove(); // instead of deleting they should be updated,
-          svg.select(".x-axis").remove(); // but that seems more complicated
-          svg.select(".case-line").remove(); //removes existing vertical line
-          addAxes(data);
-        }
-      
-        // Stores the Bundesland and the highest y-value needed for that Bundesland
-        blDomainStorage.push([data[0].Infos.Bundesland, neededYValue.domain()[1]]);   
-
-        /** The curve of the newly selected Bundesland is added.
-          `blClassN` is necessary to give each curve a distinguishable class name.
-          It will be used to select the d3 element and then to update and delete it.
-        */
-        const blClassN = data[0].Infos.Bundesland
-        visualiseCurve(svg, data, xAxis, yAxis, blClassN, "turquoise");
-          
-        // Circles of the already displayed Bundesländer are updated according to the new axis. 
-        updateExistingCurvesCircles(blDomainStorage);
+     /** Sorts the array in increasing order.
+        The Bundesland with the smallest needed y-value comes first and the one with the 
+        highest comes last.
+      */
+      blDomainStorage.sort((a,b) => {
+        return a[1] - b[1];
       })
-      
-    } else if(!checkbox.checked && foundBL == true) {
 
-        // Removes the curve and circles of the recently unselected Bundesland.
-        svg.select(".curve."+checkbox.value).remove();
-        svg.selectAll(".circles."+checkbox.value).remove();
+      // Removes the recently unselected Bundesland from `blDomainStorage`
+      blDomainStorage.forEach((arr, i) => {
+        if(arr[0] == selectedBl) {
+         blDomainStorage.splice(i,1)
+        }
+      })
 
-       /** Sorts the array in increasing order.
-          The Bundesland with the smallest needed y-value comes first and the one with the 
-          highest comes last.
-        */
-        blDomainStorage.sort((a,b) => {
-          return a[1] - b[1];
-        })
+      /** Updates the axes, the existing curves and circles if the highest needed y-value 
+        has changed after unselecting a Bundesland
+      */
+      if(yAxis.domain()[1] > blDomainStorage[blDomainStorage.length-1][1]){
+        fetchData(blDomainStorage[blDomainStorage.length-1][0], selectedMonth).then((data) => {
+          svg.select(".y-axis").remove(); 
+          svg.select(".x-axis").remove(); 
+          svg.select(".case-line").remove(); //removes existing vertical line
 
-        // Removes the recently unselected Bundesland from `blDomainStorage`
-        blDomainStorage.forEach((arr, i) => {
-          if(arr[0] == checkbox.value) {
-           blDomainStorage.splice(i,1)
-          }
-        })
-
-        /** Updates the axes, the existing curves and circles if the highest needed y-value 
-          has changed after unselecting a Bundesland
-        */
-        if(yAxis.domain()[1] > blDomainStorage[blDomainStorage.length-1][1]){
-          fetchData(blDomainStorage[blDomainStorage.length-1][0], selectedMonth).then((data) => {
-            svg.select(".y-axis").remove(); 
-            svg.select(".x-axis").remove(); 
-            svg.select(".case-line").remove(); //removes existing vertical line
-
-            addAxes(data)
-            updateExistingCurvesCircles(blDomainStorage);            
-          }) 
-        } 
-      }
-  }
+          addAxes(data)
+          updateExistingCurvesCircles(blDomainStorage);            
+        }) 
+      } 
+    }
 }
 
 
@@ -243,7 +238,7 @@ function visualiseCurve(svg, formattedData, xAxis, yAxis, classN, color){
   svg.append("path")
     .datum(formattedData)
     .attr("fill", "none")
-    .attr("id", classN)
+    .attr("id", classN+"-curve")
     .attr("stroke", color)
     .attr("stroke-width", 1)
     .attr("class", "curve" + " " + classN) //necessary to add a specific class for every Bundesland shown
@@ -252,12 +247,13 @@ function visualiseCurve(svg, formattedData, xAxis, yAxis, classN, color){
         .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
     );
 
+    console.log(classN)
   // Appends name of the Bundesland to the corresponding path
   svg.append("text")
     .attr("x", 5) // move the text from the start of the path
-    .attr("dy", 15) // move the text down
+    .attr("dy", -10) // move the text up
     .append("textPath")
-      .attr("xlink:href","#"+classN)
+      .attr("xlink:href","#"+classN+"-curve") // links the text to the element with the corresponding id, which was given to the path in the code block above
       .text(formattedData[0].Infos.Bundesland);
 
   // Appends circles to the path at the dates where data is returned
