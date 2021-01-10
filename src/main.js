@@ -3,19 +3,39 @@ import { ToggleDatePicker, GetDateForFetch } from './scripts/datePicker.js';
 import { LoadMap } from './scripts/mapGermany.js';
 
 const mapButton = document.getElementById('mapButton');
+const datePickerButton = document.getElementById('datePickerButton');
 
 
 function InitialiseEvents(){
 
     // Initially load map. The map gets hidden in mapGermany.js 
     LoadMap();
-    showHideMap();
 
-   // console.log(clickedBl) // Add class or other attribute to selected text field check for that and then reset it afterwards
+    eventListenerMap();
+    eventListenerDropdown();
 
+    // Can't be used like this anymore, because there are several onclicks
     window.onclick = function(event) {
         ToggleDatePicker(event, updateLineChart);
     }
+}
+
+
+function eventListenerMap(){
+    let mapButtonClicked = false;
+    mapButton.addEventListener('click', () => {
+        
+        if(mapButtonClicked === false){
+            visualizeSelectedBl()
+            document.getElementById('mapGermany').style.display = 'inline';
+            mapButtonClicked = true;    
+        } 
+        else if(mapButtonClicked === true){
+            document.getElementById('mapGermany').style.display = 'none';
+            mapButtonClicked = false;
+        }
+               
+    })
 }
 
 
@@ -23,7 +43,7 @@ function updateLineChart(bl, checked){
     VisualiseChosenBL(bl, checked, GetDateForFetch());
 }
 
-function returnSelectedBl(){
+function visualizeSelectedBl(){
     const mapSelectedBl = document.getElementsByTagName('text');
 
         const observer = new MutationObserver((mutations) => {
@@ -46,22 +66,6 @@ function returnSelectedBl(){
     }
 }
 
-function showHideMap(){
-    let clickIndicator = false;
-    mapButton.addEventListener('click', () => {
-        
-        if(clickIndicator === false){
-            returnSelectedBl()
-            document.getElementById('mapGermany').style.display = 'inline';
-            clickIndicator = true;    
-        } 
-        else if(clickIndicator === true){
-            document.getElementById('mapGermany').style.display = 'none';
-            clickIndicator = false;
-        }
-               
-    })
-}
 
 
 

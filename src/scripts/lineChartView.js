@@ -247,7 +247,6 @@ function visualiseCurve(svg, formattedData, xAxis, yAxis, classN, color){
         .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
     );
 
-    console.log(classN)
   // Appends name of the Bundesland to the corresponding path
   svg.append("text")
     .attr("x", 5) // move the text from the start of the path
