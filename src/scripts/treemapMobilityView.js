@@ -5,71 +5,172 @@ for (let checkbox of checkboxes){
       if(this.checked){
           displaymobilitydata(checkbox.name)
         //   console.log("Checked and the function is called");
-      } else {
-        //  console.log("unchecked");
-      }
+      } 
   }) 
 }
 
 function displaymobilitydata(param){
+
+    // d3.csv("../src/data/applemobility-germany.csv", function(data){
+    //    // console.log(data);
+    // })
+
     // temporal: without checkbox selection, "Bavaria" is the default
     if(param ==null) var param = "Bavaria";
     let mobilityData = [];
     var temp = [];
     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
-        data.forEach(element => temp.push(element));
-        temp.forEach(function(element) {
+      //  data.forEach(element => temp.push(element));
+        data.forEach(function(element) {
             if (element.country == "Germany" && 
             element["sub-region"] == "" && 
             element["region"]==param) {
-                mobilityData.push(element);
+                mobilityData.push(element);     
+               // console.log(mobilityData)    
             }
         });
+
+        let monthname = "";
+       
+        // let janSum = 0, febSum = 0, marSum = 0, aprSum = 0,  marSum = 0, 
+        let janSum = febSum = marSum = aprSum = maySum = junSum = julSum = augSum = sepSum = octSum = novSum = decSum = 0;
+        let janResult = feb = mar = apr = may = jun = jul = aug = sep = oct = nov = dec = 0;
+        let counter = 0;
 
         //calculate average value for every month
         for (let m=1; m<13; m++){
 
             //since each month has a different number of days and the data has some gaps for two days we need to store the individual number of days each month in the variable div
-            let div = 0;
+            let divider = 0;
 
             // if clause to make the month valuefitting to the formatting in the dataset
             if (m<10) month="0"+m;
             else month=m;
 
             for (let d=1; d<32; d++){
+                if(monthname == "" || monthname != month){
+                    monthname = month;
+                    counter = 0;
+                   // console.log("monthname: " + monthname + "monthtype:" + typeof(month) + " counter: " + counter)
+                } else {
+                   // console.log("monthname: " + monthname + " counter: " + counter)
+                }
 
                 // if clause to make the day value fitting to the formatting in the dataset
                 if (d<10) day="0"+d;
                 else day=d;
 
                 //format of the date stored in a variable
-                let s = "2020-"+month+"-"+day;
-
+                let ymd = "2020-"+month+"-"+day;
+      
                 mobilityData.forEach(function(element){
-                    if (element[s] !== undefined && element[s] !== "") {
-                        div++;
-                        if (element[month]== null) 
-                        element[month]= element[s];
+                    if(element[ymd] == undefined || element[ymd] == "" || element[ymd] == null ){
+                        element[ymd] = 0
+                        
+                    }else{
+                        counter++
+                     // console.log("counter" + counter)
+                        switch(month){
+                            case "01":
+                                janSum += parseFloat(element[ymd])
+                                janResult = janSum/counter
+                                element[month] = janResult.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(janSum) + " counter: " + counter + " result: " + janResult)
+                                break;
+                            case "02":
+                                febSum += parseFloat(element[ymd])
+                                feb = febSum /counter
+                                element[month] = feb.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(febSum)  + " counter: " + counter + " result: " + feb)
+                                break;
+                            case "03":
+                                marSum += parseFloat(element[ymd])
+                                mar = marSum /counter
+                                element[month] = mar.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(marSum)  + " counter: " + counter + " result: " + mar)
+                                break;
+                            case "04":
+                                aprSum += parseFloat(element[ymd])
+                                apr = aprSum /counter
+                                element[month] = apr.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(aprSum)  + " counter: " + counter + " result: " + apr)
+                                break;
+                            case "05":
+                                maySum += parseFloat(element[ymd])
+                                may = maySum /counter
+                                element[month] = may.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(maySum)  + " counter: " + counter + " result: " + may)
+                                break;
+                            case "06":
+                                junSum += parseFloat(element[ymd])
+                                jun = junSum /counter
+                                element[month] = jun.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(junSum)  + " counter: " + counter + " result: " + jun)
+                                break;
+                            case "07":
+                                julSum += parseFloat(element[ymd])
+                                jul = marSum /counter
+                                element[month] = jul.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(julSum)  + " counter: " + counter + " result: " + jul)
+                                break;
+                            case "08":
+                                augSum += parseFloat(element[ymd])
+                                aug = augSum /counter
+                                element[month] = aug.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(augSum)  + " counter: " + counter + " result: " + aug)
+                                break;
+                            case "09":
+                                sepSum += parseFloat(element[ymd])
+                                sep = sepSum /counter
+                                element[month] = sep.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(sepSum)  + " counter: " + counter + " result: " + sep)
+                                break;
+                            case 10:    
+                                octSum += parseFloat(element[ymd])
+                                oct = octSum /counter
+                                element[month] = oct.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(octSum)  + " counter: " + counter + " result: " + oct)
+                                break;
+                            case 11:
+                                novSum += parseFloat(element[ymd])
+                                nov = novSum /counter
+                                element[month] = nov.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(novSum)  + " counter: " + counter + " result: " + nov)
+                                break;
+                            case 12:
+                                decSum += parseFloat(element[ymd])
+                                dec = decSum /counter
+                                element[month] = dec.toFixed(2)
+                                console.log(ymd + " " + "sum: " + parseFloat(decSum)  + " counter: " + counter + " result: " + dec)
+                                break;
+                            default:
 
-                        else {element[month]= parseFloat(element[month]) + parseFloat(element[s]);}
+                        }
                     }
+
                 });
             }
 
-            //div needs to be divided by 16 since it gets count up in the forEach loop for all 16 German regions
-            div = div/16;
-
-            mobilityData.forEach(function(element){
-                element[month]=(parseFloat(element[month])/div).toFixed(2);
-            });
         }
 
         //generate TreeChart from the provided Dateset
-        createTreeChart(mobilityData)
+       // console.log(mobilityData)    
+        let mobilityDataPerMonth = mobilityData;
+        console.log(mobilityDataPerMonth)   
+        console.log(mobilityDataPerMonth[1][5]) 
+        console.log(mobilityDataPerMonth[0][5]) 
+        console.log(mobilityDataPerMonth[2][5]) 
+       // generateHierarchy(mobilityDataPerMonth)
+       // createTreeChart(mobilityData)
     });
 };
 
-displaymobilitydata();
+// displaymobilitydata();
+
+function generateHierarchy(data){
+
+}
+
 
 function createTreeChart(data){
 
@@ -111,14 +212,13 @@ function createTreeChart(data){
 
     // Determine the color of each field
     // Explanation from https://stackoverflow.com/questions/42546344/how-to-apply-specific-colors-to-d3-js-map-based-on-data-values?rq=1
+    var color= d3.scale.linear()
+                .domain([80, 120])
+                .range(["orange", "indianred"]);
 
-        //alte funktion
-   /*  var color= d3.scale.linear()
-                .domain([400, 1000])
-                .range(["Salmon", "IndianRed"]);
     // Add a opacity scale
     var opacity =d3.scaleLinear()
-                .domain([400, 1000])
+                .domain([50, 120])
                 .range([.4,1])
 
     // use this information to add rectangles:
@@ -133,27 +233,10 @@ function createTreeChart(data){
         .attr('width', function (d) { return d.x1 - d.x0; })
         .attr('height', function (d) { return d.y1 - d.y0})
         .style("fill", function(d) {
-            return color(d.data["05"]);})
+            return color(d.data["04"]);})
             .style("opacity", function(d) {
-                return opacity(d.data["05"])
-            }); */
-
-
-   var colorWalking= d3.scale.linear()
-                .domain([400, 1000])
-                .range(["Salmon", "IndianRed"]);
-
-    var colorTransit= d3.scale.linear()
-                .domain([400, 1000])
-                .range(["steelblue", "midnightblue"]);
-
-    var colorDriving= d3.scale.linear()
-                .domain([400, 1000])
-                .range(["gold", "darkorange"]);
-    // Add a opacity scale
-    var opacity =d3.scaleLinear()
-                .domain([400, 1000])
-                .range([.8,1])
+                return opacity(d.data["04"])
+            });
 
     // use this information to add rectangles:
     svg
@@ -187,11 +270,11 @@ function createTreeChart(data){
         .text(function(d){ 
             // Temporal: kurze Syntax und bessere Images
             if(d.data.transportation_type === "driving"){
-            return "🚘 " + d.data.transportation_type +" "+ d.data["05"]+"%"; }
+            return "🚘 " + d.data.transportation_type +" "+ d.data["12"]+"%"; }
          else if(d.data.transportation_type === "walking"){
-            return "🚶‍♀️ " + d.data.transportation_type +" "+ d.data["05"]+"%";
+            return "🚶‍♀️ " + d.data.transportation_type +" "+ d.data["12"]+"%";
         } else if(d.data.transportation_type === "transit") {
-            return "🚌 "+ d.data.transportation_type +" "+ d.data["05"]+"%";
+            return "🚌 "+ d.data.transportation_type +" "+ d.data["12"]+"%";
         }})
         .attr("font-size", "18px")
         .attr("fill", "white")
