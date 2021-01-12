@@ -117,79 +117,129 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+})({"scripts/mapGermany.js":[function(require,module,exports) {
+"use strict";
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LoadMap = LoadMap;
+var colorBackground, colorText, blHoovered; // `labelBlArray` stores the names of all the Bundesländer which are appended to the svg
 
-  return bundleURL;
-}
+var labelBlArray = []; // `clickedBlArray` stores the names of all the Bundesländer which have been selected via click
 
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+var clickedBlArray = [];
 
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
+function LoadMap() {
+  // Source http://opendatalab.de/projects/geojson-utilities/
+  d3.json('../src/data/bundeslaender.geojson').then(function (geojson) {
+    var width = 900;
+    var height = 500;
+    var svg = d3.select("#mapGermany").classed("svg-container", true).append("svg").attr("class", "map-germany") //.attr("preserveAspectRatio", "xMinYMin meet")
+    //.attr("viewBox", "0 0 600 400")
+    //.classed("svg-content-responsive", true)
+    .attr("id", "svgMap").attr("width", width).attr("height", height);
+    var projection = d3.geoMercator();
+    projection.fitSize([width, height], geojson);
+    var path = d3.geoPath().projection(projection);
+    var color = d3.scaleOrdinal(d3.schemeBlues[9].slice(2, 9));
+    var offset = geojson.offset;
+    svg.selectAll("path").data(geojson.features).enter().append("path").attr("d", path).attr("class", function (d) {
+      return d.properties.GEN;
+    }) // Sets the name of the Bundesland as the classname
+    .attr("fill", function (d, i) {
+      return color(i);
+    }).attr("stroke", "#FFF").attr("stroke-width", 0.5);
+    svg.append("g").selectAll("text").data(geojson.features).enter().append("text").attr("text-anchor", "middle").attr("font-size", 11).attr("id", function (d) {
+      return d.properties.GEN;
+    }) // Sets the name of the Bundesland as the ID
+    .attr("x", function (d) {
+      var bl = d.properties.GEN;
 
-  return '/';
-}
-
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
-
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
-  };
-
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
+      if (offset[bl] != undefined) {
+        return projection(offset[bl])[0];
       }
-    }
+    }).attr("y", function (d) {
+      var bl = d.properties.GEN;
+      if (offset[bl] != undefined) return projection(offset[bl])[1];
+    }).text(function (d) {
+      // Only fill the text if there is no text for the Bundesland yet
+      var textBool = false;
+      labelBlArray.forEach(function (bl) {
+        if (bl === d.properties.GEN || d.properties.GEN.includes("Bodensee")) {
+          textBool = true; // Bodensee needs to be mentioned explicitly
+        }
+      });
 
-    cssTimeout = null;
-  }, 50);
+      if (textBool === false) {
+        labelBlArray.push(d.properties.GEN);
+        return d.properties.GEN;
+      }
+    }).on("mouseover", highlightBl).on("mouseout", resetBlColor).on("click", clickEvent).style("cursor", "pointer");
+  }); // Hide map
+
+  document.getElementById('mapGermany').style.display = 'none';
 }
 
-module.exports = reloadCSS;
-},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"styles.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
+function highlightBl() {
+  // Get the name of the Bundesland currently hoovered over via the ID of the HTML element
+  blHoovered = d3.select(this)._groups[0][0].id; // The name of the Bundesland was given as a class name to each path and with its help gets filled now
 
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+  colorBackground = d3.select("." + blHoovered).attr("fill");
+  d3.select("." + blHoovered).attr("fill", "#009688");
+  colorText = d3.select(this).attr("fill");
+  d3.select(this).attr("fill", "white").attr("font-weight", "bold");
+}
+
+function resetBlColor() {
+  var _this = this;
+
+  // Check if the hovered over Bundesland was clicked
+  var isBlClicked = false;
+  clickedBlArray.forEach(function (bl) {
+    if (_this.id === bl) {
+      isBlClicked = true;
+    }
+  }); // If it wasn't clicked its color is reset
+
+  if (isBlClicked === false) {
+    d3.select("." + blHoovered).attr("fill", colorBackground);
+    d3.select(this).attr("fill", colorText).attr("font-weight", "normal");
+  }
+}
+
+function clickEvent() {
+  var clickedBl = d3.select(this)._groups[0][0].id; // Check if a Bundesland has already been clicked
+
+
+  var clickedBool = false;
+  clickedBlArray.forEach(function (bl) {
+    if (bl === clickedBl) {
+      clickedBool = true;
+    }
+  }); // If the clicked on Bundesland wasn't clicked before, it is marked and added to `clickedBlArray`
+
+  if (clickedBool === false & clickedBlArray.length <= 3) {
+    d3.select("." + d3.select(this)._groups[0][0].id).attr("fill", "#009688");
+    clickedBlArray.push(blHoovered); // Necessary to get the selected Bundesland in main.js
+
+    d3.select(this)._groups[0][0].classList.add('selected-bl');
+  }
+  /** If it has been clicked before the selection is revoked by changing the stroke coloring and removing the 
+  	Bundesland from the array.
+  */
+  else if (clickedBool === true) {
+      d3.select("." + d3.select(this)._groups[0][0].id).attr("stroke", "white").attr("fill", colorBackground).attr("stroke-width", 0.5);
+      var index = clickedBlArray.indexOf(clickedBl);
+      clickedBlArray.splice(index, 1); // Necessary to get the selected Bundesland in main.js
+
+      d3.select(this)._groups[0][0].classList.remove('selected-bl');
+    } // Alert when more when the user wants to select more than 4 Bundesländer. This would get too messy for the line chart.
+    else if (clickedBlArray.length == 4) {
+        alert("Du hast bereits 5 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.");
+      }
+}
+},{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -393,5 +443,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/styles.8986bff4.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/mapGermany.js"], null)
+//# sourceMappingURL=/mapGermany.2381c6f0.js.map

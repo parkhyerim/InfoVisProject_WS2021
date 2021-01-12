@@ -118,22 +118,26 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"scripts/datePicker.js":[function(require,module,exports) {
-function toggleDatePicker(event, cb) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ToggleDatePicker = ToggleDatePicker;
+exports.GetDateForFetch = GetDateForFetch;
+
+function ToggleDatePicker(event) {
+  console.log(event);
+
   if (!event.target.matches('#datePickerButton')) {
     var dropdowns = document.getElementsByClassName("dropdown");
-    var i;
 
-    for (i = 0; i < dropdowns.length; i++) {
+    for (var i = 0; i < dropdowns.length; i++) {
       var openDropdown = dropdowns[i];
 
       if (!openDropdown.classList.contains('hidden')) {
         openDropdown.classList.add('hidden');
       }
-    }
-
-    if (event.target.matches('.date')) {
-      datePicked(event.target.textContent);
-      cb();
     }
   } else {
     document.getElementById("dateDropdown").classList.toggle("hidden");
@@ -144,7 +148,7 @@ function datePicked(month) {
   document.getElementById('datePickerButton').textContent = month;
 }
 
-function getDateForFetch() {
+function GetDateForFetch() {
   switch (document.getElementById('datePickerButton').textContent) {
     case "März 2020":
       return ["2020-03-01", "2020-04-01"];
@@ -186,9 +190,6 @@ function getDateForFetch() {
       return ["2020-03-01", "2020-04-01"];
   }
 }
-
-exports.getDateForFetch = getDateForFetch;
-exports.toggleDatePicker = toggleDatePicker;
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -217,7 +218,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55374" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55201" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

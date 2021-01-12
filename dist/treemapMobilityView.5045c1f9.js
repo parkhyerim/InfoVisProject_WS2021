@@ -117,79 +117,176 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+})({"scripts/treemapMobilityView.js":[function(require,module,exports) {
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-  return bundleURL;
-}
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
-  return '/';
-}
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
+// the entry point for the Bundesländer select ('chekbox' in index.html)
+var checkboxes = document.getElementsByClassName('checkbox');
 
-function updateLink(link) {
-  var newLink = link.cloneNode();
+var _iterator = _createForOfIteratorHelper(checkboxes),
+    _step;
 
-  newLink.onload = function () {
-    link.remove();
+try {
+  var _loop3 = function _loop3() {
+    var checkbox = _step.value;
+    checkbox.addEventListener('change', function () {
+      if (this.checked) {
+        displaymobilitydata(checkbox.name);
+        console.log("Checked and the function is called");
+      } else {//  console.log("unchecked");
+      }
+    });
   };
 
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
+  for (_iterator.s(); !(_step = _iterator.n()).done;) {
+    _loop3();
   }
-
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-
-    cssTimeout = null;
-  }, 50);
+} catch (err) {
+  _iterator.e(err);
+} finally {
+  _iterator.f();
 }
 
-module.exports = reloadCSS;
-},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"styles.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
+function displaymobilitydata(param) {
+  // temporal: without checkbox selection, "Bavaria" is the default
+  if (param == null) var param = "Bavaria";
+  var mobilityData = [];
+  var temp = [];
+  d3.csv('../src/data/applemobilitytrends.csv').then(function (data) {
+    data.forEach(function (element) {
+      return temp.push(element);
+    });
+    temp.forEach(function (element) {
+      if (element.country == "Germany" && element["sub-region"] == "" && element["region"] == param) {
+        mobilityData.push(element);
+      }
+    });
+    console.log(data);
+    console.log(temp); //calculate average value for every month
 
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+    var _loop = function _loop(m) {
+      //since each month has a different number of days and the data has some gaps for two days we need to store the individual number of days each month in the variable div
+      var div = 0; // if clause to make the month valuefitting to the formatting in the dataset
+
+      if (m < 10) month = "0" + m;else month = m;
+
+      var _loop2 = function _loop2(d) {
+        // if clause to make the day value fitting to the formatting in the dataset
+        if (d < 10) day = "0" + d;else day = d; //format of the date stored in a variable
+
+        var s = "2020-" + month + "-" + day;
+        mobilityData.forEach(function (element) {
+          if (element[s] !== undefined && element[s] !== "") {
+            div++;
+            if (element[month] == null) element[month] = element[s];else {
+              element[month] = parseFloat(element[month]) + parseFloat(element[s]);
+            }
+          }
+        });
+      };
+
+      for (var d = 1; d < 32; d++) {
+        _loop2(d);
+      } //div needs to be divided by 16 since it gets count up in the forEach loop for all 16 German regions
+
+
+      div = div / 16;
+      mobilityData.forEach(function (element) {
+        element[month] = (parseFloat(element[month]) / div).toFixed(2);
+      });
+    };
+
+    for (var m = 1; m < 13; m++) {
+      _loop(m);
+    } //generate TreeChart from the provided Dateset
+
+
+    createTreeChart(mobilityData);
+  });
+}
+
+; //displaymobilitydata();
+
+function createTreeChart(data) {
+  //in case new treemap shall be loaded, the one before gets removed
+  d3.select("#treemapMobilitywrapper").select("svg").remove();
+  var margin = {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 40
+  },
+      width = 450 - margin.left - margin.right,
+      height = 450 - margin.top - margin.bottom;
+  var svg = d3.select("#treemapMobilitywrapper").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")"); //Group the data by "Germany", so our tree has a root node
+
+  var groupedData = data.reduce(function (k, v) {
+    k[v.country] = [].concat(_toConsumableArray(k[v.country] || []), [v]);
+    return k;
+  }, {}); //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes
+
+  var hgroup = d3.hierarchy(groupedData, function (d) {
+    return d.Germany;
+  }).sum(function (d) {
+    return d["12"];
+  }); // Then d3.treemap computes the position of each element of the hierarchy
+  // The coordinates are added to the root object above
+
+  var treemap = d3.treemap().size([width, height]).padding(4)(hgroup); // Determine the color of each field
+  // Explanation from https://stackoverflow.com/questions/42546344/how-to-apply-specific-colors-to-d3-js-map-based-on-data-values?rq=1
+
+  var color = d3.scale.linear().domain([400, 1000]).range(["Salmon", "IndianRed"]); // Add a opacity scale
+
+  var opacity = d3.scaleLinear().domain([400, 1000]).range([.4, 1]); // use this information to add rectangles:
+
+  svg.selectAll("rect").data(treemap.leaves()).enter().append("rect").attr("id", function (d) {
+    return d.id;
+  }).attr('x', function (d) {
+    return d.x0;
+  }).attr('y', function (d) {
+    return d.y0;
+  }).attr('width', function (d) {
+    return d.x1 - d.x0;
+  }).attr('height', function (d) {
+    return d.y1 - d.y0;
+  }).style("fill", function (d) {
+    return color(d.data["05"]);
+  }).style("opacity", function (d) {
+    return opacity(d.data["05"]);
+  }); // and to add the text labels
+
+  svg.selectAll("text").data(treemap.leaves()).enter().append("text").attr("x", function (d) {
+    return d.x0 + 20;
+  }) // +10 to adjust position (more right)
+  .attr("y", function (d) {
+    return d.y0 + 30;
+  }) // +20 to adjust position (lower)
+  .text(function (d) {
+    // Temporal: kurze Syntax und bessere Images
+    if (d.data.transportation_type === "driving") {
+      return "🚘 " + d.data.transportation_type + " " + d.data["05"] + "%";
+    } else if (d.data.transportation_type === "walking") {
+      return "🚶‍♀️ " + d.data.transportation_type + " " + d.data["05"] + "%";
+    } else if (d.data.transportation_type === "transit") {
+      return "🚌 " + d.data.transportation_type + " " + d.data["05"] + "%";
+    }
+  }).attr("font-size", "18px").attr("fill", "white");
+}
+
+exports.displaymobilitydata = displaymobilitydata;
+},{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -393,5 +490,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/styles.8986bff4.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/treemapMobilityView.js"], null)
+//# sourceMappingURL=/treemapMobilityView.5045c1f9.js.map

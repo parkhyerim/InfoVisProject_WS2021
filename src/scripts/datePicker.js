@@ -1,5 +1,5 @@
-export function ToggleDatePicker(event, updateChart) {
-
+export function ToggleDatePicker(event) {
+   console.log(event);
   if (!event.target.matches('#datePickerButton')) {
     const dropdowns = document.getElementsByClassName("dropdown");
     for (let i = 0; i < dropdowns.length; i++) {
@@ -7,10 +7,6 @@ export function ToggleDatePicker(event, updateChart) {
       if (!openDropdown.classList.contains('hidden')) {
         openDropdown.classList.add('hidden');
       }
-    }
-    if(event.target.matches('.date')){
-      datePicked(event.target.textContent);
-      updateChart();
     }
 
   } else {
@@ -25,7 +21,6 @@ function datePicked(month){
 }
 
 export function GetDateForFetch(){
-
   switch (document.getElementById('datePickerButton').textContent) {
     case "März 2020":
       return ["2020-03-01", "2020-04-01"]
@@ -54,4 +49,5 @@ export function GetDateForFetch(){
     default:
       return ["2020-03-01", "2020-04-01"]
   }
+
 }

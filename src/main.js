@@ -4,6 +4,9 @@ import { LoadMap } from './scripts/mapGermany.js';
 
 const mapButton = document.getElementById('mapButton');
 const datePickerButton = document.getElementById('datePickerButton');
+const dateButton = document.getElementsByClassName('date');
+var selectedBL = [];
+var checked;
 
 
 function InitialiseEvents(){
@@ -14,12 +17,28 @@ function InitialiseEvents(){
     // Adds and event listener to the Bundesländer Button
     eventListenerMap();
 
-    // Can't be used like this anymore, because there are several onclicks
-    window.onclick = function(event) {
-        ToggleDatePicker(event, updateLineChart);
-    }
+    //Adds event listener on datePickerButton and each droopdown DateButton element
+    eventListenerDatePicker();
+
+      
 }
 
+function eventListenerDatePicker() {
+  datePickerButton.addEventListener('click', () => {
+    document.getElementById("dateDropdown").classList.toggle("hidden");
+  } 
+  );
+  Array.prototype.forEach.call(dateButton, function(date){
+    date.addEventListener('click', ()=> {
+      datePickerButton.textContent = date.textContent;
+      date.classList.add("selectedDate");
+      selectedBL.forEach((bl) => {
+        updateLineChart(bl);
+      })
+    })
+
+  });
+}
 
 function eventListenerMap(){
     let mapButtonClicked = true;
@@ -44,7 +63,7 @@ function eventListenerMap(){
 
 function visualizeSelectedBl(){
     const mapSelectedBl = document.getElementsByTagName('text');
-
+    console.log(selectedBL);
         /** MutationObserver looks at all the html text elements and has a look if their
             attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
             has been selected in the map
@@ -52,13 +71,16 @@ function visualizeSelectedBl(){
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if(mutation.attributeName === 'class'){
-                    let checked;
+                   
                     if(mutation.target.classList[0] === 'selected-bl'){
                         checked = true;
-                    } else {
+                    } else if(mutation.target.classList[0] ==='date'){
+                      console.log("datePicked");
+                    }else {
                         checked = false;
                     } 
-                    updateLineChart(mutation.target.id, checked)            
+                    selectedBL.push(mutation.target.id);
+                    updateLineChart(mutation.target.id)            
                 }
             })  
         }) 
@@ -69,7 +91,7 @@ function visualizeSelectedBl(){
     }
 }
 
-function updateLineChart(bl, checked){
+function updateLineChart(bl){
     /** Adds the curve for the selected Bundesland to the line chart
         `checked` indicates if the mutated element was a Bundesland selected on the map.
         It is `false` if another element mutated somehow.

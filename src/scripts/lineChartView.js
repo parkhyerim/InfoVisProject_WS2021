@@ -1,5 +1,6 @@
 let svg, xAxis, yAxis;
 const blDomainStorage = [];
+var currentMonth; 
 
 const margin = {top:10, right: 30, bottom: 60, left: 60},
   width = 800 - margin.left - margin.right,
@@ -9,18 +10,33 @@ const margin = {top:10, right: 30, bottom: 60, left: 60},
   and visualises the chosen Bundesland.
 */
 export function VisualiseChosenBL(selectedBl, checked, selectedMonth){      
-    
   let foundBL = false;
+  let foundMonth = false;
+  console.log(selectedBl);
   blDomainStorage.forEach(arr => {
-    if(selectedBl == arr[0]) foundBL = true;
+    if(selectedBl == arr[0]){
+      foundBL = true;
+      
+    } 
   })
-  
-  // Checks if Bundesland is newly checked or if it already exists in blDomainStorage
-  if(foundBL == false){
+  if(selectedMonth == currentMonth) {
+    foundMonth = true;
+    currentMonth = selectedMonth;
+  }
 
+  // Checks if Bundesland is newly checked or if it already exists in blDomainStorage
+  if(foundBL == false || foundMonth == false){
+    console.log("In LineChart");
+    if(foundBL ==true){
+      blDomainStorage.forEach((arr, i) => {
+        if(arr[0] == selectedBl) {
+         blDomainStorage.splice(i,1)
+        }
+      })
+    }
+ 
     // Fetching the data of the newly selected Bundesland
     fetchData(selectedBl, selectedMonth).then((data) => {
-
       // To figure out the max y-value which is necessary to correctly display the data
       const neededYValue = d3.scaleLinear().domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
 
@@ -36,7 +52,9 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
         more Covid cases and therefore needs a higher y-value the current axes are removed 
         and the updated ones are added.
       */
+    
       if(blDomainStorage.length == 0 || blDomainStorage[blDomainStorage.length-1][1] < neededYValue.domain()[1]){
+        console.log(blDomainStorage);
         svg.select(".y-axis").remove(); // instead of deleting they should be updated,
         svg.select(".x-axis").remove(); // but that seems more complicated
         svg.select(".case-line").remove(); //removes existing vertical line
@@ -52,7 +70,7 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
       */
       const blClassN = data[0].Infos.Bundesland
       visualiseCurve(svg, data, xAxis, yAxis, blClassN, "turquoise");
-        
+
       // Circles of the already displayed Bundesländer are updated according to the new axis. 
       updateExistingCurvesCircles(blDomainStorage);
     })
@@ -86,7 +104,6 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
           svg.select(".y-axis").remove(); 
           svg.select(".x-axis").remove(); 
           svg.select(".case-line").remove(); //removes existing vertical line
-
           addAxes(data)
           updateExistingCurvesCircles(blDomainStorage);            
         }) 
@@ -128,6 +145,7 @@ function fetchData(bundesland, selectedMonth){
             feed.forEach(elem => {
               casesData.push(elem.attributes);
             });
+
             return groupDataByDate(casesData)
         });
 };
