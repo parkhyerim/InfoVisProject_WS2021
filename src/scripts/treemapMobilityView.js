@@ -233,31 +233,12 @@ function createTreeChart(data){
         .attr('width', function (d) { return d.x1 - d.x0; })
         .attr('height', function (d) { return d.y1 - d.y0})
         .style("fill", function(d) {
-            return color(d.data["04"]);})
+            return color(d.data["05"]);})
             .style("opacity", function(d) {
-                return opacity(d.data["04"])
+                return opacity(d.data["05"])
             });
 
-    // use this information to add rectangles:
-    svg
-        .selectAll("rect")
-        .data(treemap.leaves())
-        .enter()
-        .append("rect")
-        .attr("id", (d) =>{return d.id;})
-        .attr('x', function (d) { return d.x0; })
-        .attr('y', function (d) { return d.y0})
-        .attr('width', function (d) { return d.x1 - d.x0; })
-        .attr('height', function (d) { return d.y1 - d.y0})
-        .style("fill", function(d) {
-            if(d.data.transportation_type === "driving"){
-                return colorDriving(d.data["05"])}
-            else if(d.data.transportation_type === "walking"){
-                return colorWalking(d.data["05"])}
-            else if(d.data.transportation_type === "transit") {
-                return colorTransit(d.data["05"])}})
-        .style("opacity", function(d){ return opacity(d.data["05"])});
-
+   
         
     // and to add the text labels
     svg
@@ -270,11 +251,11 @@ function createTreeChart(data){
         .text(function(d){ 
             // Temporal: kurze Syntax und bessere Images
             if(d.data.transportation_type === "driving"){
-            return "🚘 " + d.data.transportation_type +" "+ d.data["12"]+"%"; }
+            return "🚘 " + d.data.transportation_type +" "+ d.data["05"]+"%"; }
          else if(d.data.transportation_type === "walking"){
-            return "🚶‍♀️ " + d.data.transportation_type +" "+ d.data["12"]+"%";
+            return "🚶‍♀️ " + d.data.transportation_type +" "+ d.data["05"]+"%";
         } else if(d.data.transportation_type === "transit") {
-            return "🚌 "+ d.data.transportation_type +" "+ d.data["12"]+"%";
+            return "🚌 "+ d.data.transportation_type +" "+ d.data["05"]+"%";
         }})
         .attr("font-size", "18px")
         .attr("fill", "white")
