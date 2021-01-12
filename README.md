@@ -21,12 +21,12 @@ Slider zur Auswahl angezeigter Monate
 Interaktive Treemap mit Mobilitätsdaten
 Auswahl versch. Bundesländer per Mausklick
 
-# Meilenstein 4:
+## Meilenstein 4:
 Flick auf Marker im Corona-Fallzahlen Diagramm Pop-Up mit Zahlen einzelner Bundesländer
 
 # Features
-## Feature 1: interaktive Landkarte
-Es wird zunächst ein Button "Bundesländer" angezeigt". Beim klicken dieses Buttons öffnet sich die Landkarte von Deutschland mit den 16 Bundesländern. Es können bis zu 4 Bundesländer ausgewählt werden. Die ausgewählten Bundesländer ändern ihre Farbe. 
+## Feature 1: Interaktive Landkarte
+Es wird zunächst ein Button "Bundesländer" angezeigt". Beim klicken dieses Buttons öffnet sich eine Landkarte von Deutschland mit den 16 Bundesländern. Es können bis zu 4 Bundesländer ausgewählt werden. Die ausgewählten Bundesländer ändern ihre Farbe. 
 
 ## Feature 2: Auswahl des Monats 
 An der linken Seite ist Drop Down Menü, welches die Auswahl eines Monats ermöglicht.
