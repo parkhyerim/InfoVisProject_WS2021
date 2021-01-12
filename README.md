@@ -23,3 +23,16 @@ Auswahl versch. Bundesländer per Mausklick
 
 # Meilenstein 4:
 Flick auf Marker im Corona-Fallzahlen Diagramm Pop-Up mit Zahlen einzelner Bundesländer
+
+# Features
+## Feature 1: interaktive Landkarte
+Es wird zunächst ein Button "Bundesländer" angezeigt". Beim klicken dieses Buttons öffnet sich die Landkarte von Deutschland mit den 16 Bundesländern. Es können bis zu 4 Bundesländer ausgewählt werden. Die ausgewählten Bundesländer ändern ihre Farbe. 
+
+## Feature 2: Auswahl des Monats 
+An der linken Seite ist Drop Down Menü, welches die Auswahl eines Monats ermöglicht.
+
+## Feature 3: Line Chart
+Basierend auf der Auswahl des/der Bundesland/Bundesländer wird eine Line Chart abgebildet. Die Line Chart zeigt den Verlauf der COVID-19 Erkrankten für den entsprechenden Zeitraum und die entsprechende Region.
+
+## Feature 4: Treemap
+Parallel dazu zeigt eine Treemap die Mobilität (unterteilt in Driving, Walking, Transit) der entsprechenden Bundesländer an. 
