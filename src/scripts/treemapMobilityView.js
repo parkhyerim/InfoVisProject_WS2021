@@ -1,10 +1,29 @@
-function displaymobilitydata(param="driving"){
+// the entry point for the Bundesländer select ('chekbox' in index.html)
+const checkboxes = document.getElementsByClassName('checkbox')
+for (let checkbox of checkboxes){
+  checkbox.addEventListener('change', function() {
+      if(this.checked){
+        displaymobilitydata(checkbox.name)
+        console.log("Checked and the function is called");
+      } else {
+        //  console.log("unchecked");
+      }
+  }) 
+}
+
+function displaymobilitydata(param){
+    // temporal: without checkbox selection, "Bavaria" is the default
+    if(param ==null) var param = "Bavaria";
     let mobilityData = [];
     var temp = [];
     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
         data.forEach(element => temp.push(element));
         temp.forEach(function(element) {
-            if (element.country == "Germany" && element["sub-region"] == "" && element["transportation_type"]==param) mobilityData.push(element);
+            if (element.country == "Germany" && 
+            element["sub-region"] == "" && 
+            element["region"]==param) {
+                mobilityData.push(element);
+            }
         });
         console.log(data);
         console.log(temp);
@@ -30,7 +49,8 @@ function displaymobilitydata(param="driving"){
                 mobilityData.forEach(function(element){
                     if (element[s] !== undefined && element[s] !== "") {
                         div++;
-                        if (element[month]== null) element[month]= element[s];
+                        if (element[month]== null) 
+                        element[month]= element[s];
 
                         else {element[month]= parseFloat(element[month]) + parseFloat(element[s]);}
                     }
@@ -55,18 +75,18 @@ function displaymobilitydata(param="driving"){
 function createTreeChart(data){
 
     //in case new treemap shall be loaded, the one before gets removed
-    d3.select("#treemapwrapper").select("svg").remove();
+    d3.select("#treemapMobilitywrapper").select("svg").remove();
 
-    var margin = {top: 20, right: 30, bottom: 30, left: 40},
-        width = 800 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+        width = 450 - margin.left - margin.right,
+        height = 450 - margin.top - margin.bottom;
 
-    var svg = d3.select("#treemapwrapper")
+    var svg = d3.select("#treemapMobilitywrapper")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("transform", "translate(" +margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     //Group the data by "Germany", so our tree has a root node
     let groupedData = data.reduce((k, v)=> {
@@ -76,7 +96,9 @@ function createTreeChart(data){
 
 
     //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes
-    var hgroup = d3.hierarchy(groupedData, function(d){return d.Germany})
+    var hgroup = d3.hierarchy(groupedData, function(d){
+                                return d.Germany}
+                                )
         .sum((d) => {return d["12"]});
 
     // Then d3.treemap computes the position of each element of the hierarchy
@@ -89,7 +111,14 @@ function createTreeChart(data){
 
     // Determine the color of each field
     // Explanation from https://stackoverflow.com/questions/42546344/how-to-apply-specific-colors-to-d3-js-map-based-on-data-values?rq=1
-    var color= d3.scale.linear().domain([70, 100]).range(["blue", "green"]);
+    var color= d3.scale.linear()
+                .domain([400, 1000])
+                .range(["Salmon", "IndianRed"]);
+
+    // Add a opacity scale
+    var opacity =d3.scaleLinear()
+                .domain([400, 1000])
+                .range([.4,1])
 
     // use this information to add rectangles:
     svg
@@ -103,7 +132,10 @@ function createTreeChart(data){
         .attr('width', function (d) { return d.x1 - d.x0; })
         .attr('height', function (d) { return d.y1 - d.y0})
         .style("fill", function(d) {
-            return color(d.data["05"]);});
+            return color(d.data["05"]);})
+            .style("opacity", function(d) {
+                return opacity(d.data["05"])
+            });
 
     // and to add the text labels
     svg
@@ -113,8 +145,16 @@ function createTreeChart(data){
         .append("text")
         .attr("x", function(d){ return d.x0+20})    // +10 to adjust position (more right)
         .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
-        .text(function(d){ return d.data.region +""+ d.data["05"]+"%"})
-        .attr("font-size", "16px")
+        .text(function(d){ 
+            // Temporal: kurze Syntax und bessere Images
+            if(d.data.transportation_type === "driving"){
+            return "🚘 " + d.data.transportation_type +" "+ d.data["05"]+"%"; }
+         else if(d.data.transportation_type === "walking"){
+            return "🚶‍♀️ " + d.data.transportation_type +" "+ d.data["05"]+"%";
+        } else if(d.data.transportation_type === "transit") {
+            return "🚌 "+ d.data.transportation_type +" "+ d.data["05"]+"%";
+        }})
+        .attr("font-size", "18px")
         .attr("fill", "white")
 }
 
