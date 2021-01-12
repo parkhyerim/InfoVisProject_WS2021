@@ -22,7 +22,11 @@ Interaktive Treemap mit Mobilitätsdaten
 Auswahl versch. Bundesländer per Mausklick
 
 ## Meilenstein 4:
-Flick auf Marker im Corona-Fallzahlen Diagramm Pop-Up mit Zahlen einzelner Bundesländer
+Treemap fertigstellen
+Styling anpassen
+Line-Chart: Achsen Label, Beschriftung der Linien anpassen, verschiedene Farben pro Linie
+Pop Ups mit Informationen
+
 
 # Features
 ## Feature 1: Interaktive Landkarte
@@ -36,3 +40,6 @@ Basierend auf der Auswahl des/der Bundesland/Bundesländer wird eine Line Chart 
 
 ## Feature 4: Treemap
 Parallel dazu zeigt eine Treemap die Mobilität (unterteilt in Driving, Walking, Transit) der entsprechenden Bundesländer an. 
+
+## Zusätzliche Features: 
+Ziel ist es, dass die Treemap mehrere Bundesländer (bis zu 4) abbilden kann. Die Intensität der Ausprägung wird durch eine Farbcodierung gesteuert. Darüber hinaus werden Pop Up Menüs hinzugefügt, die weitere informationen (zur Line Chart sowie zur Treemap) liefern. Optional wird eine zweite Darstellungsform der Treemap abgebildet. 
