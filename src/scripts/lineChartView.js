@@ -1,23 +1,23 @@
 let svg, xAxis, yAxis;
 const blDomainStorage = [];
-var currentMonth; 
+var currentMonth;
 
 const margin = {top:10, right: 30, bottom: 60, left: 60},
   width = 800 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
-/** Saves the checked Bundesländer to the array `blDomainStorage` 
+/** Saves the checked Bundesländer to the array `blDomainStorage`
   and visualises the chosen Bundesland.
 */
-export function VisualiseChosenBL(selectedBl, checked, selectedMonth){      
+export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
   let foundBL = false;
   let foundMonth = false;
   console.log(selectedBl);
   blDomainStorage.forEach(arr => {
     if(selectedBl == arr[0]){
       foundBL = true;
-      
-    } 
+
+    }
   })
   if(selectedMonth == currentMonth) {
     foundMonth = true;
@@ -33,7 +33,7 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
         }
       })
     }
- 
+
     // Fetching the data of the newly selected Bundesland
     fetchData(selectedBl, selectedMonth).then((data) => {
       // To figure out the max y-value which is necessary to correctly display the data
@@ -48,10 +48,10 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
 
       /** Checks whether the last Bundesland in `blDomainStorage` still obtains the highest needed
         y-value compared to the newly selected Bundesland. If the newly checked Bundesland has
-        more Covid cases and therefore needs a higher y-value the current axes are removed 
+        more Covid cases and therefore needs a higher y-value the current axes are removed
         and the updated ones are added.
       */
-    
+
       if(blDomainStorage.length == 0 || blDomainStorage[blDomainStorage.length-1][1] < neededYValue.domain()[1]){
         console.log(blDomainStorage);
         svg.select(".y-axis").remove(); // instead of deleting they should be updated,
@@ -59,9 +59,9 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
         svg.select(".case-line").remove(); //removes existing vertical line
         addAxes(data);
       }
-    
+
       // Stores the Bundesland and the highest y-value needed for that Bundesland
-      blDomainStorage.push([data[0].Infos.Bundesland, neededYValue.domain()[1]]);   
+      blDomainStorage.push([data[0].Infos.Bundesland, neededYValue.domain()[1]]);
 
       /** The curve of the newly selected Bundesland is added.
         `blClassN` is necessary to give each curve a distinguishable class name.
@@ -70,10 +70,10 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
       const blClassN = data[0].Infos.Bundesland
       visualiseCurve(svg, data, xAxis, yAxis, blClassN, "turquoise");
 
-      // Circles of the already displayed Bundesländer are updated according to the new axis. 
+      // Circles of the already displayed Bundesländer are updated according to the new axis.
       updateExistingCurvesCircles(blDomainStorage);
     })
-    
+
   } else if(!checked && foundBL == true) { // If Bundesland isn't selected but found in `blDomainStorage`
 
       // Removes the curve and circles of the recently unselected Bundesland.
@@ -81,7 +81,7 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
       svg.selectAll(".circles."+selectedBl).remove();
 
      /** Sorts the array in increasing order.
-        The Bundesland with the smallest needed y-value comes first and the one with the 
+        The Bundesland with the smallest needed y-value comes first and the one with the
         highest comes last.
       */
       blDomainStorage.sort((a,b) => {
@@ -95,18 +95,18 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
         }
       })
 
-      /** Updates the axes, the existing curves and circles if the highest needed y-value 
+      /** Updates the axes, the existing curves and circles if the highest needed y-value
         has changed after unselecting a Bundesland
       */
       if(yAxis.domain()[1] > blDomainStorage[blDomainStorage.length-1][1]){
         fetchData(blDomainStorage[blDomainStorage.length-1][0], selectedMonth).then((data) => {
-          svg.select(".y-axis").remove(); 
-          svg.select(".x-axis").remove(); 
+          svg.select(".y-axis").remove();
+          svg.select(".x-axis").remove();
           svg.select(".case-line").remove(); //removes existing vertical line
           addAxes(data)
-          updateExistingCurvesCircles(blDomainStorage);            
-        }) 
-      } 
+          updateExistingCurvesCircles(blDomainStorage);
+        })
+      }
     }
 }
 
@@ -114,13 +114,13 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
 export function InitializeSVG(){
   svg = d3.select("#lineChartContainer")
           .append("div")
-          .classed("svg-container", true) 
+          .classed("svg-container", true)
           .append("svg")
           .attr("preserveAspectRatio", "xMinYMin meet")
           .attr("viewBox", "0 0 600 400")
           .classed("svg-content-responsive", true)
           .append("g")
-          .attr("transform", `translate(${margin.left}, ${margin.top})`);             
+          .attr("transform", `translate(${margin.left}, ${margin.top})`);
 }
 
 
@@ -149,38 +149,38 @@ function fetchData(bundesland, selectedMonth){
         });
 };
 
-  
+
 /** Groups the received data by date. After the grouping the data is sorted
   datewise and returned as an array
 */
 function groupDataByDate(casesData){
-  /** `dataEntries` is a new object and `currentValue` is the item of the array 
+  /** `dataEntries` is a new object and `currentValue` is the item of the array
     currently looked at
   */
   const groupedReport = casesData.reduce((dataEntries, currentValue) => {
     let day = new Date(currentValue['Meldedatum']);
-    
-    /** Within the first iteration of `reduce` `dataEntries` is undefined. 
+
+    /** Within the first iteration of `reduce` `dataEntries` is undefined.
       Consequently a new object entry with the `Meldedatum` as the key is being added to
-      `dataEntries`. Further information (Bundesland, IdBundesland, AnzahlFall) 
-      are added as a value.       
+      `dataEntries`. Further information (Bundesland, IdBundesland, AnzahlFall)
+      are added as a value.
     */
     if(dataEntries[day] !== undefined){
       /** If a key with the `Meldedatum` already exists the number of cases are
         summed up.
       */
-      dataEntries[day].AnzahlFall = dataEntries[day].AnzahlFall + currentValue.AnzahlFall;  
+      dataEntries[day].AnzahlFall = dataEntries[day].AnzahlFall + currentValue.AnzahlFall;
     } else {
       dataEntries[day] = {
         Bundesland: currentValue.Bundesland,
         IdBundesland: currentValue.IdBundesland,
         AnzahlFall: currentValue.AnzahlFall
-      };  
-    }        
+      };
+    }
     return dataEntries
   },{})
 
-  // `dataEntries` gets transformed into an array so it can be easily sorted by date  
+  // `dataEntries` gets transformed into an array so it can be easily sorted by date
   let reportArr = [];
   Object.entries(groupedReport).forEach(([key, value]) => {
     reportArr.push({Meldedatum: key, Infos: value})
@@ -192,8 +192,8 @@ function groupDataByDate(casesData){
 
 
 function addAxes(data){
-  /** The next 7 lines initialize and format the labels of the xAxis nicely.    
-    If there are too less dates will be repeated on the x-axis. To avoid that we have to create a function 
+  /** The next 7 lines initialize and format the labels of the xAxis nicely.
+    If there are too less dates will be repeated on the x-axis. To avoid that we have to create a function
     for that edge case and work with xa.tickValues to set the labels manually.
     xA.tickValues([new Date(data[0].Meldedatum), new Date(data[1].Meldedatum), new Date(data[2].Meldedatum)])
   */
@@ -204,14 +204,14 @@ function addAxes(data){
   xA.tickSizeOuter(0); // removes the last tick on the xAxis
   const parseDate = d3.timeFormat("%B %d, %Y") //https://d3-wiki.readthedocs.io/zh_CN/master/Time-Scales/
   xA.tickFormat(d => parseDate(d));
- 
+
   // Appends the xAxis
   svg.append("g")
       .attr("transform", `translate(0, ${height})`)
       .attr("class", "x-axis")
       .call(xA)
       .selectAll("text")
-      .attr("transform", "rotate(330)") //rotates the labels of the x axis by 
+      .attr("transform", "rotate(330)") //rotates the labels of the x axis by
       .style("text-anchor", "end"); //makes sure that the end of the text string is anchored to the ticks
 
   // Initializes and formats the yAxis
@@ -219,7 +219,7 @@ function addAxes(data){
       .domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
       .range([height, 0])
       .nice(); //without that the highest tick of the y axis wouldn't be labelled
-  
+
   // Appends the yAxis
   svg.append("g")
       .call(d3.axisLeft(yAxis))
@@ -267,9 +267,9 @@ function appendVerticalLine(svg, xAxis, date, height){
 
   svg.append("line")
     .attr("class", "case-line")
-    .attr("x1", xAxis(date))  
+    .attr("x1", xAxis(date))
     .attr("y1", 0)
-    .attr("x2", xAxis(date))  
+    .attr("x2", xAxis(date))
     .attr("y2", height)
     .style("stroke-width", 1)
     .style("stroke", "darkblue")
