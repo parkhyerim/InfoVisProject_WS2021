@@ -39,7 +39,7 @@ function displaymobilitydata(param){
 
         //calculate average value for every month
         for (let m=1; m<13; m++){
-
+            
             //since each month has a different number of days and the data has some gaps for two days we need to store the individual number of days each month in the variable div
             let divider = 0;
 
@@ -75,13 +75,13 @@ function displaymobilitydata(param){
                                 janSum += parseFloat(element[ymd])
                                 janResult = janSum/counter
                                 element[month] = janResult.toFixed(2)
-                                console.log(ymd + " " + "sum: " + parseFloat(janSum) + " counter: " + counter + " result: " + janResult)
+                                //console.log(ymd + " " + "sum: " + parseFloat(janSum) + " counter: " + counter + " result: " + janResult)
                                 break;
                             case "02":
                                 febSum += parseFloat(element[ymd])
                                 feb = febSum /counter
                                 element[month] = feb.toFixed(2)
-                                console.log(ymd + " " + "sum: " + parseFloat(febSum)  + " counter: " + counter + " result: " + feb)
+                               // console.log(ymd + " " + "sum: " + parseFloat(febSum)  + " counter: " + counter + " result: " + feb)
                                 break;
                             case "03":
                                 marSum += parseFloat(element[ymd])
@@ -93,7 +93,7 @@ function displaymobilitydata(param){
                                 aprSum += parseFloat(element[ymd])
                                 apr = aprSum /counter
                                 element[month] = apr.toFixed(2)
-                                console.log(ymd + " " + "sum: " + parseFloat(aprSum)  + " counter: " + counter + " result: " + apr)
+                               // console.log(ymd + " " + "sum: " + parseFloat(aprSum)  + " counter: " + counter + " result: " + apr)
                                 break;
                             case "05":
                                 maySum += parseFloat(element[ymd])
@@ -105,7 +105,7 @@ function displaymobilitydata(param){
                                 junSum += parseFloat(element[ymd])
                                 jun = junSum /counter
                                 element[month] = jun.toFixed(2)
-                                console.log(ymd + " " + "sum: " + parseFloat(junSum)  + " counter: " + counter + " result: " + jun)
+                              //  console.log(ymd + " " + "sum: " + parseFloat(junSum)  + " counter: " + counter + " result: " + jun)
                                 break;
                             case "07":
                                 julSum += parseFloat(element[ymd])
@@ -117,31 +117,31 @@ function displaymobilitydata(param){
                                 augSum += parseFloat(element[ymd])
                                 aug = augSum /counter
                                 element[month] = aug.toFixed(2)
-                                console.log(ymd + " " + "sum: " + parseFloat(augSum)  + " counter: " + counter + " result: " + aug)
+                              //  console.log(ymd + " " + "sum: " + parseFloat(augSum)  + " counter: " + counter + " result: " + aug)
                                 break;
                             case "09":
                                 sepSum += parseFloat(element[ymd])
                                 sep = sepSum /counter
                                 element[month] = sep.toFixed(2)
-                                console.log(ymd + " " + "sum: " + parseFloat(sepSum)  + " counter: " + counter + " result: " + sep)
+                             ///   console.log(ymd + " " + "sum: " + parseFloat(sepSum)  + " counter: " + counter + " result: " + sep)
                                 break;
                             case 10:    
                                 octSum += parseFloat(element[ymd])
                                 oct = octSum /counter
                                 element[month] = oct.toFixed(2)
-                                console.log(ymd + " " + "sum: " + parseFloat(octSum)  + " counter: " + counter + " result: " + oct)
+                               // console.log(ymd + " " + "sum: " + parseFloat(octSum)  + " counter: " + counter + " result: " + oct)
                                 break;
                             case 11:
                                 novSum += parseFloat(element[ymd])
                                 nov = novSum /counter
                                 element[month] = nov.toFixed(2)
-                                console.log(ymd + " " + "sum: " + parseFloat(novSum)  + " counter: " + counter + " result: " + nov)
+                              //  console.log(ymd + " " + "sum: " + parseFloat(novSum)  + " counter: " + counter + " result: " + nov)
                                 break;
                             case 12:
                                 decSum += parseFloat(element[ymd])
                                 dec = decSum /counter
                                 element[month] = dec.toFixed(2)
-                                console.log(ymd + " " + "sum: " + parseFloat(decSum)  + " counter: " + counter + " result: " + dec)
+                              //  console.log(ymd + " " + "sum: " + parseFloat(decSum)  + " counter: " + counter + " result: " + dec)
                                 break;
                             default:
 
@@ -156,10 +156,10 @@ function displaymobilitydata(param){
         //generate TreeChart from the provided Dateset
        // console.log(mobilityData)    
         let mobilityDataPerMonth = mobilityData;
-        console.log(mobilityDataPerMonth)   
+        /* console.log(mobilityDataPerMonth)   
         console.log(mobilityDataPerMonth[1][5]) 
         console.log(mobilityDataPerMonth[0][5]) 
-        console.log(mobilityDataPerMonth[2][5]) 
+        console.log(mobilityDataPerMonth[2][5])  */
        // generateHierarchy(mobilityDataPerMonth)
        createTreeChart(mobilityData)
     });
@@ -167,9 +167,6 @@ function displaymobilitydata(param){
 
 // displaymobilitydata();
 
-function generateHierarchy(data){
-
-}
 
 
 function createTreeChart(data){
@@ -189,17 +186,24 @@ function createTreeChart(data){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     //Group the data by "Germany", so our tree has a root node
-    let groupedData = data.reduce((k, v)=> {
+   /*  let groupedData = data.reduce((k, v)=> {
         k[v.country] = [...k[v.country] || [], v];
         return k;
-        }, {});
+        }, {}); */
+    //Group the data by country and by region, so our tree has a root node
+        let groupedData = data.reduce((c, v) => {
+            c[v.country] = c[v.country] || {};                         //Init if country property does not exist
+            c[v.country][v.region] = c[v.country][v.region] || {};   //Init if region property does not exist
+            return c;
+          }, {});
+          console.log(groupedData);
 
 
     //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes)
     var hgroup = d3.hierarchy(groupedData, function(d){
                                 return d.Germany}
                                 )
-        .sum((d) => {return d["12"]});
+        .sum((d) => {return d["05"]});
 
     // Then d3.treemap computes the position of each element of the hierarchy
     // The coordinates are added to the root object above
