@@ -123,30 +123,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ToggleDatePicker = ToggleDatePicker;
 exports.GetDateForFetch = GetDateForFetch;
-
-function ToggleDatePicker(event) {
-  console.log(event);
-
-  if (!event.target.matches('#datePickerButton')) {
-    var dropdowns = document.getElementsByClassName("dropdown");
-
-    for (var i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-
-      if (!openDropdown.classList.contains('hidden')) {
-        openDropdown.classList.add('hidden');
-      }
-    }
-  } else {
-    document.getElementById("dateDropdown").classList.toggle("hidden");
-  }
-}
-
-function datePicked(month) {
-  document.getElementById('datePickerButton').textContent = month;
-}
 
 function GetDateForFetch() {
   switch (document.getElementById('datePickerButton').textContent) {

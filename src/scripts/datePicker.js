@@ -1,24 +1,5 @@
-export function ToggleDatePicker(event) {
-   console.log(event);
-  if (!event.target.matches('#datePickerButton')) {
-    const dropdowns = document.getElementsByClassName("dropdown");
-    for (let i = 0; i < dropdowns.length; i++) {
-      let openDropdown = dropdowns[i];
-      if (!openDropdown.classList.contains('hidden')) {
-        openDropdown.classList.add('hidden');
-      }
-    }
-
-  } else {
-    document.getElementById("dateDropdown").classList.toggle("hidden");
-  }
-
-}
 
 
-function datePicked(month){
-  document.getElementById('datePickerButton').textContent = month;
-}
 
 export function GetDateForFetch(){
   switch (document.getElementById('datePickerButton').textContent) {

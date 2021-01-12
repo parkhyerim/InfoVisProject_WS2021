@@ -1,5 +1,5 @@
 import { InitializeSVG, VisualiseChosenBL } from './scripts/lineChartView.js';
-import { ToggleDatePicker, GetDateForFetch } from './scripts/datePicker.js';
+import { GetDateForFetch } from './scripts/datePicker.js';
 import { LoadMap } from './scripts/mapGermany.js';
 
 const mapButton = document.getElementById('mapButton');
@@ -24,14 +24,17 @@ function InitialiseEvents(){
 }
 
 function eventListenerDatePicker() {
+  //toggle date picker dropdown
   datePickerButton.addEventListener('click', () => {
     document.getElementById("dateDropdown").classList.toggle("hidden");
-  } 
+    } 
   );
+  //adds an event listener for every Date in the Dropdown
   Array.prototype.forEach.call(dateButton, function(date){
     date.addEventListener('click', ()=> {
       datePickerButton.textContent = date.textContent;
       date.classList.add("selectedDate");
+      //when date is selected: update lineChart for every checked BL in the map
       selectedBL.forEach((bl) => {
         updateLineChart(bl);
       })
@@ -74,12 +77,14 @@ function visualizeSelectedBl(){
                    
                     if(mutation.target.classList[0] === 'selected-bl'){
                         checked = true;
-                    } else if(mutation.target.classList[0] ==='date'){
-                      console.log("datePicked");
-                    }else {
+                        //add selected BL to selectedBL array
+                        selectedBL.push(mutation.target.id);
+                    } else {
                         checked = false;
+                        //add selected BL to selectedBL array
+                        selectedBL.remove(mutation.target.id);
                     } 
-                    selectedBL.push(mutation.target.id);
+
                     updateLineChart(mutation.target.id)            
                 }
             })  

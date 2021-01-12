@@ -170,8 +170,6 @@ function VisualiseChosenBL(selectedBl, checked, selectedMonth) {
 
 
   if (foundBL == false || foundMonth == false) {
-    console.log("In LineChart");
-
     if (foundBL == true) {
       blDomainStorage.forEach(function (arr, i) {
         if (arr[0] == selectedBl) {

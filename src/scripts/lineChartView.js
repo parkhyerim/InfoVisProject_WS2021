@@ -26,7 +26,6 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
 
   // Checks if Bundesland is newly checked or if it already exists in blDomainStorage
   if(foundBL == false || foundMonth == false){
-    console.log("In LineChart");
     if(foundBL ==true){
       blDomainStorage.forEach((arr, i) => {
         if(arr[0] == selectedBl) {

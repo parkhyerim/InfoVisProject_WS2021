@@ -170,8 +170,6 @@ function VisualiseChosenBL(selectedBl, checked, selectedMonth) {
 
 
   if (foundBL == false || foundMonth == false) {
-    console.log("In LineChart");
-
     if (foundBL == true) {
       blDomainStorage.forEach(function (arr, i) {
         if (arr[0] == selectedBl) {
@@ -412,30 +410,7 @@ function updateExistingCurvesCircles(storageArray) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ToggleDatePicker = ToggleDatePicker;
 exports.GetDateForFetch = GetDateForFetch;
-
-function ToggleDatePicker(event) {
-  console.log(event);
-
-  if (!event.target.matches('#datePickerButton')) {
-    var dropdowns = document.getElementsByClassName("dropdown");
-
-    for (var i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-
-      if (!openDropdown.classList.contains('hidden')) {
-        openDropdown.classList.add('hidden');
-      }
-    }
-  } else {
-    document.getElementById("dateDropdown").classList.toggle("hidden");
-  }
-}
-
-function datePicked(month) {
-  document.getElementById('datePickerButton').textContent = month;
-}
 
 function GetDateForFetch() {
   switch (document.getElementById('datePickerButton').textContent) {
@@ -632,13 +607,16 @@ function InitialiseEvents() {
 }
 
 function eventListenerDatePicker() {
+  //toggle date picker dropdown
   datePickerButton.addEventListener('click', function () {
     document.getElementById("dateDropdown").classList.toggle("hidden");
-  });
+  }); //adds an event listener for every Date in the Dropdown
+
   Array.prototype.forEach.call(dateButton, function (date) {
     date.addEventListener('click', function () {
       datePickerButton.textContent = date.textContent;
-      date.classList.add("selectedDate");
+      date.classList.add("selectedDate"); //when date is selected: update lineChart for every checked BL in the map
+
       selectedBL.forEach(function (bl) {
         updateLineChart(bl);
       });
@@ -675,14 +653,15 @@ function visualizeSelectedBl() {
     mutations.forEach(function (mutation) {
       if (mutation.attributeName === 'class') {
         if (mutation.target.classList[0] === 'selected-bl') {
-          checked = true;
-        } else if (mutation.target.classList[0] === 'date') {
-          console.log("datePicked");
+          checked = true; //add selected BL to selectedBL array
+
+          selectedBL.push(mutation.target.id);
         } else {
-          checked = false;
+          checked = false; //add selected BL to selectedBL array
+
+          selectedBL.remove(mutation.target.id);
         }
 
-        selectedBL.push(mutation.target.id);
         updateLineChart(mutation.target.id);
       }
     });
