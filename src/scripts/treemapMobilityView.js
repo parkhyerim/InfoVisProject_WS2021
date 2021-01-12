@@ -161,7 +161,7 @@ function displaymobilitydata(param){
         console.log(mobilityDataPerMonth[0][5]) 
         console.log(mobilityDataPerMonth[2][5]) 
        // generateHierarchy(mobilityDataPerMonth)
-       // createTreeChart(mobilityData)
+       createTreeChart(mobilityData)
     });
 };
 
