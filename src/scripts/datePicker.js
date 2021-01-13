@@ -1,6 +1,3 @@
-
-
-
 export function GetDateForFetch(){
   switch (document.getElementById('datePickerButton').textContent) {
     case "März 2020":
