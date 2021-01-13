@@ -95,7 +95,9 @@ function highlightBl(){
 	blHoovered = d3.select(this)._groups[0][0].id
 	
 	// The name of the Bundesland was given as a class name to each path and with its help gets filled now
-	colorBackground = d3.select("."+blHoovered).attr("fill");
+	if(d3.select(this)._groups[0][0].classList[0] != 'selected-bl'){
+		colorBackground = d3.select("."+blHoovered).attr("fill");
+	}
 	d3.select("."+blHoovered).attr("fill", "#009688");
 
 	colorText = d3.select(this).attr("fill");
@@ -104,21 +106,13 @@ function highlightBl(){
 		.attr("font-weight", "bold");		
 }
 
-function resetBlColor(){
-	// Check if the hovered over Bundesland was clicked
-	let isBlClicked = false;
-	clickedBlArray.forEach( bl => {
-		if(this.id === bl){
-			isBlClicked = true;
-		}
-	})
-	// If it wasn't clicked its color is reset
-	if(isBlClicked === false){
+function resetBlColor(){	
+	if(d3.select(this)._groups[0][0].classList[0] != 'selected-bl'){
 		d3.select("."+blHoovered).attr("fill", colorBackground);
 		d3.select(this)
-		.attr("fill", colorText)
-		.attr("font-weight", "normal");	
-	}
+			.attr("fill", "black")
+			.attr("font-weight", "normal");	
+	} 
 }
 
 function clickEvent(){
@@ -134,14 +128,21 @@ function clickEvent(){
 	})
 
 	// If the clicked on Bundesland wasn't clicked before, it is marked and added to `clickedBlArray`
-	if(clickedBool === false & clickedBlArray.length <= 3) {
+	/** clickedBlArray.length > 1 makes sure that the last Bundesland currently selected stays colored. 
+		(When the user tries to revoke the last Bundesland on the map she gets an alert that at least
+		one Bundesland needs to be selected.)  clickedBlArray.length > 1
+	*/
+	if(clickedBool === false & clickedBlArray.length <= 2) {
 		d3.select("."+d3.select(this)._groups[0][0].id)
 			.attr("fill", "#009688")
 
 		clickedBlArray.push(blHoovered);
 		// Necessary to get the selected Bundesland in main.js
 		d3.select(this)._groups[0][0].classList.add('selected-bl'); 
-	} 
+	}  
+	else if(clickedBlArray.length == 1){
+		alert("Mindestens 1 Bundesland muss ausgewählt sein.")
+	}
 	/** If it has been clicked before the selection is revoked by changing the stroke coloring and removing the 
 		Bundesland from the array.
 	*/
@@ -151,13 +152,16 @@ function clickEvent(){
 			.attr("fill", colorBackground)
 			.attr("stroke-width", 0.5) 
 
-		const index = clickedBlArray.indexOf(clickedBl);
-		clickedBlArray.splice(index, 1);
-		// Necessary to get the selected Bundesland in main.js
-		d3.select(this)._groups[0][0].classList.remove('selected-bl'); 
+		// Guarantees that at least one Bundesland is always selected after the map was initialized
+		if(clickedBlArray.length > 1){
+			const index = clickedBlArray.indexOf(clickedBl);
+			clickedBlArray.splice(index, 1);
+			// Necessary to get the selected Bundesland in main.js
+			d3.select(this)._groups[0][0].classList.remove('selected-bl'); 	
+		} 
 	} 
 	// Alert when more when the user wants to select more than 4 Bundesländer. This would get too messy for the line chart.
-	else if(clickedBlArray.length == 4){
-		alert("Du hast bereits 5 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.")
-	}
+	else if(clickedBlArray.length == 3){
+		alert("Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.")
+	} 
 }
