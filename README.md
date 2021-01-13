@@ -1,6 +1,10 @@
 # 📊 InfoVisProject_WS2021 📈
 <br/>
 
+## Aufrufen der Seite
+d3.js erfordert das Starten eines Servers. Im Terminal kann hierfür zum Beispiel mit Python ein Server per `python -m SimpleHTTPServer 8080` Befehl im Root Directory des Projektes gestartet werden.
+Alternativ kann bei Visual Studio Code eine Extension(Live Server) verwendet werden.
+
 ## Project Title:
 Visualisierung der Nutzung verschiedener Verkehrsmittel und der Luftqualität in Deutschland während der Covid19-Pandemie
 <br/>
@@ -11,35 +15,55 @@ Visualisierung der Auswirkungen der Pandemie auf die Luftqualität und die Mobil
 
 # Meilensteine:
 ## Meilenstein 1:
-Themenfindung und vollständige Projektplanung
+- Themenfindung, Datensichtung und ein erstes Mock-Up
 
 ## Meilenstein 2:
-Line Chart mit Corona Daten
+- Vollständige Projektplanung inkl. Mock-Ups
 
 ## Meilenstein 3:
-Slider zur Auswahl angezeigter Monate
-Interaktive Treemap mit Mobilitätsdaten
-Auswahl versch. Bundesländer per Mausklick
+- Line Chart mit Corona Daten der jeweiligen Bundesländer
 
 ## Meilenstein 4:
-Treemap fertigstellen
-Styling anpassen
-Line-Chart: Achsen Label, Beschriftung der Linien anpassen, verschiedene Farben pro Linie
-Pop Ups mit Informationen
+- Drop-Down Menü zur Auswahl angezeigter Monate
+- Aktualisierung der Line Chart je nach ausgewähltem Monat und Bundesland
+- Interaktive Treemap mit Mobilitätsdaten
+- Implementierung einer Deutschlandkarte zur Auswahl der in der Line Chart angezeigten Bundesländer
+
+## Meilenstein 5:
+- Treemaps fertigstellen
+- (CSS-)Styling anpassen
+- Line Chart: Achsenbeschriftung, Beschriftung der Linien anpassen bzw. eine Legende implementieren
+- Pop Ups mit Informationen
+- Auf fehlende/ lückenhafte Daten hinweisen
+
 
 
 # Features
 ## Feature 1: Interaktive Landkarte
-Es wird zunächst ein Button "Bundesländer" angezeigt". Beim klicken dieses Buttons öffnet sich eine Landkarte von Deutschland mit den 16 Bundesländern. Es können bis zu 4 Bundesländer ausgewählt werden. Die ausgewählten Bundesländer ändern ihre Farbe. Nach dem die Auswahl getroffen wurde, kann der User die Karte schließen, indem er den Button "Bundesländer" erneut klickt.
-
+- "Bundesländer"-Button öffnet eine Karte von Deutschland mit den 16 Bundesländern
+- Auswahl von bis zu 3 Bundesländern per Klick auf die Namen
+- Ausgewählte Bundesländer ändern ihre Farbe
+- Beim Hooveren über ein Bundesland wechselt dies die Farbe
+- Karte kann eingeklappt werden beim erneuten Klick auf den "Bundesländer"Button
+ 
 ## Feature 2: Auswahl des Monats 
-An der linken Seite ist Drop-Down Menü, welches die Auswahl eines Monats ermöglicht. Standardmäßig wird März 2020 angezeigt. Sobald der User einen Monat auswählt, schließt sich das Drop-Down Menü und zeigt den entsprechenden Monat an. 
+- Drop-Down Menü
+- März 2020 als Default
+- Weitere Monate per Klick auswählbar
 
 ## Feature 3: Line Chart
-Basierend auf der Auswahl des/der Bundesland/Bundesländer wird eine Line Chart abgebildet. Die Line Chart zeigt den Verlauf der COVID-19 Erkrankten für den entsprechenden Zeitraum und die entsprechende Region.
+- Zeigt den Verlauf der COVID-19 Erkrankten für den entsprechenden Monat und die entsprechende Region
+- Die auf der Deutschlandkarte ausgewählten Bundesländer werden abgebildet
+- Der im Drop-Down Menü ausgewählte Monat wird angezeigt
+- Die Skalierung der y-Achse passt sich an die Wertebereiche an
+- Die x-Achse passt sich an die gefetchten Meldetdaten an. (Zum Beispiel hat Bayern oftmals weniger Meldedaten als Schleswig-Holstein. Werden beide Bundesländer zusammen ausgewählt, wird die x-Achse mit den Meldedaten, die für Bayern verfügbar sind, beschriftet.)
 
 ## Feature 4: Treemap
-Parallel dazu zeigt eine Treemap die Mobilität (unterteilt in Driving, Walking, Transit) der entsprechenden Bundesländer an. 
+- Die Treemap errechnet einen Monatsdurchschnitt für jeden auswählbaren Monats für alle Bundesländer
+- Die Werte repräsentieren das Anfragevolumen nach Apple Routenbeschreibung für Autofahrten
+- Die Baseline der Daten ist vom 13.Januar 2020
+- Sobald im Drop-Down Menü ein anderer Monat ausgewählt wird, aktualisiert sie
+- Die Einfärbung der einzelnen Bundesländer-Felder ist abhängig von der Prozentzahl. Je höher diese wird, desto grüner wird das jeweilige Feld.
 
 ## Zusätzliche Features: 
-Ziel ist es, dass die Treemap mehrere Bundesländer (bis zu 4) abbilden kann. Die Intensität der Ausprägung wird durch eine Farbcodierung gesteuert. Darüber hinaus werden Pop Up Menüs hinzugefügt, die weitere informationen (zur Line Chart sowie zur Treemap) liefern. Optional wird eine zweite Darstellungsform der Treemap abgebildet. 
+Siehe Meilenstein 5
