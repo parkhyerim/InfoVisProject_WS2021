@@ -1,10 +1,22 @@
-function displaymobilitydata(param="driving"){
+// the entry point for the Bundesländer select ('chekbox' in index.html)
+const checkboxes = document.getElementsByClassName('checkbox')
+for (let checkbox of checkboxes){
+  checkbox.addEventListener('change', function() {
+      if(this.checked){
+          displaymobilitydata(checkbox.name)
+      } 
+  }) 
+}
+
+function displaymobilitydata(param){
+    // without checkbox selection, "Bavaria" is the default
+    if(param ==null) var param = "Bavaria";
     let mobilityData = [];
     var temp = [];
     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
         data.forEach(element => temp.push(element));
         temp.forEach(function(element) {
-            if (element.country == "Germany" && element["sub-region"] == "" && element["transportation_type"]==param) mobilityData.push(element);
+            if (element.country == "Germany" && element["sub-region"] == "" && element["region"]==param) mobilityData.push(element);
         });
 
         //calculate average value for every month
@@ -54,13 +66,13 @@ displaymobilitydata();
 function createTreeChart(data){
 
     //in case new treemap shall be loaded, the one before gets removed
-    d3.select("#treemapwrapper").select("svg").remove();
+    d3.select("#treemapMobilitywrapper").select("svg").remove();
 
     var margin = {top: 20, right: 30, bottom: 30, left: 40},
         width = 800 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
 
-    var svg = d3.select("#treemapwrapper")
+    var svg = d3.select("#treemapMobilitywrapper")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -72,7 +84,14 @@ function createTreeChart(data){
         k[v.country] = [...k[v.country] || [], v];
         return k;
         }, {});
-
+        console.log("groupData: " + groupedData);
+        //Group the data by country and by region, so our tree has a root node
+        // let groupedData = data.reduce((c, v) => {
+        //     c[v.country] = c[v.country] || {};                         //Init if country property does not exist
+        //     c[v.country][v.region] = c[v.country][v.region] || {};   //Init if region property does not exist
+        //     return c;
+        //   }, {});
+        //   console.log("groupData: " + groupedData);
 
     //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes
     var hgroup = d3.hierarchy(groupedData, function(d){return d.Germany})
@@ -112,7 +131,7 @@ function createTreeChart(data){
         .append("text")
         .attr("x", function(d){ return d.x0+20})    // +10 to adjust position (more right)
         .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
-        .text(function(d){ return d.data.region +""+ d.data["05"]+"%"})
+        .text(function(d){ return d.data.transportation_type +""+ d.data["05"]+"%"})
         .attr("font-size", "16px")
         .attr("fill", "white")
 }
