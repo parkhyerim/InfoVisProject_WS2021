@@ -3,7 +3,7 @@ const blDomainStorage = [];
 var currentMonth; 
 
 const margin = {top:10, right: 30, bottom: 60, left: 60},
-  width = 800 - margin.left - margin.right,
+  width = 600 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
 /** Saves the checked Bundesländer to the array `blDomainStorage` 
@@ -108,6 +108,7 @@ export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
         }) 
       } 
     }
+
 }
 
 
