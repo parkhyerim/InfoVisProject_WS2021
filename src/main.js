@@ -11,7 +11,7 @@ var checked;
 
 function InitialiseEvents(){
 
-    // Initially load map. The map gets hidden in mapGermany.js 
+    // Initially load map. The map gets hidden in mapGermany.js
     LoadMap();
 
     // Adds and event listener to the Bundesländer Button
@@ -20,14 +20,14 @@ function InitialiseEvents(){
     //Adds event listener on datePickerButton and each droopdown DateButton element
     eventListenerDatePicker();
 
-      
+
 }
 
 function eventListenerDatePicker() {
   //toggle date picker dropdown
   datePickerButton.addEventListener('click', () => {
     document.getElementById("dateDropdown").classList.toggle("hidden");
-    } 
+    }
   );
   //adds an event listener for every Date in the Dropdown
   Array.prototype.forEach.call(dateButton, function(date){
@@ -37,7 +37,9 @@ function eventListenerDatePicker() {
       //when date is selected: update lineChart for every checked BL in the map
       selectedBL.forEach((bl) => {
         updateLineChart(bl);
-      })
+      });
+      displaymobilitydata(GetDateForFetch());
+
     })
 
   });
@@ -46,20 +48,20 @@ function eventListenerDatePicker() {
 function eventListenerMap(){
     let mapButtonClicked = true;
     mapButton.addEventListener('click', () => {
-        
-        /** If the map button is clicked, one or more Bundesländer can be selected and will 
+
+        /** If the map button is clicked, one or more Bundesländer can be selected and will
             then be displayed
         */
         if(mapButtonClicked === true){
             visualizeSelectedBl()
             document.getElementById('mapGermany').style.display = 'inline';
-            mapButtonClicked = false;    
-        } 
+            mapButtonClicked = false;
+        }
         else if(mapButtonClicked === false){
             document.getElementById('mapGermany').style.display = 'none';
             mapButtonClicked = true;
         }
-               
+
     })
 }
 
@@ -74,7 +76,7 @@ function visualizeSelectedBl(){
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if(mutation.attributeName === 'class'){
-                   
+
                     if(mutation.target.classList[0] === 'selected-bl'){
                         checked = true;
                         //add selected BL to selectedBL array
@@ -83,16 +85,16 @@ function visualizeSelectedBl(){
                         checked = false;
                         //add selected BL to selectedBL array
                         selectedBL.remove(mutation.target.id);
-                    } 
+                    }
 
-                    updateLineChart(mutation.target.id)            
+                    updateLineChart(mutation.target.id)
                 }
-            })  
-        }) 
+            })
+        })
     const config = { attributes: true };
-    
+
     for (let blMap of mapSelectedBl){
-        observer.observe(blMap, config);    
+        observer.observe(blMap, config);
     }
 }
 

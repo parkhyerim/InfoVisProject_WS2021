@@ -1,6 +1,9 @@
-function displaymobilitydata(param="driving", month){
+function displaymobilitydata(monthparam, param="driving"){
     let mobilityData = [];
     var temp = [];
+    monthparam = monthparam[0].substr((monthparam[0].indexOf("-")+1), 2);
+
+
     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
         data.forEach(element => temp.push(element));
         temp.forEach(function(element) {
@@ -45,13 +48,13 @@ function displaymobilitydata(param="driving", month){
         }
 
         //generate TreeChart from the provided Dateset
-        createTreeChart(mobilityData)
+        createTreeChart(mobilityData, monthparam)
     });
 };
 
 //displaymobilitydata();
 
-function createTreeChart(data){
+function createTreeChart(data, monthparam){
 
     //in case new treemap shall be loaded, the one before gets removed
     d3.select("#treemapwrapper").select("svg").remove();
@@ -76,7 +79,9 @@ function createTreeChart(data){
 
     //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes
     var hgroup = d3.hierarchy(groupedData, function(d){return d.Germany})
-        .sum((d) => {return d["12"]});
+        .sum((d) => {return d[monthparam]});
+
+    console.log(hgroup);
 
     // Then d3.treemap computes the position of each element of the hierarchy
     // The coordinates are added to the root object above
@@ -88,7 +93,7 @@ function createTreeChart(data){
 
     // Determine the color of each field
     // Explanation from https://stackoverflow.com/questions/42546344/how-to-apply-specific-colors-to-d3-js-map-based-on-data-values?rq=1
-    var color= d3.scale.linear().domain([70, 100]).range(["blue", "green"]);
+    var color= d3.scale.linear().domain([50, 180]).range(["blue", "green"]);
 
     // use this information to add rectangles:
     svg
@@ -102,7 +107,7 @@ function createTreeChart(data){
         .attr('width', function (d) { return d.x1 - d.x0; })
         .attr('height', function (d) { return d.y1 - d.y0})
         .style("fill", function(d) {
-            return color(d.data["05"]);});
+            return color(d.data[monthparam]);});
 
     // and to add the text labels
     svg
@@ -110,9 +115,16 @@ function createTreeChart(data){
         .data(treemap.leaves())
         .enter()
         .append("text")
-        .attr("x", function(d){ return d.x0+20})    // +10 to adjust position (more right)
+        .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
         .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
-        .text(function(d){ return d.data.region +""+ d.data["05"]+"%"})
+        .text(function(d){ return d.data.region})
+        .attr("font-size", "16px")
+        .attr("fill", "white")
+        //.attr("textLength", function (d) { return d.x1 - d.x0 - 10; })
+        .append('svg:tspan')
+        .attr('x', function(d){ return d.x0+5})
+        .attr('dy', 30)
+        .text(function(d){ return d.data[monthparam]+"%"})
         .attr("font-size", "16px")
         .attr("fill", "white")
 }

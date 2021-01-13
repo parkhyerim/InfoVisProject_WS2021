@@ -12,7 +12,7 @@ const margin = {top:10, right: 30, bottom: 60, left: 60},
 export function VisualiseChosenBL(selectedBl, checked, selectedMonth){
   let foundBL = false;
   let foundMonth = false;
-  console.log(selectedBl);
+  console.log(selectedMonth);
   blDomainStorage.forEach(arr => {
     if(selectedBl == arr[0]){
       foundBL = true;
