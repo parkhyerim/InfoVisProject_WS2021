@@ -15,55 +15,56 @@ h1 {
     position: center;
 }
 
-#chartContainer{
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 10px;
-  grid-auto-rows: minmax(100px, auto);
-
-}
-
-#bundesländerSelector{
-  grid-column: 1 / 2;
-  grid-row: 2;
+.date-picker{
+  width: 40%;
+  margin: auto;
 }
 
 
-#dataWrapper{
-  grid-column: 2;
-  grid-row: 1;
+.side-bar{
+  height: 100vh !important;
 }
 
-#treemap_Viz{
-  grid-column: 1;
-  grid-row: 1;
+.button-width{
+  width: 120px;
+  display: table !important;
+}
+
+.add-padding{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.map-germany {
+  display: block;
+  margin: auto;
 }
 
 .svg-container {
   display: inline-block;
   position: relative;
   width: 100%;
-	padding-bottom: 70%; 
-	vertical-align: middle; 
-	overflow: hidden; 
+  padding-bottom: 70%; 
+  vertical-align: middle; 
+  overflow: hidden; 
 }
 .svg-content-responsive {
-	display: inline-block;
-	position: absolute;
-	top: 0;
-	left: 0;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
 
 }
 
 
 
 .popover {
-  background-color: 	#fef9f9;
+  background-color:   #fef9f9;
   padding: 0px;
 
 }
 .popover-header {
-  background-color: 	#3f0f0f;
+  background-color:   #3f0f0f;
   color: #FFFFFF;
   margin: 0px;
 
@@ -115,5 +116,51 @@ h1 {
   width: 16px;
  
  }
+
+ .dropbtn {
+  background-color: #3498DB;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #2980B9;
+}
+
+.dropdown {
+  position: relative;
+  display: block;
+}
+
+#dateDropdown {
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+#dateDropdown div {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+#dateDropdown div:hover {
+  background-color: #EBE7E7
+}
+
+
+.hidden {
+  display: none;
+}
+
+
+
 
 /*# sourceMappingURL=/styles.8986bff4.css.map */

@@ -117,21 +117,585 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"main.js":[function(require,module,exports) {
-document.onreadystatechange = function () {
-  $(function () {
-    $('[data-toggle="popover"]').popover({
-      placement: 'top',
-      html: true,
-      title: '<div class="popover-header"><div class="popover-title">First Step</div><a href="#" class="close" data-dismiss="alert">&times;</a></div>',
-      content: '<div class="popover-content"><p>Excellent Bootstrap popover! I really love it.</p></div>'
-    }).addClass($(this).data("class"));
-    $(document).on("click", ".popover .close", function () {
-      $('[data-toggle="popover"]').popover('hide');
+})({"scripts/lineChartView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.VisualiseChosenBL = VisualiseChosenBL;
+exports.InitializeSVG = InitializeSVG;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var svg, xAxis, yAxis;
+var blDomainStorage = [];
+var currentMonth;
+var margin = {
+  top: 10,
+  right: 30,
+  bottom: 60,
+  left: 60
+},
+    width = 800 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+/** Saves the checked Bundesländer to the array `blDomainStorage` 
+  and visualises the chosen Bundesland.
+*/
+
+function VisualiseChosenBL(selectedBl, checked, selectedMonth) {
+  var foundBL = false;
+  var foundMonth = false;
+  console.log(selectedBl);
+  blDomainStorage.forEach(function (arr) {
+    if (selectedBl == arr[0]) {
+      foundBL = true;
+    }
+  });
+
+  if (selectedMonth == currentMonth) {
+    foundMonth = true;
+    currentMonth = selectedMonth;
+  } // Checks if Bundesland is newly checked or if it already exists in blDomainStorage
+
+
+  if (foundBL == false || foundMonth == false) {
+    if (foundBL == true) {
+      blDomainStorage.forEach(function (arr, i) {
+        if (arr[0] == selectedBl) {
+          blDomainStorage.splice(i, 1);
+        }
+      });
+    } // Fetching the data of the newly selected Bundesland
+
+
+    fetchData(selectedBl, selectedMonth).then(function (data) {
+      // To figure out the max y-value which is necessary to correctly display the data
+      var neededYValue = d3.scaleLinear().domain([0, d3.max(data, function (item) {
+        return item.Infos.AnzahlFall;
+      })]);
+      /** Sorts the array in increasing order.
+        The Bundesland with the smallest needed y-value comes first and the one with the highest comes last.
+      */
+
+      blDomainStorage.sort(function (a, b) {
+        return a[1] - b[1];
+      });
+      /** Checks whether the last Bundesland in `blDomainStorage` still obtains the highest needed
+        y-value compared to the newly selected Bundesland. If the newly checked Bundesland has
+        more Covid cases and therefore needs a higher y-value the current axes are removed 
+        and the updated ones are added.
+      */
+
+      if (blDomainStorage.length == 0 || blDomainStorage[blDomainStorage.length - 1][1] < neededYValue.domain()[1]) {
+        console.log(blDomainStorage);
+        svg.select(".y-axis").remove(); // instead of deleting they should be updated,
+
+        svg.select(".x-axis").remove(); // but that seems more complicated
+
+        svg.select(".case-line").remove(); //removes existing vertical line
+
+        addAxes(data);
+      } // Stores the Bundesland and the highest y-value needed for that Bundesland
+
+
+      blDomainStorage.push([data[0].Infos.Bundesland, neededYValue.domain()[1]]);
+      /** The curve of the newly selected Bundesland is added.
+        `blClassN` is necessary to give each curve a distinguishable class name.
+        It will be used to select the d3 element and then to update and delete it.
+      */
+
+      var blClassN = data[0].Infos.Bundesland;
+      visualiseCurve(svg, data, xAxis, yAxis, blClassN, "turquoise"); // Circles of the already displayed Bundesländer are updated according to the new axis. 
+
+      updateExistingCurvesCircles(blDomainStorage);
+    });
+  } else if (!checked && foundBL == true) {
+    // If Bundesland isn't selected but found in `blDomainStorage`
+    // Removes the curve and circles of the recently unselected Bundesland.
+    svg.select(".curve." + selectedBl).remove();
+    svg.selectAll(".circles." + selectedBl).remove();
+    /** Sorts the array in increasing order.
+       The Bundesland with the smallest needed y-value comes first and the one with the 
+       highest comes last.
+     */
+
+    blDomainStorage.sort(function (a, b) {
+      return a[1] - b[1];
+    }); // Removes the recently unselected Bundesland from `blDomainStorage`
+
+    blDomainStorage.forEach(function (arr, i) {
+      if (arr[0] == selectedBl) {
+        blDomainStorage.splice(i, 1);
+      }
+    });
+    /** Updates the axes, the existing curves and circles if the highest needed y-value 
+      has changed after unselecting a Bundesland
+    */
+
+    if (yAxis.domain()[1] > blDomainStorage[blDomainStorage.length - 1][1]) {
+      fetchData(blDomainStorage[blDomainStorage.length - 1][0], selectedMonth).then(function (data) {
+        svg.select(".y-axis").remove();
+        svg.select(".x-axis").remove();
+        svg.select(".case-line").remove(); //removes existing vertical line
+
+        addAxes(data);
+        updateExistingCurvesCircles(blDomainStorage);
+      });
+    }
+  }
+}
+
+function InitializeSVG() {
+  svg = d3.select("#lineChartContainer").append("div").classed("svg-container", true).append("svg").attr("preserveAspectRatio", "xMinYMin meet").attr("viewBox", "0 0 600 400").classed("svg-content-responsive", true).append("g").attr("transform", "translate(".concat(margin.left, ", ").concat(margin.top, ")"));
+}
+
+function fetchData(bundesland, selectedMonth) {
+  return fetch("https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query?where=Meldedatum%20%3E%3D%20TIMESTAMP%20%27".concat(selectedMonth[0], "%2000%3A00%3A00%27%20AND%20Meldedatum%20%3C%3D%20TIMESTAMP%20%27").concat(selectedMonth[1], "%2000%3A00%3A00%27%20AND%20Bundesland%20%3D%20%27").concat(bundesland, "%27&outFields=Bundesland,AnzahlFall,Meldedatum,IdBundesland&outSR=4326&f=json"), {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    /** `casesData` is the array where the fetched data will be stored in.
+      `feed` is the array of objects returned by the request.
+      Each array entry has the following schema
+      [attributes: {Bundesland: "", AnzahlFall: "", IdBundesland: "", Meldedatum: ""}]
+      By iterating through `feed` and pushing the objects to `casesData` one depth is removed so
+      the data can be handled more easily.
+    */
+    var casesData = [];
+    var feed = data.features;
+    feed.forEach(function (elem) {
+      casesData.push(elem.attributes);
+    });
+    return groupDataByDate(casesData);
+  });
+}
+
+;
+/** Groups the received data by date. After the grouping the data is sorted
+  datewise and returned as an array
+*/
+
+function groupDataByDate(casesData) {
+  /** `dataEntries` is a new object and `currentValue` is the item of the array 
+    currently looked at
+  */
+  var groupedReport = casesData.reduce(function (dataEntries, currentValue) {
+    var day = new Date(currentValue['Meldedatum']);
+    /** Within the first iteration of `reduce` `dataEntries` is undefined. 
+      Consequently a new object entry with the `Meldedatum` as the key is being added to
+      `dataEntries`. Further information (Bundesland, IdBundesland, AnzahlFall) 
+      are added as a value.       
+    */
+
+    if (dataEntries[day] !== undefined) {
+      /** If a key with the `Meldedatum` already exists the number of cases are
+        summed up.
+      */
+      dataEntries[day].AnzahlFall = dataEntries[day].AnzahlFall + currentValue.AnzahlFall;
+    } else {
+      dataEntries[day] = {
+        Bundesland: currentValue.Bundesland,
+        IdBundesland: currentValue.IdBundesland,
+        AnzahlFall: currentValue.AnzahlFall
+      };
+    }
+
+    return dataEntries;
+  }, {}); // `dataEntries` gets transformed into an array so it can be easily sorted by date  
+
+  var reportArr = [];
+  Object.entries(groupedReport).forEach(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        key = _ref2[0],
+        value = _ref2[1];
+
+    reportArr.push({
+      Meldedatum: key,
+      Infos: value
+    });
+  }); // Sorts the array containing the summed up cases by `Meldedatum`
+
+  reportArr.sort(function (a, b) {
+    return b.Meldedatum - a.Meldedatum;
+  });
+  return reportArr;
+}
+
+function addAxes(data) {
+  /** The next 7 lines initialize and format the labels of the xAxis nicely.    
+    If there are too less dates will be repeated on the x-axis. To avoid that we have to create a function 
+    for that edge case and work with xa.tickValues to set the labels manually.
+    xA.tickValues([new Date(data[0].Meldedatum), new Date(data[1].Meldedatum), new Date(data[2].Meldedatum)])
+  */
+  xAxis = d3.scaleTime().domain(d3.extent(data, function (item) {
+    return new Date(item.Meldedatum);
+  })).range([0, width]);
+  var xA = d3.axisBottom(xAxis);
+  xA.tickSizeOuter(0); // removes the last tick on the xAxis
+
+  var parseDate = d3.timeFormat("%B %d, %Y"); //https://d3-wiki.readthedocs.io/zh_CN/master/Time-Scales/
+
+  xA.tickFormat(function (d) {
+    return parseDate(d);
+  }); // Appends the xAxis
+
+  svg.append("g").attr("transform", "translate(0, ".concat(height, ")")).attr("class", "x-axis").call(xA).selectAll("text").attr("transform", "rotate(330)") //rotates the labels of the x axis by 
+  .style("text-anchor", "end"); //makes sure that the end of the text string is anchored to the ticks
+  // Initializes and formats the yAxis
+
+  yAxis = d3.scaleLinear().domain([0, d3.max(data, function (item) {
+    return item.Infos.AnzahlFall;
+  })]).range([height, 0]).nice(); //without that the highest tick of the y axis wouldn't be labelled
+  // Appends the yAxis
+
+  svg.append("g").call(d3.axisLeft(yAxis)).attr("class", "y-axis"); // Class added to be able to remove the axis;
+}
+
+function visualiseCurve(svg, formattedData, xAxis, yAxis, classN, color) {
+  svg.append("path").datum(formattedData).attr("fill", "none").attr("id", classN + "-curve").attr("stroke", color).attr("stroke-width", 1).attr("class", "curve" + " " + classN) //necessary to add a specific class for every Bundesland shown
+  .attr("d", d3.line().x(function (item) {
+    return xAxis(new Date(item.Meldedatum));
+  }).y(function (item) {
+    return yAxis(new Date(item.Infos.AnzahlFall));
+  })); // Appends name of the Bundesland to the corresponding path
+
+  svg.append("text").attr("x", 5) // move the text from the start of the path
+  .attr("dy", -10) // move the text up
+  .append("textPath").attr("xlink:href", "#" + classN + "-curve") // links the text to the element with the corresponding id, which was given to the path in the code block above
+  .text(formattedData[0].Infos.Bundesland); // Appends circles to the path at the dates where data is returned
+
+  svg.selectAll("circles").data(formattedData).enter().append("circle").attr("class", "circles" + " " + classN).attr("fill", "darkblue").attr("stroke", "none").attr("cx", function (item) {
+    return xAxis(new Date(item.Meldedatum));
+  }).attr("cy", function (item) {
+    return yAxis(new Date(item.Infos.AnzahlFall));
+  }).attr("r", 2);
+} // Appends a vertical line at the selected date
+
+
+function appendVerticalLine(svg, xAxis, date, height) {
+  d3.select(".case-line").remove(); //removes existing vertical line
+
+  svg.append("line").attr("class", "case-line").attr("x1", xAxis(date)).attr("y1", 0).attr("x2", xAxis(date)).attr("y2", height).style("stroke-width", 1).style("stroke", "darkblue").style("fill", "none");
+}
+
+function updateExistingCurvesCircles(storageArray) {
+  storageArray.forEach(function (arr) {
+    svg.select(".curve." + arr[0]).attr("d", d3.line().x(function (item) {
+      return xAxis(new Date(item.Meldedatum));
+    }).y(function (item) {
+      return yAxis(new Date(item.Infos.AnzahlFall));
+    }));
+    svg.selectAll(".circles." + arr[0]).attr("cx", function (item) {
+      return xAxis(new Date(item.Meldedatum));
+    }).attr("cy", function (item) {
+      return yAxis(new Date(item.Infos.AnzahlFall));
     });
   });
-};
-},{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+}
+},{}],"scripts/datePicker.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.GetDateForFetch = GetDateForFetch;
+
+function GetDateForFetch() {
+  switch (document.getElementById('datePickerButton').textContent) {
+    case "März 2020":
+      return ["2020-03-01", "2020-04-01"];
+
+    case "April 2020":
+      return ["2020-04-01", "2020-05-01"];
+
+    case "Mai 2020":
+      return ["2020-05-01", "2020-06-01"];
+
+    case "Juni 2020":
+      return ["2020-06-01", "2020-07-01"];
+
+    case "Juli 2020":
+      return ["2020-07-01", "2020-08-01"];
+
+    case "August 2020":
+      return ["2020-08-01", "2020-09-01"];
+
+    case "September 2020":
+      return ["2020-09-01", "2020-10-01"];
+
+    case "Oktober 2020":
+      return ["2020-10-01", "2020-11-01"];
+
+    case "November 2020":
+      return ["2020-11-01", "2020-12-01"];
+
+    case "Dezember 2020":
+      return ["2020-12-01", "2021-01-01"];
+
+    case "Januar 2021":
+      return ["2021-01-01", "2021-02-01"];
+
+    case "Februar 2021":
+      return ["2021-02-01", "2021-03-01"];
+
+    default:
+      return ["2020-03-01", "2020-04-01"];
+  }
+}
+},{}],"scripts/mapGermany.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LoadMap = LoadMap;
+var colorBackground, colorText, blHoovered; // `labelBlArray` stores the names of all the Bundesländer which are appended to the svg
+
+var labelBlArray = []; // `clickedBlArray` stores the names of all the Bundesländer which have been selected via click
+
+var clickedBlArray = [];
+
+function LoadMap() {
+  // Source http://opendatalab.de/projects/geojson-utilities/
+  d3.json('../src/data/bundeslaender.geojson').then(function (geojson) {
+    var width = 900;
+    var height = 500;
+    var svg = d3.select("#mapGermany").classed("svg-container", true).append("svg").attr("class", "map-germany") //.attr("preserveAspectRatio", "xMinYMin meet")
+    //.attr("viewBox", "0 0 600 400")
+    //.classed("svg-content-responsive", true)
+    .attr("id", "svgMap").attr("width", width).attr("height", height);
+    var projection = d3.geoMercator();
+    projection.fitSize([width, height], geojson);
+    var path = d3.geoPath().projection(projection);
+    var color = d3.scaleOrdinal(d3.schemeBlues[9].slice(2, 9));
+    var offset = geojson.offset;
+    svg.selectAll("path").data(geojson.features).enter().append("path").attr("d", path).attr("class", function (d) {
+      return d.properties.GEN;
+    }) // Sets the name of the Bundesland as the classname
+    .attr("fill", function (d, i) {
+      return color(i);
+    }).attr("stroke", "#FFF").attr("stroke-width", 0.5);
+    svg.append("g").selectAll("text").data(geojson.features).enter().append("text").attr("text-anchor", "middle").attr("font-size", 11).attr("id", function (d) {
+      return d.properties.GEN;
+    }) // Sets the name of the Bundesland as the ID
+    .attr("x", function (d) {
+      var bl = d.properties.GEN;
+
+      if (offset[bl] != undefined) {
+        return projection(offset[bl])[0];
+      }
+    }).attr("y", function (d) {
+      var bl = d.properties.GEN;
+      if (offset[bl] != undefined) return projection(offset[bl])[1];
+    }).text(function (d) {
+      // Only fill the text if there is no text for the Bundesland yet
+      var textBool = false;
+      labelBlArray.forEach(function (bl) {
+        if (bl === d.properties.GEN || d.properties.GEN.includes("Bodensee")) {
+          textBool = true; // Bodensee needs to be mentioned explicitly
+        }
+      });
+
+      if (textBool === false) {
+        labelBlArray.push(d.properties.GEN);
+        return d.properties.GEN;
+      }
+    }).on("mouseover", highlightBl).on("mouseout", resetBlColor).on("click", clickEvent).style("cursor", "pointer");
+  }); // Hide map
+
+  document.getElementById('mapGermany').style.display = 'none';
+}
+
+function highlightBl() {
+  // Get the name of the Bundesland currently hoovered over via the ID of the HTML element
+  blHoovered = d3.select(this)._groups[0][0].id; // The name of the Bundesland was given as a class name to each path and with its help gets filled now
+
+  colorBackground = d3.select("." + blHoovered).attr("fill");
+  d3.select("." + blHoovered).attr("fill", "#009688");
+  colorText = d3.select(this).attr("fill");
+  d3.select(this).attr("fill", "white").attr("font-weight", "bold");
+}
+
+function resetBlColor() {
+  var _this = this;
+
+  // Check if the hovered over Bundesland was clicked
+  var isBlClicked = false;
+  clickedBlArray.forEach(function (bl) {
+    if (_this.id === bl) {
+      isBlClicked = true;
+    }
+  }); // If it wasn't clicked its color is reset
+
+  if (isBlClicked === false) {
+    d3.select("." + blHoovered).attr("fill", colorBackground);
+    d3.select(this).attr("fill", colorText).attr("font-weight", "normal");
+  }
+}
+
+function clickEvent() {
+  var clickedBl = d3.select(this)._groups[0][0].id; // Check if a Bundesland has already been clicked
+
+
+  var clickedBool = false;
+  clickedBlArray.forEach(function (bl) {
+    if (bl === clickedBl) {
+      clickedBool = true;
+    }
+  }); // If the clicked on Bundesland wasn't clicked before, it is marked and added to `clickedBlArray`
+
+  if (clickedBool === false & clickedBlArray.length <= 3) {
+    d3.select("." + d3.select(this)._groups[0][0].id).attr("fill", "#009688");
+    clickedBlArray.push(blHoovered); // Necessary to get the selected Bundesland in main.js
+
+    d3.select(this)._groups[0][0].classList.add('selected-bl');
+  }
+  /** If it has been clicked before the selection is revoked by changing the stroke coloring and removing the 
+  	Bundesland from the array.
+  */
+  else if (clickedBool === true) {
+      d3.select("." + d3.select(this)._groups[0][0].id).attr("stroke", "white").attr("fill", colorBackground).attr("stroke-width", 0.5);
+      var index = clickedBlArray.indexOf(clickedBl);
+      clickedBlArray.splice(index, 1); // Necessary to get the selected Bundesland in main.js
+
+      d3.select(this)._groups[0][0].classList.remove('selected-bl');
+    } // Alert when more when the user wants to select more than 4 Bundesländer. This would get too messy for the line chart.
+    else if (clickedBlArray.length == 4) {
+        alert("Du hast bereits 5 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.");
+      }
+}
+},{}],"main.js":[function(require,module,exports) {
+"use strict";
+
+var _lineChartView = require("./scripts/lineChartView.js");
+
+var _datePicker = require("./scripts/datePicker.js");
+
+var _mapGermany = require("./scripts/mapGermany.js");
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var mapButton = document.getElementById('mapButton');
+var datePickerButton = document.getElementById('datePickerButton');
+var dateButton = document.getElementsByClassName('date');
+var selectedBL = [];
+var checked;
+
+function InitialiseEvents() {
+  // Initially load map. The map gets hidden in mapGermany.js 
+  (0, _mapGermany.LoadMap)(); // Adds and event listener to the Bundesländer Button
+
+  eventListenerMap(); //Adds event listener on datePickerButton and each droopdown DateButton element
+
+  eventListenerDatePicker();
+}
+
+function eventListenerDatePicker() {
+  //toggle date picker dropdown
+  datePickerButton.addEventListener('click', function () {
+    document.getElementById("dateDropdown").classList.toggle("hidden");
+  }); //adds an event listener for every Date in the Dropdown
+
+  Array.prototype.forEach.call(dateButton, function (date) {
+    date.addEventListener('click', function () {
+      datePickerButton.textContent = date.textContent;
+      date.classList.add("selectedDate"); //when date is selected: update lineChart for every checked BL in the map
+
+      selectedBL.forEach(function (bl) {
+        updateLineChart(bl);
+      });
+    });
+  });
+}
+
+function eventListenerMap() {
+  var mapButtonClicked = true;
+  mapButton.addEventListener('click', function () {
+    /** If the map button is clicked, one or more Bundesländer can be selected and will 
+        then be displayed
+    */
+    if (mapButtonClicked === true) {
+      visualizeSelectedBl();
+      document.getElementById('mapGermany').style.display = 'inline';
+      mapButtonClicked = false;
+    } else if (mapButtonClicked === false) {
+      document.getElementById('mapGermany').style.display = 'none';
+      mapButtonClicked = true;
+    }
+  });
+}
+
+function visualizeSelectedBl() {
+  var mapSelectedBl = document.getElementsByTagName('text');
+  console.log(selectedBL);
+  /** MutationObserver looks at all the html text elements and has a look if their
+      attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
+      has been selected in the map
+  */
+
+  var observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      if (mutation.attributeName === 'class') {
+        if (mutation.target.classList[0] === 'selected-bl') {
+          checked = true; //add selected BL to selectedBL array
+
+          selectedBL.push(mutation.target.id);
+        } else {
+          checked = false; //add selected BL to selectedBL array
+
+          selectedBL.remove(mutation.target.id);
+        }
+
+        updateLineChart(mutation.target.id);
+      }
+    });
+  });
+  var config = {
+    attributes: true
+  };
+
+  var _iterator = _createForOfIteratorHelper(mapSelectedBl),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var blMap = _step.value;
+      observer.observe(blMap, config);
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+}
+
+function updateLineChart(bl) {
+  /** Adds the curve for the selected Bundesland to the line chart
+      `checked` indicates if the mutated element was a Bundesland selected on the map.
+      It is `false` if another element mutated somehow.
+  */
+  (0, _lineChartView.VisualiseChosenBL)(bl, checked, (0, _datePicker.GetDateForFetch)());
+}
+
+(0, _lineChartView.InitializeSVG)();
+InitialiseEvents();
+},{"./scripts/lineChartView.js":"scripts/lineChartView.js","./scripts/datePicker.js":"scripts/datePicker.js","./scripts/mapGermany.js":"scripts/mapGermany.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -159,7 +723,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57481" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55201" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

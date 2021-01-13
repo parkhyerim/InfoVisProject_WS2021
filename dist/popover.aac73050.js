@@ -117,8 +117,20 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"scripts/values.js":[function(require,module,exports) {
-//wir könnten die Daten entweder in json in eine funktion schreiben oder über die API abrufen(?!)
+})({"scripts/popover.js":[function(require,module,exports) {
+document.onreadystatechange = function () {
+  $(function () {
+    $('[data-toggle="popover"]').popover({
+      placement: 'top',
+      html: true,
+      title: '<div class="popover-header"><div class="popover-title">First Step</div><a href="#" class="close" data-dismiss="alert">&times;</a></div>',
+      content: '<div class="popover-content"><p>Excellent Bootstrap popover! I really love it.</p></div>'
+    }).addClass($(this).data("class"));
+    $(document).on("click", ".popover .close", function () {
+      $('[data-toggle="popover"]').popover('hide');
+    });
+  });
+};
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -323,5 +335,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/values.js"], null)
-//# sourceMappingURL=/values.843755d3.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/popover.js"], null)
+//# sourceMappingURL=/popover.aac73050.js.map
