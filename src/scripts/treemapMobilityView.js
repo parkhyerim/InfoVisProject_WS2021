@@ -1,6 +1,3 @@
-// let myMonat = "";
-// let ticket = 0;
-
 // temporary: the entry point for the regions selection ('chekbox' in index.html)
 const checkboxes = document.getElementsByClassName('checkbox')
 let counterRegion = 0; // number of checked regions
@@ -16,7 +13,6 @@ for (let checkbox of checkboxes){
       }
   }) 
 }
-
 
 function displaymobilitydata(regionParam, monthParam){
 
@@ -81,7 +77,7 @@ let hgroup = d3.hierarchy(groupedData, function(d){
                       return d.Germany})
     .sum((d) => {return d[month]});
 
-createTreeChart(hgroup, month);
+    createTreeChart(hgroup, month);
 
 };
 
@@ -134,7 +130,7 @@ function createTreeChart(hgroup, month){
         .attr('width', function (d) { return d.x1 - d.x0; })
         .attr('height', function (d) { return d.y1 - d.y0})
         .style("fill", function(d) {
-            return color2(d.data[month]);})
+            return color1(d.data[month]);})
             // .style("opacity", function(d) {
             //     return opacity(d.data[month])
             // });
@@ -146,20 +142,21 @@ function createTreeChart(hgroup, month){
     .data(treemap.leaves())
     .enter()
     .append("text")
-    .attr("x", function(d){ return d.x0+20})    // +10 to adjust position (more right)
+    .attr("x", function(d){ return d.x0+10})    // +10 to adjust position (more right)
     .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
     .attr("dy", "1.1em")
     .text(function(d){ 
         // Temporal: kurze Syntax und bessere Images
         if(d.data.transportation_type === "driving"){
-        return "🚘 " + d.data.transportation_type +" "+ d.data[month]+"%"; }
-     else if(d.data.transportation_type === "walking"){
-        return "🚶‍♀️ " + d.data.transportation_type +" "+ d.data[month]+"%";
-    } else if(d.data.transportation_type === "transit") {
-        return "🚌 "+ d.data.transportation_type + " "+ d.data[month]+"%";
-    }})
+             return "🚘 " + d.data.transportation_type +" "+ d.data[month]+"%"; }
+        else if(d.data.transportation_type === "walking"){
+            return "🚶‍♀️ " + d.data.transportation_type +" "+ d.data[month]+"%";
+        } else if(d.data.transportation_type === "transit") {
+            return "🚌 "+ d.data.transportation_type + " "+ d.data[month]+"%";
+        }})
     .attr("font-size", "14px")
     .attr("fill", "white")
+    .attr("font-weight","bold")
 }
 
 
