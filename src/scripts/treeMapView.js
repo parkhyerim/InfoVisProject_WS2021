@@ -1,32 +1,20 @@
-// the entry point for the Bundesländer select ('chekbox' in index.html)
-const checkboxes = document.getElementsByClassName('checkbox')
-for (let checkbox of checkboxes){
-  checkbox.addEventListener('change', function() {
-      if(this.checked){
-        displaymobilitydata(checkbox.name)
-        console.log("Checked and the function is called");
-      } else {
-        //  console.log("unchecked");
-      }
-  }) 
-}
-
-function displaymobilitydata(param){
-    // temporal: without checkbox selection, "Bavaria" is the default
-    if(param ==null) var param = "Bavaria";
+export function Displaymobilitydata(monthparam, param="driving"){
     let mobilityData = [];
+    let month, day;
     var temp = [];
+    monthparam = monthparam[0].substr((monthparam[0].indexOf("-")+1), 2);
+
+
     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
         data.forEach(element => temp.push(element));
         temp.forEach(function(element) {
             if (element.country == "Germany" && 
             element["sub-region"] == "" && 
-            element["region"]==param) {
+            element["transportation_type"]==param) {
                 mobilityData.push(element);
             }
         });
-        console.log(data);
-        console.log(temp);
+     
         //calculate average value for every month
         for (let m=1; m<13; m++){
 
@@ -66,59 +54,47 @@ function displaymobilitydata(param){
         }
 
         //generate TreeChart from the provided Dateset
-        createTreeChart(mobilityData)
+        createTreeChart(mobilityData, monthparam)
     });
 };
 
-//displaymobilitydata();
-
-function createTreeChart(data){
+function createTreeChart(data, monthparam){
 
     //in case new treemap shall be loaded, the one before gets removed
-    d3.select("#treemapMobilitywrapper").select("svg").remove();
+    d3.select("#treemapwrapper").select("svg").remove();
 
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
-        width = 450 - margin.left - margin.right,
-        height = 450 - margin.top - margin.bottom;
+    var margin = {top: 20, right: 30, bottom: 30, left: 40},
+        width = 800 - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom;
 
-    var svg = d3.select("#treemapMobilitywrapper")
+    var svg = d3.select("#treemapwrapper")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" +margin.left + "," + margin.top + ")");
 
     //Group the data by "Germany", so our tree has a root node
     let groupedData = data.reduce((k, v)=> {
         k[v.country] = [...k[v.country] || [], v];
         return k;
-        }, {});
-
+    }, {});
 
     //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes
-    var hgroup = d3.hierarchy(groupedData, function(d){
-                                return d.Germany}
-                                )
-        .sum((d) => {return d["12"]});
+    var hgroup = d3.hierarchy(groupedData, function(d){return d.Germany})
+        .sum((d) => {return d[monthparam]});
 
     // Then d3.treemap computes the position of each element of the hierarchy
     // The coordinates are added to the root object above
-   const treemap= d3.treemap()
-       .size([width, height])
-       .padding(4)
-      (hgroup)
+    const treemap= d3.treemap()
+        .size([width, height])
+        .padding(4)
+        (hgroup)
 
 
     // Determine the color of each field
     // Explanation from https://stackoverflow.com/questions/42546344/how-to-apply-specific-colors-to-d3-js-map-based-on-data-values?rq=1
-    var color= d3.scale.linear()
-                .domain([400, 1000])
-                .range(["Salmon", "IndianRed"]);
-
-    // Add a opacity scale
-    var opacity =d3.scaleLinear()
-                .domain([400, 1000])
-                .range([.4,1])
+    var color= d3.scale.linear().domain([50, 180]).range(["blue", "green"]);
 
     // use this information to add rectangles:
     svg
@@ -132,10 +108,7 @@ function createTreeChart(data){
         .attr('width', function (d) { return d.x1 - d.x0; })
         .attr('height', function (d) { return d.y1 - d.y0})
         .style("fill", function(d) {
-            return color(d.data["05"]);})
-            .style("opacity", function(d) {
-                return opacity(d.data["05"])
-            });
+            return color(d.data[monthparam]);});
 
     // and to add the text labels
     svg
@@ -143,19 +116,16 @@ function createTreeChart(data){
         .data(treemap.leaves())
         .enter()
         .append("text")
-        .attr("x", function(d){ return d.x0+20})    // +10 to adjust position (more right)
+        .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
         .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
-        .text(function(d){ 
-            // Temporal: kurze Syntax und bessere Images
-            if(d.data.transportation_type === "driving"){
-            return "🚘 " + d.data.transportation_type +" "+ d.data["05"]+"%"; }
-         else if(d.data.transportation_type === "walking"){
-            return "🚶‍♀️ " + d.data.transportation_type +" "+ d.data["05"]+"%";
-        } else if(d.data.transportation_type === "transit") {
-            return "🚌 "+ d.data.transportation_type +" "+ d.data["05"]+"%";
-        }})
-        .attr("font-size", "18px")
+        .text(function(d){ return d.data.region})
+        .attr("font-size", "16px")
+        .attr("fill", "white")
+        //.attr("textLength", function (d) { return d.x1 - d.x0 - 10; })
+        .append('svg:tspan')
+        .attr('x', function(d){ return d.x0+5})
+        .attr('dy', 30)
+        .text(function(d){ return d.data[monthparam]+"%"})
+        .attr("font-size", "16px")
         .attr("fill", "white")
 }
-
-exports.displaymobilitydata = displaymobilitydata;

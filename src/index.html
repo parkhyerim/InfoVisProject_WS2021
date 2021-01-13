@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:,"> <!-- so that dev tools are quiet -->
     <title>InfoVis Project</title>
     <link rel="stylesheet" href="styles.css">
 
-    <!-- jQuery needs to be imported before materialize.js--> 
+    <!-- jQuery needs to be imported before materialize.js-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
+
     <!-- Materialize + Materialize Icons-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    
+
     <!-- d3 -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
@@ -21,19 +21,18 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 
-    <script type="module" language="javascript" src="scripts/lineChartView.js" ></script> 
+    <script type="module" language="javascript" src="scripts/lineChartView.js" ></script>
     <script type="module" language="javascript" src="main.js"></script>
-    <script type="module" src="scripts/mapGermany.js"></script> 
+    <script type="module" src="scripts/mapGermany.js"></script>
     <script type="module" src="scripts/datePicker.js" ></script>
-    <!-- <script type="text/JavaScript" src="scripts/treemapMobilityView.js"></script> -->
+    <script type="module" src="scripts/treeMapView.js"></script>
 </head>
 
 <body class="teal lighten-5">
     <header class="teal section">
         <h2 class="center white-text">Visualisierung der Fallzahlen und Mobilitätsdaten</h2>
         <h6 class="flow text grey-text center text-lighten-2">Auswirkung der Covid 19-Pandemie auf die Nutzung verschiedener Verkehrsmittel (%)</h6>
-    </header>
-   
+    </header>   
              
     <div> 
         <div class="row">
@@ -64,19 +63,16 @@
                 <div id="mapGermany" class="map-germany"></div>   
                 <div class="row">
                     <div class="col s6">
-                        <div id="lineChartContainer">
+                        <div id="lineChartContainer"></div>
                     </div>
                     <div class="col s6">
                         <!-- Container for Treemap with Mobility -->
-                        <div id="treemapMobilitywrapper">
-                            <!--<button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover" >Info</button>-->
-                        </div>
+                        <div id="treemapwrapper"></div>
                     </div>
                 </div> 
             </div>
         </div>
 
     </div> 
-
 </body>
 </html>

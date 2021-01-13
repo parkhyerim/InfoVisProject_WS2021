@@ -1,6 +1,7 @@
 import { InitializeSVG, VisualiseChosenBL } from './scripts/lineChartView.js';
 import { GetDateForFetch } from './scripts/datePicker.js';
 import { LoadMap } from './scripts/mapGermany.js';
+import { Displaymobilitydata } from './scripts/treeMapView.js';
 
 const mapButton = document.getElementById('mapButton');
 const datePickerButton = document.getElementById('datePickerButton');
@@ -17,16 +18,13 @@ function InitialiseEvents(){
 
     //Adds event listener on datePickerButton and each droopdown DateButton element
     eventListenerDatePicker();
-
-      
 }
 
 function eventListenerDatePicker() {
   //toggle date picker dropdown
-  datePickerButton.addEventListener('click', () => {
-    document.getElementById("dateDropdown").classList.toggle("hidden");
-    } 
-  );
+    datePickerButton.addEventListener('click', () => {
+        document.getElementById("dateDropdown").classList.toggle("hidden");
+    });
 
   //adds an event listener for every Date in the Dropdown
   Array.prototype.forEach.call(dateButton, function(date){
@@ -38,6 +36,7 @@ function eventListenerDatePicker() {
         document.getElementById("dateDropdown").classList.toggle("hidden");
         updateLineChart(bl);
       })
+      Displaymobilitydata(GetDateForFetch());
     })
 
   });
@@ -58,8 +57,7 @@ function eventListenerMap(){
         else if(mapButtonClicked === false){
             document.getElementById('mapGermany').style.display = 'none';
             mapButtonClicked = true;
-        }
-               
+        }               
     })
 }
 
@@ -75,6 +73,8 @@ function updateLineChart(bl, newBLWasSelected){
 }
 
 function initializeMap(){
+    Displaymobilitydata(GetDateForFetch());
+    
     const mapSelectedBl = document.getElementsByTagName('text');
         /** MutationObserver looks at all the html text elements and has a look if their
             attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
@@ -109,4 +109,3 @@ function initializeMap(){
 
 InitializeSVG();
 InitialiseEvents();
-

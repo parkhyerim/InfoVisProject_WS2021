@@ -98,6 +98,7 @@ function highlightBl(){
 	if(d3.select(this)._groups[0][0].classList[0] != 'selected-bl'){
 		colorBackground = d3.select("."+blHoovered).attr("fill");
 	}
+
 	d3.select("."+blHoovered).attr("fill", "#009688");
 
 	colorText = d3.select(this).attr("fill");
@@ -128,10 +129,6 @@ function clickEvent(){
 	})
 
 	// If the clicked on Bundesland wasn't clicked before, it is marked and added to `clickedBlArray`
-	/** clickedBlArray.length > 1 makes sure that the last Bundesland currently selected stays colored. 
-		(When the user tries to revoke the last Bundesland on the map she gets an alert that at least
-		one Bundesland needs to be selected.)  clickedBlArray.length > 1
-	*/
 	if(clickedBool === false & clickedBlArray.length <= 2) {
 		d3.select("."+d3.select(this)._groups[0][0].id)
 			.attr("fill", "#009688")
@@ -143,6 +140,7 @@ function clickEvent(){
 	else if(clickedBlArray.length == 1){
 		alert("Mindestens 1 Bundesland muss ausgewählt sein.")
 	}
+
 	/** If it has been clicked before the selection is revoked by changing the stroke coloring and removing the 
 		Bundesland from the array.
 	*/

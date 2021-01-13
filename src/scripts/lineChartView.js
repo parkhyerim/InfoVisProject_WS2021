@@ -51,7 +51,6 @@ export function VisualiseChosenBL(BLToBeVisualized, newBLWasSelected, selectedMo
         It will be used to select the d3 element and then to update and delete it.
       */
       const blClassN = data[0].Infos.Bundesland;
-      console.log(randomColor())
       visualiseCurve(svg, data, xAxis, yAxis, blClassN, randomColor());
         
       // Circles of the already displayed Bundesländer are updated according to the new axis. 
