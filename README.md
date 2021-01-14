@@ -66,3 +66,6 @@ Visualisierungen zu den Auswirkungen der Covid-19-Pandemie auf die Mobilität
 
 ## Zusätzliche Features: 
 Siehe Meilenstein 5
+
+## Browser:
+Getestet in Firefox und Chrome
