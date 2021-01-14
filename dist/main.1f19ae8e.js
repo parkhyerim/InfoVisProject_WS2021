@@ -118,7 +118,19 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"main.js":[function(require,module,exports) {
-'use strict';
+document.onreadystatechange = function () {
+  $(function () {
+    $('[data-toggle="popover"]').popover({
+      placement: 'top',
+      html: true,
+      title: '<div class="popover-header"><div class="popover-title">First Step</div><a href="#" class="close" data-dismiss="alert">&times;</a></div>',
+      content: '<div class="popover-content"><p>Excellent Bootstrap popover! I really love it.</p></div>'
+    }).addClass($(this).data("class"));
+    $(document).on("click", ".popover .close", function () {
+      $('[data-toggle="popover"]').popover('hide');
+    });
+  });
+};
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -147,7 +159,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51934" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57481" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
