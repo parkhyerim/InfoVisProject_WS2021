@@ -4,9 +4,11 @@ let counterRegion = 0; // number of checked regions
 for (let checkbox of checkboxes){
   checkbox.addEventListener('change', function() {
       if(this.checked){
-           displaymobilitydata(checkbox.name, "03")
-        //  displaymobilitydata(checkbox.name, myMonat)  // params: region, month
-          // displaymobilitydata("Berlin", "01") 
+           generateMobilityData(checkbox.name, "03")
+        //  generateMobilityData
+        (checkbox.name, myMonat)  // params: region, month
+          // generateMobilityData
+          ("Berlin", "01") 
           counterRegion++; 
       }else{
           counterRegion--;
@@ -14,14 +16,12 @@ for (let checkbox of checkboxes){
   }) 
 }
 
-function displaymobilitydata(regionParam, monthParam){
-
+function generateMobilityData(regionParam, monthParam){
     let mobilityData = [];
-    var temp = [];
     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
         data.filter(function(element){
-            if (element.country == "Germany" && element["sub-region"] == "" &&  element["region"]==regionParam){
-                mobilityData.push(element);   
+            if (element.country == "Germany" && element["sub-region"] == "" &&  element["region"]== regionParam){
+                mobilityData.push(element);   // Create a new dataset(array) containing only data for Germany
              // mobilityData.push({country: element.country, region: element.region, transportation_type: element.transportation_type, jan:"", feb:"", mar:""});   
             }
         })
@@ -33,7 +33,7 @@ function displaymobilitydata(regionParam, monthParam){
         //     }
         // });
 
-        // console.log(mobilityData)   
+       // console.log(mobilityData)   
 
         // Create a nested array 
         let nestedData = d3.group(mobilityData, d => d.region, d => d.transportation_type)
@@ -55,7 +55,8 @@ function displaymobilitydata(regionParam, monthParam){
 };
 
 // temporary: display the treemap for default params: Bavaria, January (without checkbox selection)
-// displaymobilitydata("Bavaria", "01");
+// generateMobilityData
+("Bavaria", "01");
 
 function createTreemapData(data, month){
 
