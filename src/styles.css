@@ -7,10 +7,6 @@ h1 {
     padding-top: 40px;
   }
 
-.jumbotron{
-    background-color: red;
-    color:#fff;
-}
 #visualisationContainer{
     position: center;
 }
@@ -21,19 +17,14 @@ h1 {
 }
 
 
-.side-bar{
-  height: 100vh !important;
-}
+
 
 .button-width{
   width: 120px;
   display: table !important;
 }
 
-.add-padding{
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
+
 
 .map-germany {
   display: block;
@@ -117,47 +108,85 @@ h1 {
  
  }
 
- .dropbtn {
-  background-color: #3498DB;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #2980B9;
-}
-
-.dropdown {
-  position: relative;
-  display: block;
-}
-
-#dateDropdown {
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  overflow: auto;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-#dateDropdown div {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-#dateDropdown div:hover {
-  background-color: #EBE7E7
-}
-
 
 .hidden {
   display: none;
 }
 
+.btn-group {
+  padding:5px;
+  /* position: absolute; */
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  vertical-align: middle;
+  margin:auto;
+  /* left: 5%;
+  right: 15%; */
+}
 
+.btn-group>.btn:first-child:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-group>.btn:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+
+.btn-group>.btn:last-child:not(:first-child),
+.btn-group>.dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn-group>.btn-inactive {
+  background-color: #607d8b;
+}
+
+.btn-group>.btn {
+  -webkit-box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 0px 0px rgba(0, 0, 0, 0), 0 0px 0px 0 rgba(0, 0, 0, 0);
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 0px 0px rgba(0, 0, 0, 0), 0 0px 0px 0 rgba(0, 0, 0, 0);
+}
+
+.btn-group>.btn-inactive:hover {
+  background-color: #728F9D;
+}
+
+.btn-group>.btn:hover {
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+#selectedDate{
+  background-color:teal;
+}
+
+#mapBtnContainer{
+  /* position: absolute; */
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  vertical-align: middle;
+  /* right: 9%;
+  margin:0%; */
+  padding:5px;
+  margin-left: 20px;
+}
+
+
+#selectorContainer{
+
+}
+
+#btnContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#lineChartContainer{
+  height: 400px;
+}
+
+#treemapwrapper{
+  margin-left: 30px;
+}

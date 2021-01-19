@@ -28,48 +28,62 @@
     <script type="module" src="scripts/treeMapView.js"></script>
 </head>
 
-<body class="teal lighten-5">
+<body>
     <header class="teal section">
-        <h2 class="center white-text">Visualisierung der Fallzahlen und Mobilitätsdaten</h2>
+        <h3 class="center white-text">Visualisierung der Fallzahlen und Mobilitätsdaten</h2>
         <h5 class="flow text grey-text center text-lighten-2">Auswirkungen der Covid-19-Pandemie auf die Mobilität</h5>
     </header>   
+
+
              
     <div> 
-        <div class="row">
-            <div class="col s2 teal lighten-2 side-bar">
-                <!--<h5 class="low text white-text">Wähle einen Monat</h5>-->
-                <div id="datePicker" class="date-picker add-padding">
-                    <a id="datePickerButton" class="waves-effect waves-light btn button-width">März 2020</a>
-                    <div id="dateDropdown" class="dropdown hidden">
-                      <div class="date ">März 2020</div>
-                      <div class="date">April 2020</div>
-                      <div class="date">Mai 2020</div>
-                      <div class="date">Juni 2020</div>
-                      <div class="date">Juli 2020</div>
-                      <div class="date">August 2020</div>
-                      <div class="date">September 2020</div>
-                      <div class="date">Oktober 2020</div>
-                      <div class="date">November 2020</div>
-                      <div class="date">Dezember 2020</div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col s10">
-                <div class="center-align add-padding">
+        <div class = "row" id="btnContainer"> 
+            <!-- <div class="col s3" > 
+                <div id="mapBtnContainer">
                     <a id="mapButton" class="waves-effect waves-light btn"><i class="material-icons right">map</i>Bundesländer</a>
                 </div>
                 
-                <div id="mapGermany" class="map-germany"></div>   
-                <div class="row">
-                    <div class="col s6">
-                        <div id="lineChartContainer"></div>
-                    </div>
-                    <div class="col s6">
-                        <!-- Container for Treemap with Mobility -->
-                        <div id="treemapwrapper"></div>
-                    </div>
-                </div> 
+            </div> -->
+
+            <div > 
+                <div class="btn-group" role="group" >
+                    <button type="button" class="btn btn-inactive date">März 2020</button>
+                    <button type="button" class="btn btn-inactive date">April 2020</button>
+                    <button type="button" class="btn btn-inactive date">Mai 2020</button>
+                    <button type="button" class="btn btn-inactive date">Juni 2020</button>
+                    <button type="button" class="btn btn-inactive date">Juli 2020</button>
+                    <button type="button" class="btn btn-inactive date">August 2020</button>
+                    <button type="button" class="btn btn-inactive date">September 2020</button>
+                    <button type="button" class="btn btn-inactive date">Oktober 2020</button>
+                    <button type="button" class="btn btn-inactive date">November 2020</button>
+                    <button type="button" class="btn btn-inactive date">Dezember 2020</button>
+                    
+                  </div>
+
+            </div>
+                
+
+               
+
+     
+
+        </div>
+
+        <div class ="row" id="selectorContainer">
+            <div class="col s4 m4 l4 offset-s4">
+                <div id="mapGermany" class="map-germany"></div> 
+            </div>
+            <div class="col s8 m8 l8 hidden" id="lineChartContainer">
+            </div>
+
+        </div>
+
+        <div class="row">
+        
+            <div class="col s5">
+                <!-- Container for Treemap with Mobility -->
+                <div id="treemapwrapper"></div>
             </div>
         </div>
 

@@ -12,8 +12,8 @@ export function LoadMap(){
 	// Source http://opendatalab.de/projects/geojson-utilities/
 	d3.json('../src/data/bundeslaender.geojson').then((geojson)=>{
 				
-		const width = 900;
-		const height =500;
+		const width = 700;
+		const height =350;
 
 		const svg = d3  
 			.select("#mapGermany")
