@@ -62,4 +62,6 @@ typings/
 
 # misc
 .idea
+.vscode
+.cache
 

@@ -59,25 +59,35 @@ function displaymobilitydata(regionParam, monthParam){
 
 function createTreemapData(data, month){
 
+//THIS IS FOR THE GERMANY-BUNDESLAND HIERACHY 
 //Group the data by "Germany", so our tree has a root node
-let groupedData = data.reduce((k, v)=> {
-    k[v.country] = [...k[v.country] || [], v];
-    return k;
-    }, {}); 
+/*  let groupedData = data.reduce((c, v)=> {
+    c[v.country] = [...c[v.country] || [], v];
+    return c;
+    }, {});  */
 
+//THIS IS FOR THE GERMANY-BUNDESLAND-TRANSPORTAIONTYPE HIERACHY
 //Group the data by country and by region, so our tree has a root node
-// let groupedData = data.reduce((c, v) => {
-//     c[v.country] = c[v.country] || {};                         //Init if country property does not exist
-//     c[v.country][v.region] = c[v.country][v.region] || {};   //Init if region property does not exist
-//     return c;
-//   }, {});
+ /* let groupedData = data.reduce((c, v) => {
+     c[v.country] = c[v.country] || [], v;                         //Init if country property does not exist
+     c[v.country][v.region] = [...c[v.country][v.region] || [], v];   //Init if region property does not exist
+     return c;
+     }, {});  */
 
+//THIS IS FOR THE GERMANY-BUNDESLAND-TRANSPORTAIONTYPE HIERACHY
+ let groupedData = data.reduce((c,v) => {
+    let con = c[v.country] = c[v.country] || {};
+    con = con[v.region] = con[v.region] || {};
+    con = con[v.transportation_type] = con[v.transportation_type] || v;
+ return c;
+}, {}); 
+ 
 //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes)
 let hgroup = d3.hierarchy(groupedData, function(d){
                       return d.Germany})
     .sum((d) => {return d[month]});
-
-    createTreeChart(hgroup, month);
+console.log(hgroup);
+    createTreeChart(hgroup, month); 
 
 };
 
