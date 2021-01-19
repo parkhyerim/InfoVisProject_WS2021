@@ -1,4 +1,4 @@
-import { InitializeSVG, VisualiseChosenBL } from './scripts/lineChartView.js';
+import { InitializeSVG, VisualiseChosenBL, UpdateLineChartMonth, GetCasesGermany } from './scripts/lineChartView.js';
 import { GetDateForFetch } from './scripts/datePicker.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
@@ -32,9 +32,18 @@ function eventListenerDatePicker() {
       datePickerButton.textContent = date.textContent;
       date.classList.add('selectedDate');
       //when date is selected: update lineChart for every checked BL in the map
-      selectedBL.forEach((bl) => {
+      selectedBL.forEach((bundesland) => {
         document.getElementById("dateDropdown").classList.toggle("hidden");
-        updateLineChart(bl);
+        //UpdateLineChartMonth(GetDateForFetch());
+
+        
+       GetCasesGermany(GetDateForFetch())
+            .then((totalCasesDE) => {
+                console.log(totalCasesDE)
+            });
+
+        
+        //updateLineChart(bl);
       })
       Displaymobilitydata(GetDateForFetch());
     })

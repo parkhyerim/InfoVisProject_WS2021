@@ -1,9 +1,116 @@
 let svg, xAxis, yAxis, currentDomain;
 const blDomainStorage = [];
+const allBundesländer = ["Schleswig-Holstein", "Hamburg", "Nordrhein-Westfalen", "Bayern", "Baden-Württemberg", 
+"Hessen", "Niedersachsen", "Mecklenburg-Vorpommern", "Rheinland-Pfalz", "Saarland", "Sachsen", "Thüringen", 
+"Sachsen-Anhalt", "Brandenburg", "Bremen", "Berlin"];
+
+const months = [["2020-03-01", "2020-04-01"], ["2020-04-01", "2020-05-01"], ["2020-05-01", "2020-06-01"], ["2020-06-01", "2020-07-01"],
+ ["2020-07-01", "2020-08-01"], ["2020-08-01", "2020-09-01"], ["2020-09-01", "2020-10-01"], ["2020-10-01", "2020-11-01"],
+ ["2020-11-01", "2020-12-01"], ["2020-12-01", "2021-01-01"]]
+    
+
+let casesTotal = 0;
+
 
 const margin = {top:10, right: 30, bottom: 60, left: 60},
   width = 600 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
+
+export async function GetCasesGermany(selectedMonth){
+  let casesTotal = 0;
+
+  /** Iterates through all the Bundesländer. Fetches their data for a specific month
+    and adds up the case numbers. The result is the number of cases in the country
+    during that specific month.
+    (A Promise seems to be necessary, because of the asynchronous fetchData in 
+    the forEach loop.)
+  */
+  //for(let i=0; i<allBundesländer.length; i++){
+     await fetchData("Berlin", selectedMonth)
+        .then( bundeslandObject => {
+          console.log(bundeslandObject)
+          
+          bundeslandObject.forEach(dayObject => {
+            casesTotal = casesTotal + dayObject.Infos.AnzahlFall;      
+          })  
+        }) 
+  //}
+  return casesTotal;
+}
+
+GetCasesGermany(["2020-03-01", "2020-04-01"])
+
+
+export function UpdateLineChartMonth(selectedMonth){
+  blDomainStorage.sort((a,b) => {
+        return a[1] - b[1];
+  })
+
+  blDomainStorage.forEach(bundesland => {
+    fetchData(bundesland, selectedMonth).then( data => {
+
+    })
+  })
+
+  // Fetching the data of the newly selected Bundesland
+  fetchData(BLToBeVisualized, selectedMonth).then((data) => {
+
+    // To figure out the max y-value which is necessary to correctly display the data
+    const neededYValue = d3.scaleLinear().domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
+
+    // Removes the Bundesland from `blDomainStorage` if it already exists
+    blDomainStorage.forEach((arr, i) => {
+      if(BLToBeVisualized == arr[0]){
+        blDomainStorage.splice(i, 1)
+        // Removes the curve and circles of the recently unselected Bundesland.
+        svg.select(".curve."+arr[0]).remove();
+        svg.selectAll(".circles."+arr[0]).remove();
+      }
+    })
+
+
+    // Stores the Bundesland and the highest y-value needed for that Bundesland
+   blDomainStorage.push([data[0].Infos.Bundesland, neededYValue.domain()[1]]);
+
+    /** Sorts the array in increasing order.
+      The Bundesland with the smallest needed y-value comes first and the one with the highest comes last.
+    */
+    blDomainStorage.sort((a,b) => {
+      return a[1] - b[1];
+    })
+
+
+    /** Checks whether the last Bundesland in `blDomainStorage` still obtains the highest needed
+      y-value compared to the newly selected Bundesland. If the newly checked Bundesland has
+      more Covid cases and therefore needs a higher y-value the current axes are removed 
+      and the updated ones are added.
+    **/
+    if(currentDomain > blDomainStorage[blDomainStorage.length-1][1]){
+      svg.select(".y-axis").remove(); // instead of deleting they should be updated,
+      svg.select(".x-axis").remove(); // but that seems more complicated
+      svg.select(".case-line").remove(); //removes existing vertical line
+      addAxes(data);
+    }
+
+    if(currentDomain < blDomainStorage[blDomainStorage.length-1][1]){
+      svg.select(".y-axis").remove(); // instead of deleting they should be updated,
+      svg.select(".x-axis").remove(); // but that seems more complicated
+      svg.select(".case-line").remove(); //removes existing vertical line
+      addAxes(data);
+    }
+
+    /** The curve of the newly selected Bundesland is added.
+      `blClassN` is necessary to give each curve a distinguishable class name.
+      It will be used to select the d3 element and then to update and delete it.
+    */
+    const blClassN = data[0].Infos.Bundesland
+    visualiseCurve(svg, data, xAxis, yAxis, blClassN, randomColor());
+      
+    // Circles of the already displayed Bundesländer are updated according to the new axis. 
+    updateExistingCurvesCircles(blDomainStorage);
+  })
+} 
+
 
 /** Saves the checked Bundesländer to the array `blDomainStorage` 
   and visualises the chosen Bundesland.
@@ -163,6 +270,7 @@ export function VisualiseChosenBL(BLToBeVisualized, newBLWasSelected, selectedMo
 }
 
 
+
 export function InitializeSVG(){
   svg = d3.select("#lineChartContainer")
           .append("div")
@@ -196,7 +304,7 @@ function fetchData(bundesland, selectedMonth){
             feed.forEach(elem => {
               casesData.push(elem.attributes);
             });
-            return groupDataByDate(casesData)
+            return groupDataByDate(casesData);
         });
 };
 
@@ -228,7 +336,7 @@ function groupDataByDate(casesData){
         AnzahlFall: currentValue.AnzahlFall
       };  
     }        
-    return dataEntries
+    return dataEntries;
   },{})
 
   // `dataEntries` gets transformed into an array so it can be easily sorted by date  
