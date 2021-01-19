@@ -34,15 +34,17 @@ function eventListenerDatePicker() {
       //when date is selected: update lineChart for every checked BL in the map
       selectedBL.forEach((bundesland) => {
         document.getElementById("dateDropdown").classList.toggle("hidden");
-        //UpdateLineChartMonth(GetDateForFetch());
+        //updateLineChart(bundesland);
+        //UpdateLineChartMonth(bundesland, GetDateForFetch());
 
         
-       GetCasesGermany(GetDateForFetch())
+       /*GetCasesGermany(GetDateForFetch())
             .then((totalCasesDE) => {
                 console.log(totalCasesDE)
-            });
+            });*/
 
-        
+        GetCasesGermany(GetDateForFetch());
+
         //updateLineChart(bl);
       })
       Displaymobilitydata(GetDateForFetch());
@@ -114,7 +116,6 @@ function initializeMap(){
         observer.observe(blMap, config);    
     }
 }
-
 
 InitializeSVG();
 InitialiseEvents();

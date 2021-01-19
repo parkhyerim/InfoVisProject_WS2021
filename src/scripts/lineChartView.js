@@ -3,42 +3,88 @@ const blDomainStorage = [];
 const allBundesländer = ["Schleswig-Holstein", "Hamburg", "Nordrhein-Westfalen", "Bayern", "Baden-Württemberg", 
 "Hessen", "Niedersachsen", "Mecklenburg-Vorpommern", "Rheinland-Pfalz", "Saarland", "Sachsen", "Thüringen", 
 "Sachsen-Anhalt", "Brandenburg", "Bremen", "Berlin"];
-
-const months = [["2020-03-01", "2020-04-01"], ["2020-04-01", "2020-05-01"], ["2020-05-01", "2020-06-01"], ["2020-06-01", "2020-07-01"],
- ["2020-07-01", "2020-08-01"], ["2020-08-01", "2020-09-01"], ["2020-09-01", "2020-10-01"], ["2020-10-01", "2020-11-01"],
- ["2020-11-01", "2020-12-01"], ["2020-12-01", "2021-01-01"]]
     
-
-let casesTotal = 0;
-
-
 const margin = {top:10, right: 30, bottom: 60, left: 60},
   width = 600 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
-export async function GetCasesGermany(selectedMonth){
-  let casesTotal = 0;
 
-  /** Iterates through all the Bundesländer. Fetches their data for a specific month
-    and adds up the case numbers. The result is the number of cases in the country
-    during that specific month.
-    (A Promise seems to be necessary, because of the asynchronous fetchData in 
-    the forEach loop.)
+
+export async function gatherCases(selectedMonth){
+  let arrayDE = [];
+
+  /** Iterates through all the Bundesländer.
+    `bundeslandArrayMonth` contains the number of cases per day for the 
+    corresponding Bundesland. They are pushed into `arrayDE 
   */
-  //for(let i=0; i<allBundesländer.length; i++){
-     await fetchData("Berlin", selectedMonth)
-        .then( bundeslandObject => {
-          console.log(bundeslandObject)
-          
-          bundeslandObject.forEach(dayObject => {
-            casesTotal = casesTotal + dayObject.Infos.AnzahlFall;      
-          })  
+  for(let i=0; i<allBundesländer.length; i++){
+
+     await fetchData(allBundesländer[i], selectedMonth)
+        .then( bundeslandArrayMonth => {
+          arrayDE.push(bundeslandArrayMonth)
         }) 
-  //}
-  return casesTotal;
+  }
+
+  // The cases of all Bundesländer are accumulated.
+  const accumulatedCasesPerDay = arrayDE.reduce((accumulator, currentValue) =>{ 
+    // `currentValue` contains the daily cases of a Bundesland
+    currentValue.forEach(obj => {
+      let day = obj.Meldedatum;
+      if(accumulator[day] !== undefined){
+        accumulator[day].AnzahlFälle = accumulator[day].AnzahlFälle + obj.Infos.AnzahlFall;
+      } else {
+        accumulator[day] = {
+          AnzahlFall: obj.Infos.AnzahlFall
+        }
+      }
+    })
+    return accumulator;
+  }, {})
+
+  return accumulatedCasesPerDay;
 }
 
-GetCasesGermany(["2020-03-01", "2020-04-01"])
+
+export function GetCasesGermany(selectedMonth){
+  gatherCases(selectedMonth).then((accumulatedCasesPerDayObject)=> {
+     // `accumulatedCasesPerDay` gets transformed into an array so it can be easily sorted by date  
+    let sortAllCases = [];
+    Object.entries(accumulatedCasesPerDayObject).forEach(([key, value]) => {
+      sortAllCases.push({Meldedatum: key, Infos: value})
+    })
+    // Sorts the array containing the summed up cases by `Meldedatum`
+    sortAllCases.sort((a, b) => new Date(a.Meldedatum) - new Date(b.Meldedatum))
+
+    svg.select(".y-axis").remove(); // instead of deleting they should be updated,
+    svg.select(".x-axis").remove(); // but that seems more complicated
+    svg.select(".curve").remove();
+    svg.selectAll(".circles").remove();
+
+    
+    addAxes(sortAllCases)
+    //visualiseCurve(svg, sortAllCases, xAxis, yAxis, "DE", randomColor());
+    svg.append("path")
+      .datum(sortAllCases)
+      .attr("fill", "none")
+      .attr("id", "DE-curve")
+      .attr("stroke", randomColor())
+      .attr("stroke-width", 1)
+      .attr("class", "curve" + " " + "DE") //necessary to add a specific class for every Bundesland shown
+      .attr("d", d3.line()
+          .x(item => xAxis(new Date(item.Meldedatum)))
+          .y(item => yAxis(new Date(item.AnzahlFälle)))
+      );
+    //console.log(sortAllCases)
+
+  })
+  
+  
+  //return sortAllCases;
+
+  //visualiseCurve(svg, sortAllCases, xAxis, yAxis, blClassN, randomColor());
+
+}
+
 
 
 export function UpdateLineChartMonth(selectedMonth){
@@ -88,14 +134,12 @@ export function UpdateLineChartMonth(selectedMonth){
     if(currentDomain > blDomainStorage[blDomainStorage.length-1][1]){
       svg.select(".y-axis").remove(); // instead of deleting they should be updated,
       svg.select(".x-axis").remove(); // but that seems more complicated
-      svg.select(".case-line").remove(); //removes existing vertical line
       addAxes(data);
     }
 
     if(currentDomain < blDomainStorage[blDomainStorage.length-1][1]){
       svg.select(".y-axis").remove(); // instead of deleting they should be updated,
       svg.select(".x-axis").remove(); // but that seems more complicated
-      svg.select(".case-line").remove(); //removes existing vertical line
       addAxes(data);
     }
 
@@ -104,6 +148,7 @@ export function UpdateLineChartMonth(selectedMonth){
       It will be used to select the d3 element and then to update and delete it.
     */
     const blClassN = data[0].Infos.Bundesland
+    console.log(data)
     visualiseCurve(svg, data, xAxis, yAxis, blClassN, randomColor());
       
     // Circles of the already displayed Bundesländer are updated according to the new axis. 
@@ -146,7 +191,6 @@ export function VisualiseChosenBL(BLToBeVisualized, newBLWasSelected, selectedMo
       if(blDomainStorage.length == 0 || blDomainStorage[blDomainStorage.length-1][1] < neededYValue.domain()[1]){
         svg.select(".y-axis").remove(); // instead of deleting they should be updated,
         svg.select(".x-axis").remove(); // but that seems more complicated
-        svg.select(".case-line").remove(); //removes existing vertical line
         addAxes(data);
       }
     
@@ -193,7 +237,6 @@ export function VisualiseChosenBL(BLToBeVisualized, newBLWasSelected, selectedMo
         fetchData(blDomainStorage[blDomainStorage.length-1][0], selectedMonth).then((data) => {
           svg.select(".y-axis").remove(); 
           svg.select(".x-axis").remove(); 
-          svg.select(".case-line").remove(); //removes existing vertical line
 
           addAxes(data)
           updateExistingCurvesCircles(blDomainStorage);            
@@ -345,7 +388,7 @@ function groupDataByDate(casesData){
     reportArr.push({Meldedatum: key, Infos: value})
   })
   // Sorts the array containing the summed up cases by `Meldedatum`
-  reportArr.sort((a, b) => b.Meldedatum - a.Meldedatum)
+  reportArr.sort((a, b) => new Date(a.Meldedatum) - new Date(b.Meldedatum))
   return reportArr;
 }
 
