@@ -96,6 +96,10 @@ function createTreeChart(data, monthparam){
     // Explanation from https://stackoverflow.com/questions/42546344/how-to-apply-specific-colors-to-d3-js-map-based-on-data-values?rq=1
     var color= d3.scale.linear().domain([50, 180]).range(["blue", "green"]);
 
+    var blName= data[0].region;
+    console.log(blName[3]);
+
+
     // use this information to add rectangles:
     svg
         .selectAll("rect")
@@ -110,15 +114,30 @@ function createTreeChart(data, monthparam){
         .style("fill", function(d) {
             return color(d.data[monthparam]);});
 
+
     // and to add the text labels
     svg
         .selectAll("text")
         .data(treemap.leaves())
         .enter()
         .append("text")
-         .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
+        .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
         .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
-        .text(function(d){ return d.data.region})
+        .text(function(d){ return d.data.region.substring(0, 6);})
+        .attr("font-size", "16px")
+        .attr("fill", "white")
+
+        .append('svg:tspan')
+        .attr('x', function(d){ return d.x0+5})
+        .attr('dy', 20)
+        .text(function(d){ return d.data.region.substring(5, d.data.region.length);})
+        .attr("font-size", "16px")
+        .attr("fill", "white")
+
+        .append('svg:tspan')
+        .attr('x', function(d){ return d.x0+5})
+        .attr('dy', 20)
+        .text(function(d){ return d.data.region.substring(5, d.data.region.length);})
         .attr("font-size", "16px")
         .attr("fill", "white")
         //.attr("textLength", function (d) { return d.x1 - d.x0 - 10; })
@@ -128,4 +147,6 @@ function createTreeChart(data, monthparam){
         .text(function(d){ return d.data[monthparam]+"%"})
         .attr("font-size", "16px")
         .attr("fill", "white")
+
+
 }
