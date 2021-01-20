@@ -3,7 +3,7 @@ const blDomainStorage = [];
 
 const margin = {top:10, right: 30, bottom: 60, left: 100},
   width = 1000 - margin.left - margin.right,
-  height = 350 - margin.top - margin.bottom;
+  height = 200 - margin.top - margin.bottom;
 
 /** Saves the checked Bundesländer to the array `blDomainStorage` 
   and visualises the chosen Bundesland.
@@ -169,7 +169,7 @@ export function InitializeSVG(){
           .classed("svg-container", true) 
           .append("svg")
           .attr("preserveAspectRatio", "xMinYMin meet")
-          .attr("viewBox", "0 0 1100 350")
+          .attr("viewBox", "0 0 1100 200")
           .classed("svg-content-responsive", true)
           .append("g")
           .attr("transform", `translate(${margin.left}, ${margin.top})`);             
