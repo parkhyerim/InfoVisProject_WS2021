@@ -4,7 +4,7 @@ let counterRegion = 0; // number of checked regions
 for (let checkbox of checkboxes){
   checkbox.addEventListener('change', function() {
       if(this.checked){
-           displaymobilitydata(checkbox.name, "03")
+           createMobilityData(checkbox.name, "03")
         //  displaymobilitydata(checkbox.name, myMonat)  // params: region, month
           // displaymobilitydata("Berlin", "01") 
           counterRegion++; 
@@ -13,15 +13,15 @@ for (let checkbox of checkboxes){
       }
   }) 
 }
+let multipleRegionsList = [];
+function createMobilityData(regionParam, monthParam){
 
-function displaymobilitydata(regionParam, monthParam){
-
-    let mobilityData = [];
-    var temp = [];
+    let mobilityGermanyData = [];
+    
     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
         data.filter(function(element){
-            if (element.country == "Germany" && element["sub-region"] == "" &&  element["region"]==regionParam){
-                mobilityData.push(element);   
+            if (element.country == "Germany" && element["sub-region"] == "" &&  element["region"] == regionParam){
+                mobilityGermanyData.push(element);  // Create a new dataset(array) containing only data for Germany 
              // mobilityData.push({country: element.country, region: element.region, transportation_type: element.transportation_type, jan:"", feb:"", mar:""});   
             }
         })
@@ -33,58 +33,79 @@ function displaymobilitydata(regionParam, monthParam){
         //     }
         // });
 
-        // console.log(mobilityData)   
-
+     //   console.log(mobilityGermanyData)   
+      //  console.log(mobilityGermanyData[0])
+       
         // Create a nested array 
-        let nestedData = d3.group(mobilityData, d => d.region, d => d.transportation_type)
-
+        let nestedData = d3.group(mobilityGermanyData,  d => d.region, d => d.transportation_type)
+    
+        let num = 0;
+        if(counterRegion > 0 && counterRegion < 4){
+           // emptyList.push(mobilityGermanyData)
+           num = counterRegion - 1;
+           multipleRegionsList.push(mobilityGermanyData);
+           console.log("multipleRegionsList")
+       // console.log(multipleRegionsList)
+          
+        }
+    
         //  nested array again and again to get data by transport
         let dataByRegion = nestedData.get(regionParam)
         let dataByDriving = dataByRegion.get("driving")
         let dataByWalking = dataByRegion.get("walking")
         let dataByTransit = dataByRegion.get("transit")
-        
+
        // Calculate the monthly average separately for the means of transport 
         if(dataByDriving) CalculateMonthlyAverage(dataByDriving)
         if(dataByWalking) CalculateMonthlyAverage(dataByWalking)
         if(dataByTransit) CalculateMonthlyAverage(dataByTransit)
- 
-        createTreemapData(mobilityData, monthParam)
-    });
-   
+
+       createTreemapData(multipleRegionsList, monthParam)
+    }); 
 };
 
-// temporary: display the treemap for default params: Bavaria, January (without checkbox selection)
-// displaymobilitydata("Bavaria", "01");
 
 function createTreemapData(data, month){
+    console.log(data);
+
+
 
 //THIS IS FOR THE GERMANY-BUNDESLAND HIERACHY 
 //Group the data by "Germany", so our tree has a root node
-/*  let groupedData = data.reduce((c, v)=> {
-    c[v.country] = [...c[v.country] || [], v];
+  let groupedData = data.reduce((c, v)=> {
+     
+    c[v.region] = [...c[v.region] || [], v];
+    console.log(c);
     return c;
-    }, {});  */
-
-//THIS IS FOR THE GERMANY-BUNDESLAND-TRANSPORTAIONTYPE HIERACHY
+    }, {});    
+//console.log(groupedData);
+//THIS IS FOR THE GERMAN"Y-BUNDESLAND-TRANSPORTAIONTYPE HIERACHY
 //Group the data by country and by region, so our tree has a root node
- /* let groupedData = data.reduce((c, v) => {
-     c[v.country] = c[v.country] || [], v;                         //Init if country property does not exist
-     c[v.country][v.region] = [...c[v.country][v.region] || [], v];   //Init if region property does not exist
-     return c;
-     }, {});  */
+    /* let groupedData = data.reduce((c, v) => {
+    if(c[v.country] != undefined){
+        c[v.country] = c[v.country]
 
+
+       } 
+     c[v.country] = c[v.country] || [], v;                         //Init if country property does not exist
+     c[v.country][v.region] = {...c[v.country][v.region] || [], v};   //Init if region property does not exist
+     return c;
+     }, {});   */ 
+ 
 //THIS IS FOR THE GERMANY-BUNDESLAND-TRANSPORTAIONTYPE HIERACHY
- let groupedData = data.reduce((c,v) => {
+ /*  let groupedData = data.reduce((c,v) => {
     let con = c[v.country] = c[v.country] || {};
     con = con[v.region] = con[v.region] || {};
     con = con[v.transportation_type] = con[v.transportation_type] || v;
- return c;
-}, {}); 
- 
+    console.log(con);
+    return con;
+}, {});  
+ */
+
 //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes)
 let hgroup = d3.hierarchy(groupedData, function(d){
-                      return d.Germany})
+                    console.log(groupedData);
+                      return d})
     .sum((d) => {return d[month]});
 console.log(hgroup);
     createTreeChart(hgroup, month); 
@@ -204,7 +225,7 @@ function CalculateMonthlyAverage(data){
                         case "01":
                             janSum += parseFloat(element[ymd])
                             janAvg = janSum/counter
-                            console.log(month + " " + typeof(month))
+                            //console.log(month + " " + typeof(month))
                             element[month] = janAvg.toFixed(2)
                             //console.log(ymd + " " + "sum: " + parseFloat(janSum) + " counter: " + counter + " result: " + janResult)
                             break;
