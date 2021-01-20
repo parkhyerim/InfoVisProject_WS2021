@@ -1,11 +1,11 @@
-import { InitializeSVG, VisualiseChosenBL, UpdateLineChartMonth, GetCasesGermany } from './scripts/lineChartView.js';
+import { InitializeSVG, UpdateLineChartPathMonth, ShowDEData, AddBundeslandToLineChart, RemoveBundeslandFromLineChart } from './scripts/lineChartView.js';
 import { GetDateForFetch } from './scripts/datePicker.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
 
 const mapButton = document.getElementById('mapButton');
 const datePickerButton = document.getElementById('datePickerButton');
-const dateButton = document.getElementsByClassName('date');
+const dateButtons = document.getElementsByClassName('date');
 let selectedBL = [];
 
 function InitialiseEvents(){
@@ -18,6 +18,10 @@ function InitialiseEvents(){
 
     //Adds event listener on datePickerButton and each droopdown DateButton element
     eventListenerDatePicker();
+
+    // Add line chart for all DE cases
+    ShowDEData(GetDateForFetch())
+
 }
 
 function eventListenerDatePicker() {
@@ -26,31 +30,34 @@ function eventListenerDatePicker() {
         document.getElementById("dateDropdown").classList.toggle("hidden");
     });
 
-  //adds an event listener for every Date in the Dropdown
-  Array.prototype.forEach.call(dateButton, function(date){
-    date.addEventListener('click', ()=> {
-      datePickerButton.textContent = date.textContent;
-      date.classList.add('selectedDate');
-      //when date is selected: update lineChart for every checked BL in the map
-      selectedBL.forEach((bundesland) => {
-        document.getElementById("dateDropdown").classList.toggle("hidden");
-        //updateLineChart(bundesland);
-        //UpdateLineChartMonth(bundesland, GetDateForFetch());
+     //adds an event listener for every Date in the Dropdown
+    for(let date of dateButtons){
+        date.addEventListener('click', ()=> {
+                
+            datePickerButton.textContent = date.textContent;
 
-        
-       /*GetCasesGermany(GetDateForFetch())
-            .then((totalCasesDE) => {
-                console.log(totalCasesDE)
-            });*/
+            document.getElementById("dateDropdown").classList.toggle("hidden");
+            document.getElementById("spinner").classList.add("active");
+            date.classList.add('selectedDate');
+            
+            // ShowDEData returns a promise. This guarantees that the axes are loaded
+            ShowDEData(GetDateForFetch()).then(() => {
+                
+                selectedBL.forEach((bundesland) => {
+                    UpdateLineChartPathMonth(bundesland, GetDateForFetch())
 
-        GetCasesGermany(GetDateForFetch());
+                //when date is selected: update lineChart for every checked BL in the map    
+                })
+            })
 
-        //updateLineChart(bl);
-      })
-      Displaymobilitydata(GetDateForFetch());
-    })
-
-  });
+            
+            
+            
+            
+          //Displaymobilitydata(GetDateForFetch());
+        })
+            
+    } 
 }
 
 function eventListenerMap(){
@@ -80,11 +87,11 @@ function updateLineChart(bl, newBLWasSelected){
 
     // newBLWasSelected only true if a new Bundesland was selected
     // false when only the date was changed
-    VisualiseChosenBL(bl, newBLWasSelected, GetDateForFetch());
+    //VisualiseChosenBL(bl, newBLWasSelected, GetDateForFetch());
 }
 
 function initializeMap(){
-    Displaymobilitydata(GetDateForFetch());
+    //Displaymobilitydata(GetDateForFetch());
     
     const mapSelectedBl = document.getElementsByTagName('text');
         /** MutationObserver looks at all the html text elements and has a look if their
@@ -100,13 +107,16 @@ function initializeMap(){
                         newBLWasSelected = true;
                         //add selected BL to selectedBL array
                         selectedBL.push(mutation.target.id);
+                        AddBundeslandToLineChart(mutation.target.id, GetDateForFetch());
                     } else {
                         newBLWasSelected = false;
                         //add selected BL to selectedBL array
                         const index = selectedBL.indexOf(mutation.target.id)
                         selectedBL.splice(index, 1);
+                        RemoveBundeslandFromLineChart(mutation.target.id);
                     } 
-                    updateLineChart(mutation.target.id, newBLWasSelected)            
+                    //updateLineChart(mutation.target.id, newBLWasSelected)            
+                    //UpdateLineChartBundesland(mutation.target.id, newBLWasSelected);
                 }
             })  
         }) 
