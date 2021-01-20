@@ -62,6 +62,14 @@ typings/
 
 # misc
 .idea
+<<<<<<< Updated upstream
 .vscode
 .cache
+=======
+.cache
+.DS_Store
+.eslintignore
+.eslintrc.json
+dist
+>>>>>>> Stashed changes
 
