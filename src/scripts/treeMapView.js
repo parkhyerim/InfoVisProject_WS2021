@@ -63,9 +63,9 @@ function createTreeChart(data, monthparam){
     //in case new treemap shall be loaded, the one before gets removed
     d3.select("#treemapwrapper").select("svg").remove();
 
-    var margin = {top: 20, right: 30, bottom: 30, left: 40},
-        width = 700 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+    var margin = {top: 20, right: 30, bottom: 30, left: 30},
+        width = 600 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
     var svg = d3.select("#treemapwrapper")
         .append("svg")
@@ -116,7 +116,7 @@ function createTreeChart(data, monthparam){
         .data(treemap.leaves())
         .enter()
         .append("text")
-        .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
+         .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
         .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
         .text(function(d){ return d.data.region})
         .attr("font-size", "16px")

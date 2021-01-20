@@ -1,7 +1,7 @@
 let svg, xAxis, yAxis, currentDomain;
 const blDomainStorage = [];
 
-const margin = {top:10, right: 30, bottom: 60, left: 60},
+const margin = {top:10, right: 30, bottom: 60, left: 100},
   width = 1000 - margin.left - margin.right,
   height = 350 - margin.top - margin.bottom;
 

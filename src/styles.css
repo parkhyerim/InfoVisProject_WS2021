@@ -28,85 +28,23 @@ h1 {
 
 .map-germany {
   display: block;
-  margin: auto;
+  
 }
 
 .svg-container {
   display: inline-block;
   position: relative;
   width: 100%;
-  padding-bottom: 70%; 
   vertical-align: middle; 
   overflow: hidden; 
 }
 .svg-content-responsive {
   display: inline-block;
-  position: absolute;
   top: 0;
   left: 0;
 
 }
 
-
-
-.popover {
-  background-color:   #fef9f9;
-  padding: 0px;
-
-}
-.popover-header {
-  background-color:   #3f0f0f;
-  color: #FFFFFF;
-  margin: 0px;
-
-}
-.popover-title {
-  font-size: 22px;
-  margin-left: 15px;;
-
-}
-.close{
-  position: absolute;
-  right: 10px;
-  top: -5px;
-  font-size: 36px;
-  color: #FFFFFF;
-}
-.popover-content {
-  color: black;
-  padding: 15px;
-}
-.bs-popover-top .arrow {
- /* Position at the bottom center */
- bottom: -16px;
- position: absolute;
- left: 50%;
-
- /* Border */
- background-color: #fef9f9;
- transform: translate(-50%, -50%) rotate(45deg);
-
- /* Size */
- height: 16px;
- width: 16px;
-
-}
-
-.bs-popover-left .arrow {
-  /* Position at the right center */
-  right: -16px;
-  position: absolute;
-  top: 50%;
- 
-  /* Border */
-  background-color: #fef9f9;
-  transform: translate(-50%, -50%) rotate(45deg);
- 
-  /* Size */
-  height: 16px;
-  width: 16px;
- 
- }
 
 
 .hidden {
@@ -173,9 +111,6 @@ h1 {
 }
 
 
-#selectorContainer{
-
-}
 
 #btnContainer{
   display: flex;
@@ -184,9 +119,31 @@ h1 {
 }
 
 #lineChartContainer{
-  height: 400px;
+  height: 200px;
 }
 
 #treemapwrapper{
   margin-left: 30px;
+}
+
+.modal {
+  left: 0;
+  right: 0;
+  background-color: #fafafa;
+  padding: 0;
+  max-height: 40%;
+  width: 35%;
+  will-change: top, opacity;
+}
+
+#toast-container {
+
+  right: auto !important;
+  bottom: 50%;
+  left:4%;
+  top: auto !important;
+}
+
+.material-icons{
+  color: teal;
 }

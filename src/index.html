@@ -26,6 +26,7 @@
     <script type="module" src="scripts/mapGermany.js"></script>
     <script type="module" src="scripts/datePicker.js" ></script>
     <script type="module" src="scripts/treeMapView.js"></script>
+    <script type="text/javascript" src="scripts/popover.js"></script>
 </head>
 
 <body>
@@ -39,6 +40,24 @@
     <div> 
 
         <div class = "row" id="btnContainer"> 
+             <a onclick="M.toast({html: 'I am a toast'})" ><i class="medium material-icons">info_outline</i></a>
+            
+            <!-- Modal Trigger -->
+            <a class="modal-trigger" href="#demo-modal"> <i class="medium material-icons">info</i></a>
+                            <!-- Modal Structure -->
+                <div id="demo-modal" class="modal">
+                    <div class="modal-content">
+                    <h4>A Demo of small modal</h4>
+                    <p>Content of the modal goes here. Place marketing text or other information here.
+                    </p>
+                
+                    </div>
+                    <div class="modal-footer">
+                    <a href="#!" class="modal-action modal-close waves-effect waves-red btn brown darken-3">Close</a>
+                    </div>
+                </div>
+
+            <!-- <button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover" >Info</button> -->
             <!-- <div class="col s3" > 
                 <div id="mapBtnContainer">
                     <a id="mapButton" class="waves-effect waves-light btn"><i class="material-icons right">map</i>Bundesländer</a>
@@ -47,8 +66,9 @@
             </div> -->
 
             <div > 
+                
                 <div class="btn-group" role="group" >
-                    <button type="button" class="btn btn-inactive date">März 2020</button>
+                    <button type="button" class="btn btn-inactive date tooltipped" data-position="top" data-tooltip="I am a tooltip">März 2020</button>
                     <button type="button" class="btn btn-inactive date">April 2020</button>
                     <button type="button" class="btn btn-inactive date">Mai 2020</button>
                     <button type="button" class="btn btn-inactive date">Juni 2020</button>
@@ -71,21 +91,24 @@
         </div>
 
         <div class ="row" id="selectorContainer">
-            <div class="col s4 m4 l4 offset-s4">
+            <div class="col s3 ">
                 <div id="mapGermany" class="map-germany"></div> 
             </div>
-            <div class="col s8 m8 l8 hidden" id="lineChartContainer">
+            <div class="col s9 hidden" id="lineChartContainer">
             </div>
 
-        </div>
 
+        </div>
         <div class="row">
-        
-            <div class="col s5">
+
+            <div class="col s6">
                 <!-- Container for Treemap with Mobility -->
                 <div id="treemapwrapper"></div>
             </div>
         </div>
+
+        
+
 
     </div> 
 </body>

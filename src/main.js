@@ -9,6 +9,7 @@ const datePicked = '';
 const dateButton = document.getElementsByClassName('date');
 let selectedBL = [];
 
+
 function InitialiseEvents(){
 
     // Initially load map. The map gets hidden in mapGermany.js 
@@ -27,6 +28,10 @@ function eventListenerDatePicker() {
 //adds an event listener for every Datebutton
   Array.prototype.forEach.call(dateButton, function(date){
     date.addEventListener('click', ()=> {
+        
+    $('.modal').modal('open');
+    M.toast({html: 'I am a toast!'}, 3000, 'blue');
+
      // datePickerButton.textContent = date.textContent;
      if(document.getElementById('selectedDate') != null){
         document.getElementById('selectedDate').removeAttribute("id");
