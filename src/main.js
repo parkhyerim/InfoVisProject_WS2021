@@ -2,6 +2,8 @@ import { InitializeSVG, VisualiseChosenBL } from './scripts/lineChartView.js';
 import { GetDateForFetch } from './scripts/datePicker.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
+import { createMobilityData } from './scripts/treeMapMobilityView.js';
+
 
 const mapButton = document.getElementById('mapButton');
 const datePickerButton = document.getElementById('datePickerButton');
@@ -37,6 +39,7 @@ function eventListenerDatePicker() {
         updateLineChart(bl);
       })
       Displaymobilitydata(GetDateForFetch());
+      createMobilityData(GetDateForFetch());
     })
 
   });
@@ -74,10 +77,11 @@ function updateLineChart(bl, newBLWasSelected){
 
 function initializeMap(){
     Displaymobilitydata(GetDateForFetch());
+    createMobilityData(GetDateForFetch());
     
     const mapSelectedBl = document.getElementsByTagName('text');
         /** MutationObserver looks at all the html text elements and has a look if their
-            attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
+            attributes# changed. If the class attribute changed to `selected-bl` a new Bundesland
             has been selected in the map
         */
         const observer = new MutationObserver((mutations) => {
