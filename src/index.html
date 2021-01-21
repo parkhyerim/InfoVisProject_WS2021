@@ -1,84 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="data:,"> <!-- so that dev tools are quiet -->
-  <title>InfoVis Project</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:,"> <!-- so that dev tools are quiet -->
+    <title>InfoVis Project</title>
+    <link rel="stylesheet" href="styles.css">
 
-  <!-- jQuery needs to be imported before materialize.js-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- jQuery needs to be imported before materialize.js-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-  <!-- Materialize + Materialize Icons-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Materialize + Materialize Icons-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- d3 -->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
-  <script src="https://d3js.org/d3.v6.min.js"></script>
+    <!-- d3 -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
 
-  <!-- Compiled and minified JavaScript -->
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 
-  <script type="module" language="javascript" src="scripts/lineChartView.js"></script>
-  <script type="module" language="javascript" src="main.js"></script>
-  <script type="module" src="scripts/mapGermany.js"></script>
-  <script type="module" src="scripts/datePicker.js"></script>
-  <script type="module" src="scripts/treeMapView.js"></script>
-  <script type="modulet" src="scripts/treeMapMobilityView.js"></script>
+    <script type="module" language="javascript" src="scripts/lineChartView.js" ></script>
+    <script type="module" language="javascript" src="main.js"></script>
+    <script type="module" src="scripts/mapGermany.js"></script>
+    <script type="module" src="scripts/datePicker.js" ></script>
+    <script type="module" src="scripts/treeMapView.js"></script>
+    <script type="module" src="scripts/treeMapMobilityView.js"></script>
 </head>
 
 <body class="teal lighten-5">
-  <header class="teal section">
-    <h2 class="center white-text">Visualisierung der Fallzahlen und Mobilitätsdaten</h2>
-    <h5 class="flow text grey-text center text-lighten-2">Auswirkungen der Covid-19-Pandemie auf die Mobilität</h5>
-  </header>
-
-  <div>
-    <div class="row">
-      <div class="col s2 teal lighten-2 side-bar">
-        <!--<h5 class="low text white-text">Wähle einen Monat</h5>-->
-        <div id="datePicker" class="date-picker add-padding">
-          <a id="datePickerButton" class="waves-effect waves-light btn button-width">März 2020</a>
-          <div id="dateDropdown" class="dropdown hidden">
-            <div class="date ">März 2020</div>
-            <div class="date">April 2020</div>
-            <div class="date">Mai 2020</div>
-            <div class="date">Juni 2020</div>
-            <div class="date">Juli 2020</div>
-            <div class="date">August 2020</div>
-            <div class="date">September 2020</div>
-            <div class="date">Oktober 2020</div>
-            <div class="date">November 2020</div>
-            <div class="date">Dezember 2020</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col s10">
-        <div class="center-align add-padding">
-          <a id="mapButton" class="waves-effect waves-light btn"><i class="material-icons right">map</i>Bundesländer</a>
-        </div>
-
-        <div id="mapGermany" class="map-germany"></div>
+    <header class="teal section">
+        <h2 class="center white-text">Visualisierung der Fallzahlen und Mobilitätsdaten</h2>
+        <h5 class="flow text grey-text center text-lighten-2">Auswirkungen der Covid-19-Pandemie auf die Mobilität</h5>
+    </header>   
+             
+    <div> 
         <div class="row">
-          <div class="col s6">
-            <div id="lineChartContainer"></div>
-          </div>
-          <div class="col s6">
-            <!-- Container for Treemap with Mobility -->
-            <div id="treemapwrapper"></div>
-            <p>Treemap</p>
-          </div>
+            <div class="col s2 teal lighten-2 side-bar">
+                <!--<h5 class="low text white-text">Wähle einen Monat</h5>-->
+                <div id="datePicker" class="date-picker add-padding">
+                    <a id="datePickerButton" class="waves-effect waves-light btn button-width">März 2020</a>
+                    <div id="dateDropdown" class="dropdown hidden">
+                      <div class="date ">März 2020</div>
+                      <div class="date">April 2020</div>
+                      <div class="date">Mai 2020</div>
+                      <div class="date">Juni 2020</div>
+                      <div class="date">Juli 2020</div>
+                      <div class="date">August 2020</div>
+                      <div class="date">September 2020</div>
+                      <div class="date">Oktober 2020</div>
+                      <div class="date">November 2020</div>
+                      <div class="date">Dezember 2020</div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="col s10">
+                <div class="center-align add-padding">
+                    <a id="mapButton" class="waves-effect waves-light btn"><i class="material-icons right">map</i>Bundesländer</a>
+                </div>
+                
+                <div id="mapGermany" class="map-germany"></div>   
+                <div class="row">
+                    <div class="col s6">
+                        <div id="lineChartContainer"></div>
+                    </div>
+                    <div class="col s6">
+                        <!-- Container for Treemap with Mobility for Germany-->
+                        <div id="treemapwrapper"></div>
+                    </div>
+                     <!-- Container for Treemap with Mobility sort by the selected states-->
+                    <div id = "treemap_mobility_Viz">
+                      <button type="button" class="btn btn-outline-info" id="popoverLC" data-toggle="popover">Info</button>
+                      <div id="treemapRegion01"> </div>
+                      <div id="monatSelector"></div>
+                      <div id="treemapRegion02"></div>
+                  </div>
+                </div> 
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  </div>
+    </div> 
 </body>
-
 </html>
