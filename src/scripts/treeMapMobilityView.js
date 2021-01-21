@@ -1,5 +1,5 @@
- // temporary: the entry point for the regions selection ('chekbox' in index.html)
-const checkboxes = document.getElementsByClassName('map-germany')
+// temporary: the entry point for the regions selection ('chekbox' in index.html)
+const checkboxes = document.getElementsByClassName('checkbox')
 let counterRegion = 0; // number of checked regions
 for (let checkbox of checkboxes){
   checkbox.addEventListener('change', function() {
@@ -11,11 +11,10 @@ for (let checkbox of checkboxes){
       }else{
           counterRegion--;
       }
-  })  
-} 
-
+  }) 
+}
 let multipleRegionsList = [];
-export function createMobilityData(regionParam, monthParam){
+function createMobilityData(regionParam, monthParam){
 
     let mobilityGermanyData = [];
     
@@ -39,7 +38,6 @@ export function createMobilityData(regionParam, monthParam){
        
         // Create a nested array 
         let nestedData = d3.group(mobilityGermanyData,  d => d.region, d => d.transportation_type)
-        console.log(nestedData);
     
         let num = 0;
         if(counterRegion > 0 && counterRegion < 4){
@@ -51,8 +49,6 @@ export function createMobilityData(regionParam, monthParam){
     
         //  nested array again and again to get data by transport
         let dataByRegion = nestedData.get(regionParam)
-        console.log(regionParam);
-        console.log(nestedData.get(regionParam));
         let dataByDriving = dataByRegion.get("driving")
         let dataByWalking = dataByRegion.get("walking")
         let dataByTransit = dataByRegion.get("transit")
