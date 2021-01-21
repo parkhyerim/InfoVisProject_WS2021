@@ -41,14 +41,11 @@ function createMobilityData(regionParam, monthParam){
     
         let num = 0;
         if(counterRegion > 0 && counterRegion < 4){
-           // emptyList.push(mobilityGermanyData)
-           num = counterRegion - 1;
-           multipleRegionsList.push(mobilityGermanyData);
-           //let d3hierarchy = d3.hierarchy(nestedData);
-           console.log("multipleRegionsList")
-        console.log(multipleRegionsList)
-          
-        }
+            // emptyList.push(mobilityGermanyData)
+            num = counterRegion - 1;
+            multipleRegionsList.push(mobilityGermanyData);
+           
+         }
     
         //  nested array again and again to get data by transport
         let dataByRegion = nestedData.get(regionParam)
@@ -71,82 +68,31 @@ function createMobilityData(regionParam, monthParam){
 
 function createTreemapData(data, month){
 
-console.log("createTreemap data")
-console.log(data)
 
-let d3hierarchy = d3.hierarchy(data, function(d){return d.children});
-console.log(d3hierarchy)
-//Group the data by "Germany", so our tree has a root node
-// let groupedData = data.reduce((k, v)=> {
-//     k[v.country] = [...k[v.country] || [], v];
-//     return k;
-//     }, {}); 
+let groupArray = [];
 
-// let treeData = d3.stratify()
-// .id(function(d){return d.region;})
-// .parentId(function(d){return d.country;})
-// (data);
-// console.log(treeData);
-
-
-
-
-//  console.log("grouped Data")
-//  console.log(groupedData)
-
-//Group the data by "Germany", so our tree has a root node
-let groupedData2 = data.reduce((k, v)=> {
-  //let con = k[v.country] = [...k[v.country] || [], v];
-
-  for(i=0 ; i < v.length; i++){
-    let con = k[v[i].country] = k[v[i].country] || {};
-    con = con[v[innerHeight].region] = con[v[i].region] || {};
-    con = con[v[i].transportation_type] = con[v[i].transportation_type] || v;
- return con; 
-}
- 
-  //con = con[v.transportation_type] = con[v.transportation_type] || {};
-//   con = con["percentage"] = v;
- console.log(con)
-   
-    }, {}); 
-
-
-
- 
-console.log("groupdData2")
-console.log(groupedData2)
-
-
-//Group the data by country and by region, so our tree has a root node
-let groupedData = data.reduce((c, v) => {
-    c[v.country] = [...c[v.country]] || [], v;                         //Init if country property does not exist
-    c[v.country][v.region] = c[v.country][v.region] || [], v;   //Init if region property does not exist
-    return c;
-  });
-console.log("grouped Data")
- console.log(groupedData)
-
-// Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes)
-let hgroup = d3.hierarchy(groupedData2, function(d){
-                      return d.Germany})
-    .sum(function(d){ 
-        console.log(d[month]) 
-        return d[month];
+data.forEach(region => {
+    let regionArray = [];
+    region.forEach(transportType => {
+        regionArray.push(transportType);
     })
-  //.sort((a,b) => (b[month] - a[month]))  //
+    groupArray.push({ "children": regionArray}) 
+})
 
-    createTreeChart(hgroup, month);
- 
+const groupedData = { "children": groupArray }
+
+
+//Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes)
+let hgroup = d3.hierarchy(groupedData, d =>  d.children )
+    .sum((d) => {return d[month]});
+    
+    createTreeChart(hgroup, month); 
+
 };
 
 
 function createTreeChart(hgroup, month){
-    console.log("hgroup")
-    console.log(hgroup)
     // Old treemap gets removed
-
-
     d3.select("#treemapRegion01").select("svg").remove();
 
     var margin = {top: 10, right: 10, bottom: 10, left: 10};
@@ -169,7 +115,6 @@ function createTreeChart(hgroup, month){
        .paddingInner(2)
        .round(true)
        (hgroup)
-
 
     // color options
     var color= d3.scale.linear().domain([60, 300]).range(["orange", "indianred"]);
@@ -223,7 +168,6 @@ function createTreeChart(hgroup, month){
     .attr("fill", "white")
     .attr("font-weight","bold")
 }
-
 
 // Calculate the monthly average separately for the means of transport 
 function CalculateMonthlyAverage(data){
