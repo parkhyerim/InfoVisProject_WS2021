@@ -64,8 +64,8 @@ function createTreeChart(data, monthparam){
     d3.select("#treemapwrapper").select("svg").remove();
 
     var margin = {top: 20, right: 30, bottom: 30, left: 30},
-        width = 600 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        width = 700 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
     var svg = d3.select("#treemapwrapper")
         .append("svg")
@@ -97,7 +97,7 @@ function createTreeChart(data, monthparam){
     var color= d3.scale.linear().domain([50, 180]).range(["blue", "green"]);
 
     var blName= data[0].region;
-    console.log(blName[3]);
+    console.log(treemap.leaves());
 
 
     // use this information to add rectangles:
@@ -116,28 +116,28 @@ function createTreeChart(data, monthparam){
 
 
     // and to add the text labels
-    svg
+var map=  svg
         .selectAll("text")
         .data(treemap.leaves())
         .enter()
         .append("text")
         .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
         .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
-        .text(function(d){ return d.data.region.substring(0, 6);})
+        .text(function(d){ return d.data.region.substring(0, 9);})
+        .attr("font-size", "16px")
+        .attr("fill", "white")
+        
+        .append('svg:tspan')
+        .attr('x', function(d){ return d.x0+5})
+        .attr('dy', 20)
+        .text(function(d){ return d.data.region.substring(9, 17);})
         .attr("font-size", "16px")
         .attr("fill", "white")
 
         .append('svg:tspan')
         .attr('x', function(d){ return d.x0+5})
         .attr('dy', 20)
-        .text(function(d){ return d.data.region.substring(5, d.data.region.length);})
-        .attr("font-size", "16px")
-        .attr("fill", "white")
-
-        .append('svg:tspan')
-        .attr('x', function(d){ return d.x0+5})
-        .attr('dy', 20)
-        .text(function(d){ return d.data.region.substring(5, d.data.region.length);})
+        .text(function(d){ return d.data.region.substring(17, d.data.region.length);})
         .attr("font-size", "16px")
         .attr("fill", "white")
         //.attr("textLength", function (d) { return d.x1 - d.x0 - 10; })
@@ -147,6 +147,7 @@ function createTreeChart(data, monthparam){
         .text(function(d){ return d.data[monthparam]+"%"})
         .attr("font-size", "16px")
         .attr("fill", "white")
+
 
 
 }
