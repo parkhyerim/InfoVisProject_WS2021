@@ -16,12 +16,18 @@ h1 {
 }
 
 .date-picker{
+<<<<<<< HEAD
 width: 40%;
 margin: auto;
+=======
+  width: 40%;
+  margin: auto;
+>>>>>>> main
 }
 
 
 .side-bar{
+<<<<<<< HEAD
 height: 100vh !important;
 }
 
@@ -53,12 +59,46 @@ display: inline-block;
 position: absolute;
 top: 0;
 left: 0;
+=======
+  height: 100vh !important;
+}
+
+.button-width{
+  width: 120px;
+  display: table !important;
+}
+
+.add-padding{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.map-germany {
+  display: block;
+  margin: auto;
+}
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 70%; 
+  vertical-align: middle; 
+  overflow: hidden; 
+}
+.svg-content-responsive {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+>>>>>>> main
 
 }
 
 
 
 .popover {
+<<<<<<< HEAD
 background-color:   #fef9f9;
 padding: 0px;
 
@@ -67,6 +107,16 @@ padding: 0px;
 background-color:   #3f0f0f;
 color: #FFFFFF;
 margin: 0px;
+=======
+  background-color:   #fef9f9;
+  padding: 0px;
+
+}
+.popover-header {
+  background-color:   #3f0f0f;
+  color: #FFFFFF;
+  margin: 0px;
+>>>>>>> main
 
 }
 .popover-title {
@@ -157,7 +207,11 @@ background-color: #EBE7E7
 
 
 .hidden {
+<<<<<<< HEAD
 display: none;
+=======
+  display: none;
+>>>>>>> main
 }
 
 
