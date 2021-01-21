@@ -118,8 +118,6 @@ function resetBlColor(){
 
 function clickEvent(){
 	const clickedBl = d3.select(this)._groups[0][0].id;
-	console.log(d3.select(this)._groups[0][0].id);//hier steht das richtige Bundesland drin
-	
 
 	// Check if a Bundesland has already been clicked
 	let clickedBool = false;
