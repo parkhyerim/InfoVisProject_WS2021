@@ -1,60 +1,103 @@
-// temporary: the entry point for the regions selection ('chekbox' in index.html)
-const checkboxes = document.getElementsByClassName('checkbox')
-let counterRegion = 0; // number of checked regions
-for (let checkbox of checkboxes){
-  checkbox.addEventListener('change', function() {
-      if(this.checked){
-           createMobilityData(checkbox.name, "03")
-        //  displaymobilitydata(checkbox.name, myMonat)  // params: region, month
-          // displaymobilitydata("Berlin", "01") 
-          counterRegion++; 
-      }else{
-          counterRegion--;
-      }
-  }) 
+export function DisplayMobilitySelectedRegion(monthparam){
+  //  console.log("Mobility per selected region is called")
+  //  console.log(monthparam)
 }
-let multipleRegionsList = [];
-function createMobilityData(regionParam, monthParam){
 
+let counterRegion = 0; // number of selected regions
+
+export function UpdateSelectedRegions(regionParam, isSelected, monthParam){
+    let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2);
+    let region = ReplaceRegionName(regionParam);
+  //  console.log(region + " " + month)
+      // true. new added. false. deleted
+    if(isSelected){
+        counterRegion++;
+        createMobilityData(region, month, isSelected); // params: region, month      
+    } else {
+        counterRegion--;
+        createMobilityData(region, month, isSelected); // params: region, month
+    }
+}
+
+export function UpdateSelectedRegions2(regionList, isSelected, monthParam){
+    console.log(regionList)
+    let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2);
+   // let region = [];
+   // region.push(regionList)
+   //  console.log(region)
+   // createMobilityData(regionList, month)
+    // let region = ReplaceRegionName(regionParam);
+    // console.log(region + " " + month)
+    //   // true. new added. false. deleted
+    // if(isSelected){
+    //     counterRegion++;
+    //     createMobilityData(region, month, isSelected); // params: region, month      
+    // } else {
+    //     counterRegion--;
+    //     createMobilityData(region, month, isSelected); // params: region, month
+    // }
+}
+
+
+
+// // temporary: the entry point for the regions selection ('chekbox' in index.html)
+// const checkboxes = document.getElementsByClassName('checkbox')
+// // let counterRegion = 0; // number of checked regions
+// for (let checkbox of checkboxes){
+//   checkbox.addEventListener('change', function() {
+//       if(this.checked){
+//            createMobilityData(checkbox.name, "03")
+//         //  displaymobilitydata(checkbox.name, myMonat)  // params: region, month
+//           // displaymobilitydata("Berlin", "01") 
+//           counterRegion++; 
+//       }else{
+//           counterRegion--;
+//       }
+//   }) 
+// }
+
+// createMobilityData("Berlin", "01")
+
+let multipleRegionsList = [];
+function createMobilityData(regionParam, monthParam, selected){
+  //  function createMobilityData(regionList, monthParam){
     let mobilityGermanyData = [];
-    
+    let isSelected;
+    let selectedNumber;
+   // selectedNumber = regionList.lenth;
+
     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
         data.filter(function(element){
-            if (element.country == "Germany" && element["sub-region"] == "" &&  element["region"] == regionParam){
+            if (element.country == "Germany" && element["sub-region"] == "" &&  element["region"] == regionParam){ //
+                // for(var i=0 ; i < regionList.length; i++){
+                //     console.log(regionList.length)
+
+                // }
                 mobilityGermanyData.push(element);  // Create a new dataset(array) containing only data for Germany 
              // mobilityData.push({country: element.country, region: element.region, transportation_type: element.transportation_type, jan:"", feb:"", mar:""});   
             }
         })
-
-        // data.forEach(element => temp.push(element));
-        // temp.forEach(function(element) {
-        //     if (element.country == "Germany" && element["sub-region"] == "" &&  element["region"]==regionParam) {
-        //         mobilityData.push(element);    
-        //     }
-        // });
-
-     //   console.log(mobilityGermanyData)   
-      //  console.log(mobilityGermanyData[0])
+  
        
-        // Create a nested array 
-        let nestedData = d3.group(mobilityGermanyData,  d => d.region, d => d.transportation_type)
-    
         let num = 0;
         if(counterRegion > 0 && counterRegion < 4){
            // emptyList.push(mobilityGermanyData)
            num = counterRegion - 1;
-           multipleRegionsList.push(mobilityGermanyData);
-          
+           multipleRegionsList.push(mobilityGermanyData);   
         }
     
+
+        
+         // Create a nested array 
+         let nestedData = d3.group(mobilityGermanyData,  d => d.region, d => d.transportation_type)
         //  nested array again and again to get data by transport
         let dataByRegion = nestedData.get(regionParam)
         let dataByDriving = dataByRegion.get("driving")
         let dataByWalking = dataByRegion.get("walking")
         let dataByTransit = dataByRegion.get("transit")
-
+      //  console.log(dataByDriving)
        // Calculate the monthly average separately for the means of transport 
-        if(dataByDriving) CalculateMonthlyAverage(dataByDriving)
+        if(dataByDriving) CalculateMonthlyAverage(dataByDriving) 
         if(dataByWalking) CalculateMonthlyAverage(dataByWalking)
         if(dataByTransit) CalculateMonthlyAverage(dataByTransit)
 
@@ -68,6 +111,7 @@ function createMobilityData(regionParam, monthParam){
 
 function createTreemapData(data, month){
 
+    // console.log(data)
 
 let groupArray = [];
 
@@ -91,16 +135,17 @@ let hgroup = d3.hierarchy(groupedData, d =>  d.children )
 };
 
 
+
 function createTreeChart(hgroup, month){
     // Old treemap gets removed
-    d3.select("#treemapRegion01").select("svg").remove();
+    d3.select("#treemapMobility").select("svg").remove();
 
     var margin = {top: 10, right: 10, bottom: 10, left: 10};
     var width = 400;
     var height = 400;
 
   
-    var svg = d3.select("#treemapRegion01")
+    var svg = d3.select("#treemapMobility")
     .append("svg")
     .attr("width", width + 20)
     .attr("height", height)
@@ -169,16 +214,27 @@ function createTreeChart(hgroup, month){
     .attr("font-weight","bold")
 }
 
-// Calculate the monthly average separately for the means of transport 
+
+
+
+
+
+// Calculate the monthly average separately for the means of transportation 
 function CalculateMonthlyAverage(data){
+    console.log("data")
+    console.log(data)
     let monthName = "";  // to use for calculating of monthly average value
-    let sum = janSum = febSum = marSum = aprSum = maySum = junSum = julSum = augSum = sepSum = octSum = novSum = decSum = 0; // variable for each monthly total
-    let avg = janAvg = febAvg = marAvg = aprAvg = mayAvg = junAvg = julAvg = augAvg = sepAvg = octAvg = novAvg = decAvg = 0; // variable for each monthly average
+    var janSum, febSum, marSum, aprSum, maySum, junSum, julSum, augSum, sepSum, octSum, novSum, decSum;
+    janSum = febSum = marSum = aprSum = maySum = junSum = julSum = augSum = sepSum = octSum = novSum = decSum = 0; // variable for each monthly total
+    var janAvg, febAvg, marAvg, aprAvg, mayAvg, junAvg, julAvg, augAvg, sepAvg, octAvg, novAvg, decAvg;
+    janAvg = febAvg = marAvg = aprAvg = mayAvg = junAvg = julAvg = augAvg = sepAvg = octAvg = novAvg = decAvg = 0; // variable for each monthly average
     let counter = 0; // count only the day that has a valid value 
+    let month, day = "";
 
     for (let m=1; m<13; m++){ // loop over months
         if (m<10) month="0"+m;
-        else month=m;
+        else month=m.toString();
+        console.log(month)
 
         for (let d=1; d<32; d++){  // loop over days
             if(monthName == "" || monthName != month){  // first calculation of the average or calculation of the new month
@@ -203,7 +259,7 @@ function CalculateMonthlyAverage(data){
                         case "01":
                             janSum += parseFloat(element[ymd])
                             janAvg = janSum/counter
-                           // console.log(month + " " + typeof(month))
+                            console.log(month + " " + typeof(month))
                             element[month] = janAvg.toFixed(2)
                             //console.log(ymd + " " + "sum: " + parseFloat(janSum) + " counter: " + counter + " result: " + janResult)
                             break;
@@ -239,7 +295,7 @@ function CalculateMonthlyAverage(data){
                             break;
                         case "07":
                             julSum += parseFloat(element[ymd])
-                            julAvg = marSum /counter
+                            julAvg = julSum /counter
                             element[month] = julAvg.toFixed(2)
                           //  console.log(ymd + " " + "sum: " + parseFloat(julSum)  + " counter: " + counter + " result: " + julAvg)
                             break;
@@ -255,19 +311,19 @@ function CalculateMonthlyAverage(data){
                             element[month] = sepAvg.toFixed(2)
                          ///   console.log(ymd + " " + "sum: " + parseFloat(sepSum)  + " counter: " + counter + " result: " + sepAvg)
                             break;
-                        case 10:    
+                        case "10":    
                             octSum += parseFloat(element[ymd])
                             octAvg = octSum /counter
                             element[month] = octAvg.toFixed(2)
                            // console.log(ymd + " " + "sum: " + parseFloat(octSum)  + " counter: " + counter + " result: " + octAvg)
                             break;
-                        case 11:
+                        case "11":
                             novSum += parseFloat(element[ymd])
                             novAvg = novSum /counter
                             element[month] = novAvg.toFixed(2)
                           //  console.log(ymd + " " + "sum: " + parseFloat(novSum)  + " counter: " + counter + " result: " + novAvg)
                             break;
-                        case 12:
+                        case "12":
                             decSum += parseFloat(element[ymd])
                             decAvg = decSum /counter
                             element[month] = decAvg.toFixed(2)
@@ -281,3 +337,31 @@ function CalculateMonthlyAverage(data){
             });
         }}
     }
+
+
+
+    function ReplaceRegionName(regionParam){
+        switch (regionParam) {
+            case "Bayern":
+              return "Bavaria"
+            case "Hessen":
+              return "Hesse"
+            case "Niedersachsen":
+              return "Lower Saxony"
+            case "Nordrhein-Westfalen":
+                return "North Rhine-Westphalia"
+            case "Bremen":
+                return "Bremen (state)"
+            case "Rheinland-Pfalz":
+                return "Rhineland-Palatinate"
+            case "Sachsen":
+                return "Saxony"
+            case "Sachsen-Anhalt":
+                return "Saxony-Anhalt"
+            case "Thüringen":
+             return "Thuringia"
+            default:   
+             return regionParam
+        }
+    }
+    

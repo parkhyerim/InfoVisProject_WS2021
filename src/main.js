@@ -2,6 +2,7 @@ import { InitializeSVG, VisualiseChosenBL } from './scripts/lineChartView.js';
 import { GetDateForFetch } from './scripts/datePicker.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
+import { DisplayMobilitySelectedRegion, UpdateSelectedRegions, UpdateSelectedRegions2 } from './scripts/treemapMobilityView.js';
 
 const mapButton = document.getElementById('mapButton');
 const datePickerButton = document.getElementById('datePickerButton');
@@ -70,10 +71,16 @@ function updateLineChart(bl, newBLWasSelected){
     // newBLWasSelected only true if a new Bundesland was selected
     // false when only the date was changed
     VisualiseChosenBL(bl, newBLWasSelected, GetDateForFetch());
+ UpdateSelectedRegions(bl, newBLWasSelected, GetDateForFetch());
+}
+
+function updateTreemapSelectedRegionsChart(regionList, newBLWasSelected){
+   // UpdateSelectedRegions2(regionList, newBLWasSelected, GetDateForFetch());
 }
 
 function initializeMap(){
     Displaymobilitydata(GetDateForFetch());
+   // DisplayMobilitySelectedRegion(GetDateForFetch());
     
     const mapSelectedBl = document.getElementsByTagName('text');
         /** MutationObserver looks at all the html text elements and has a look if their
@@ -95,7 +102,9 @@ function initializeMap(){
                         const index = selectedBL.indexOf(mutation.target.id)
                         selectedBL.splice(index, 1);
                     } 
-                    updateLineChart(mutation.target.id, newBLWasSelected)            
+                    //console.log(selectedBL)
+                    updateLineChart(mutation.target.id, newBLWasSelected)   
+                    updateTreemapSelectedRegionsChart(selectedBL, newBLWasSelected)    
                 }
             })  
         }) 
