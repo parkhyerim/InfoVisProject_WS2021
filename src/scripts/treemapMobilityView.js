@@ -44,8 +44,6 @@ function createMobilityData(regionParam, monthParam){
            // emptyList.push(mobilityGermanyData)
            num = counterRegion - 1;
            multipleRegionsList.push(mobilityGermanyData);
-           console.log("multipleRegionsList")
-       // console.log(multipleRegionsList)
           
         }
     
@@ -65,49 +63,29 @@ function createMobilityData(regionParam, monthParam){
 };
 
 
+// temporary: display the treemap for default params: Bavaria, January (without checkbox selection)
+// displaymobilitydata("Bavaria", "01");
+
 function createTreemapData(data, month){
-    console.log(data);
 
 
+let groupArray = [];
 
-//THIS IS FOR THE GERMANY-BUNDESLAND HIERACHY 
-//Group the data by "Germany", so our tree has a root node
-  let groupedData = data.reduce((c, v)=> {
-     
-    c[v.region] = [...c[v.region] || [], v];
-    console.log(c);
-    return c;
-    }, {});    
-//console.log(groupedData);
-//THIS IS FOR THE GERMAN"Y-BUNDESLAND-TRANSPORTAIONTYPE HIERACHY
-//Group the data by country and by region, so our tree has a root node
-    /* let groupedData = data.reduce((c, v) => {
-    if(c[v.country] != undefined){
-        c[v.country] = c[v.country]
+data.forEach(region => {
+    let regionArray = [];
+    region.forEach(transportType => {
+        regionArray.push(transportType);
+    })
+    groupArray.push({ "children": regionArray}) 
+})
 
+const groupedData = { "children": groupArray }
 
-       } 
-     c[v.country] = c[v.country] || [], v;                         //Init if country property does not exist
-     c[v.country][v.region] = {...c[v.country][v.region] || [], v};   //Init if region property does not exist
-     return c;
-     }, {});   */ 
- 
-//THIS IS FOR THE GERMANY-BUNDESLAND-TRANSPORTAIONTYPE HIERACHY
- /*  let groupedData = data.reduce((c,v) => {
-    let con = c[v.country] = c[v.country] || {};
-    con = con[v.region] = con[v.region] || {};
-    con = con[v.transportation_type] = con[v.transportation_type] || v;
-    console.log(con);
-    return con;
-}, {});  
- */
 
 //Transform the data grouped by "Germany" into a hiearchy by usind d3.js hierachy (first param is root, second param is child nodes)
-let hgroup = d3.hierarchy(groupedData, function(d){
-                    console.log(groupedData);
-                      return d})
+let hgroup = d3.hierarchy(groupedData, d =>  d.children )
     .sum((d) => {return d[month]});
-console.log(hgroup);
+    
     createTreeChart(hgroup, month); 
 
 };
@@ -179,11 +157,11 @@ function createTreeChart(hgroup, month){
     .text(function(d){ 
         // Temporal: kurze Syntax und bessere Images
         if(d.data.transportation_type === "driving"){
-             return "🚘 " + d.data.transportation_type +" "+ d.data[month]+"%"; }
+             return "🚘 " + d.data.region + ' ' +d.data.transportation_type +" "+ d.data[month]+"%"; }
         else if(d.data.transportation_type === "walking"){
-            return "🚶‍♀️ " + d.data.transportation_type +" "+ d.data[month]+"%";
+            return "🚶‍♀️ " + d.data.region + ' ' + d.data.transportation_type +" "+ d.data[month]+"%";
         } else if(d.data.transportation_type === "transit") {
-            return "🚌 "+ d.data.transportation_type + " "+ d.data[month]+"%";
+            return "🚌 "+ d.data.region + ' ' + d.data.transportation_type + " "+ d.data[month]+"%";
         }})
     .attr("font-size", "14px")
     .attr("fill", "white")
@@ -225,7 +203,6 @@ function CalculateMonthlyAverage(data){
                         case "01":
                             janSum += parseFloat(element[ymd])
                             janAvg = janSum/counter
-                            //console.log(month + " " + typeof(month))
                             element[month] = janAvg.toFixed(2)
                             //console.log(ymd + " " + "sum: " + parseFloat(janSum) + " counter: " + counter + " result: " + janResult)
                             break;
