@@ -13,6 +13,7 @@ export function VisualiseChosenBL(BLToBeVisualized, newBLWasSelected, selectedMo
   let foundBL = false;
   blDomainStorage.forEach(arr => {
     if(BLToBeVisualized == arr[0]) foundBL = true;
+    console.log(BLToBeVisualized); //hier steht das richtige Bundesland drin
   })
   
   // Checks if Bundesland is newly checked or if it already exists in blDomainStorage
