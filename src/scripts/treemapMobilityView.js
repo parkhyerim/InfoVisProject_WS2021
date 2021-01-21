@@ -41,11 +41,11 @@ function createMobilityData(regionParam, monthParam){
     
         let num = 0;
         if(counterRegion > 0 && counterRegion < 4){
-            // emptyList.push(mobilityGermanyData)
-            num = counterRegion - 1;
-            multipleRegionsList.push(mobilityGermanyData);
-           
-         }
+           // emptyList.push(mobilityGermanyData)
+           num = counterRegion - 1;
+           multipleRegionsList.push(mobilityGermanyData);
+          
+        }
     
         //  nested array again and again to get data by transport
         let dataByRegion = nestedData.get(regionParam)
@@ -158,11 +158,11 @@ function createTreeChart(hgroup, month){
     .text(function(d){ 
         // Temporal: kurze Syntax und bessere Images
         if(d.data.transportation_type === "driving"){
-             return "🚘 " + d.data.transportation_type +" "+ d.data[month]+"%"; }
+             return "🚘 " + d.data.region + ' ' +d.data.transportation_type +" "+ d.data[month]+"%"; }
         else if(d.data.transportation_type === "walking"){
-            return "🚶‍♀️ " + d.data.transportation_type +" "+ d.data[month]+"%";
+            return "🚶‍♀️ " + d.data.region + ' ' + d.data.transportation_type +" "+ d.data[month]+"%";
         } else if(d.data.transportation_type === "transit") {
-            return "🚌 "+ d.data.transportation_type + " "+ d.data[month]+"%";
+            return "🚌 "+ d.data.region + ' ' + d.data.transportation_type + " "+ d.data[month]+"%";
         }})
     .attr("font-size", "14px")
     .attr("fill", "white")
