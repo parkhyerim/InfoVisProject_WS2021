@@ -1,5 +1,6 @@
 import { InitializeSVG, UpdateLineChartPathMonth, ShowDEData, AddBundeslandToLineChart, RemoveBundeslandFromLineChart } from './scripts/lineChartView.js';
 import { GetDateForFetch } from './scripts/datePicker.js';
+import { GetCasesDE } from './scripts/getLineChartData.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
 
@@ -128,4 +129,7 @@ function initializeMap(){
 }
 
 InitializeSVG();
-InitialiseEvents();
+InitialiseEvents(); 
+
+/* Alle Monate als Objekt
+GetCasesDE(selectedMonth).then((casesDE)=>{*/

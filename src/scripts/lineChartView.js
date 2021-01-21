@@ -16,7 +16,6 @@ export async function ShowDEData(selectedMonth){
     and when the month is updates
     */
     await GetCasesDE(selectedMonth).then((casesDE)=>{
-      
       addAxes(casesDE)
     
       svg.append("path")
@@ -57,7 +56,7 @@ export async function ShowDEData(selectedMonth){
         .attr("dy", ".75em")
         .attr("dx", 8)
         .attr("transform", "rotate(-360)")
-        .text("Fallzahlen");
+        .text("Gemeldete");
 
       svg.append("text")
         .attr("class", "y-label")
@@ -65,7 +64,7 @@ export async function ShowDEData(selectedMonth){
         .attr("dy", "1.75em")
         .attr("dx", 8)
         .attr("transform", "rotate(-360)")
-        .text("gesamt");
+        .text("Fälle");
 
       /*
       svg.append("text")

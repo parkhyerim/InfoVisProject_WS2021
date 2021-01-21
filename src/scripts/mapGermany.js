@@ -41,9 +41,9 @@ export function LoadMap(){
 			.append("path")  
 			.attr("d", path) 
 			.attr("class", d => d.properties.GEN) // Sets the name of the Bundesland as the classname
-			.attr("fill", (d, i) => color(i))  
-			.attr("stroke", "#FFF")  
-			.attr("stroke-width", 0.5);  
+			.attr("fill", "#e1f5fe")  
+			.attr("stroke", "#01579b")  
+			.attr("stroke-width", 0.75);  
 			
 
 		svg.append("g")  
@@ -53,6 +53,7 @@ export function LoadMap(){
 			.append("text")  
 			.attr("text-anchor", "middle") 
 			.attr("font-size", 11)
+			.style("fill", "#009688")
 			.attr("id", d => d.properties.GEN) // Sets the name of the Bundesland as the ID
 			.attr("x", d => {
 				const bl = d.properties.GEN;
@@ -101,9 +102,9 @@ function highlightBl(){
 
 	d3.select("."+blHoovered).attr("fill", "#009688");
 
-	colorText = d3.select(this).attr("fill");
+	colorText = d3.select(this).style("fill");
 	d3.select(this)
-		.attr("fill", "white")
+		.style("fill", "white")
 		.attr("font-weight", "bold");		
 }
 
@@ -111,7 +112,7 @@ function resetBlColor(){
 	if(d3.select(this)._groups[0][0].classList[0] != 'selected-bl'){
 		d3.select("."+blHoovered).attr("fill", colorBackground);
 		d3.select(this)
-			.attr("fill", "black")
+			.style("fill", colorText)
 			.attr("font-weight", "normal");	
 	} 
 }
@@ -132,6 +133,8 @@ function clickEvent(){
 	if(clickedBool === false & clickedBlArray.length <= 2) {
 		d3.select("."+d3.select(this)._groups[0][0].id)
 			.attr("fill", "#009688")
+			.attr("stroke", "#01579b")  
+			.attr("stroke-width", 0.75);
 
 		clickedBlArray.push(blHoovered);
 		// Necessary to get the selected Bundesland in main.js
@@ -148,7 +151,11 @@ function clickEvent(){
 		d3.select("."+d3.select(this)._groups[0][0].id)
 			.attr("stroke", "white")
 			.attr("fill", colorBackground)
+			.attr("stroke", "#01579b")  
 			.attr("stroke-width", 0.5) 
+
+		d3.select(this)
+			.style("fill", colorText)
 
 		// Guarantees that at least one Bundesland is always selected after the map was initialized
 		if(clickedBlArray.length > 1){
