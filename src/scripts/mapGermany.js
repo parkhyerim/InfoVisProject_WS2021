@@ -12,8 +12,8 @@ export function LoadMap(){
 	// Source http://opendatalab.de/projects/geojson-utilities/
 	d3.json('../src/data/bundeslaender.geojson').then((geojson)=>{
 				
-		const width = 800;
-		const height =600;
+		const width = 650;
+		const height =450;
 
 		const svg = d3  
 			.select("#mapGermany")
@@ -21,7 +21,7 @@ export function LoadMap(){
 			.append("svg")
 			.attr("class", "map-germany")
 			.attr("preserveAspectRatio", "xMinYMin meet")
-          	.attr("viewBox", "0 0 800 600")
+          	.attr("viewBox", "0 0 650 450")
           	.classed("svg-content-responsive", true)
 			.attr("id", "svgMap")
 			.attr("width", width)  

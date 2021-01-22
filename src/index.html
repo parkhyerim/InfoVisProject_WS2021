@@ -73,10 +73,10 @@
                 </div>
     
             </div>
-            <div class="row" style="margin: 30px; margin-top: 60px;">
+            <div class="row" >
 
 
-                <div class="col s6" id="treemapContainer">
+                <div class="col s7" id="treemapContainer">
                     <div class="row">
                         <div class="col s12">
                           <ul class="tabs">
@@ -86,31 +86,30 @@
                         </div>
 
                         <div id="treemap1" class="col s12">
-                                                <!-- Container for Treemap with Mobility -->
-                            <div style="height:100px;"> Icons</div>
-                            <div id="treemapwrapper">
-
-                                <!-- Modal Trigger -->
+                            <div class="row " id="iconContainer">  
+                                <div class="col s11"> 
+                                    <div > Icons</div>
+                                </div>   
+                                <div class="col s1"> 
+                                    <!-- Modal Trigger -->
+                                    <a class="modal-trigger" href="#demo-modal" > <i class="small material-icons">info</i></a>    
+                                </div> 
+                               
                             </div>
-                            <a class="modal-trigger" href="#demo-modal"> <i class="medium material-icons">info</i></a>
-                                <!-- Modal Structure -->
-                                <div id="demo-modal" class="modal">
-                                    <div class="modal-content">
-                                    <h4>A Demo of small modal</h4>
-                                    <p>Content of the modal goes here. Place marketing text or other information here.
-                                    </p>
-                                
-                                    </div>
-                                    <div class="modal-footer">
-                                    <a href="#!" class="modal-action modal-close waves-effect waves-red btn brown darken-3">Close</a>
-                                    </div>
-                                </div>
+                            <div class="row">                                                
+                                <!-- Container for Treemap with Mobility -->
+                                <div id="treemapwrapper"></div> 
+
+                            </div>
+    
+
+          
                         </div>
                         <div id="treemap2" class="col s12">Treemap2</div>
                         </div>
                     </div>
 
-                    <div class="col s6" id="wordCloudContainer">
+                    <div class="col s5" id="wordCloudContainer">
                         WordCircle
                     </div>
 
@@ -119,12 +118,18 @@
             
         </div> 
 
-
-       
-
-
-
+        <!-- Modal Structure -->
+        <div id="demo-modal" class="modal">
+            <div class="modal-content">
+            <h4>A Demo of small modal</h4>
+            <p>Content of the modal goes here. Place marketing text or other information here.
+            </p>
         
+            </div>
+            <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-red btn brown darken-3">Close</a>
+            </div>
+        </div>
 
 
     </div> 
