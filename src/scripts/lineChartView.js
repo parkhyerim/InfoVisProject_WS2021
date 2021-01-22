@@ -2,7 +2,7 @@ let svg, xAxis, yAxis, currentDomain;
 const blDomainStorage = [];
 
 const margin = {top:10, right: 30, bottom: 60, left: 100},
-  width = 1000 - margin.left - margin.right,
+  width = 900 - margin.left - margin.right,
   height = 200 - margin.top - margin.bottom;
 
 /** Saves the checked Bundesländer to the array `blDomainStorage` 

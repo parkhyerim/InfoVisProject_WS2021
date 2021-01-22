@@ -126,21 +126,41 @@ var map=  svg
         .text(function(d){ return d.data.region.substring(0, 9);})
         .attr("font-size", "16px")
         .attr("fill", "white")
-        
+
+    // map.selectAll('tspan')
+    //     .data(function(d){
+    //         console.log(d);
+    //         switch(d.data.region){
+    //             case "Berlin":
+    //             return d.data.region.substring(1, 4);
+
+    //             case "Berlin":
+    //                 return d.data.region.substring(1, 4);
+
+    //             case "Hamburg":
+    //                 return d.data.region.substring(1, 4);
+                
+
+    //         }
+    //     })
+    //     .enter()
+    //     .append('tspan')
+
+
         .append('svg:tspan')
         .attr('x', function(d){ return d.x0+5})
         .attr('dy', 20)
-        .text(function(d){ return d.data.region.substring(9, 17);})
+        .text(function(d){ return d.data.region.substring(9, 18);})
         .attr("font-size", "16px")
         .attr("fill", "white")
 
         .append('svg:tspan')
         .attr('x', function(d){ return d.x0+5})
         .attr('dy', 20)
-        .text(function(d){ return d.data.region.substring(17, d.data.region.length);})
+        .text(function(d){ return d.data.region.substring(18, d.data.region.length);})
         .attr("font-size", "16px")
         .attr("fill", "white")
-        //.attr("textLength", function (d) { return d.x1 - d.x0 - 10; })
+        .attr("textLength", function (d) { return d.x1 - d.x0 - 10; })
         .append('svg:tspan')
         .attr('x', function(d){ return d.x0+5})
         .attr('dy', 30)

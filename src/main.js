@@ -15,12 +15,15 @@ function InitialiseEvents(){
     // Initially load map. The map gets hidden in mapGermany.js 
     LoadMap();
 
-    // Adds and event listener to the Bundesländer Button
-    eventListenerMap();
 
     //Adds event listener on datePickerButton and each droopdown DateButton element
     eventListenerDatePicker();
 
+    
+
+  $(document).ready(function(){
+    $('.tabs').tabs();
+  });
     
 }
 
@@ -28,9 +31,6 @@ function eventListenerDatePicker() {
 //adds an event listener for every Datebutton
   Array.prototype.forEach.call(dateButton, function(date){
     date.addEventListener('click', ()=> {
-        
-    $('.modal').modal('open');
-    M.toast({html: 'I am a toast!'}, 3000, 'blue');
 
      // datePickerButton.textContent = date.textContent;
      if(document.getElementById('selectedDate') != null){
@@ -52,26 +52,6 @@ function eventListenerDatePicker() {
 }
 
 
-
-function eventListenerMap(){
-    
-    // let mapButtonClicked = true;
-    // mapButton.addEventListener('click', () => {
-        
-    //     /** If the map button is clicked, one or more Bundesländer can be selected and will 
-    //         then be displayed
-    //     */
-    //     if(mapButtonClicked === true){
-    //         initializeMap()
-    //         document.getElementById('mapGermany').style.display = 'inline';
-    //         mapButtonClicked = false;    
-    //     } 
-    //     else if(mapButtonClicked === false){
-    //         document.getElementById('mapGermany').style.display = 'none';
-    //         mapButtonClicked = true;
-    //     }               
-    // })
-}
 
 function updateLineChart(bl, newBLWasSelected){
     /** Adds the curve for the selected Bundesland to the line chart
