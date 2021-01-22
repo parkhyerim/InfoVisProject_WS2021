@@ -63,9 +63,9 @@ function createTreeChart(data, monthparam){
     //in case new treemap shall be loaded, the one before gets removed
     d3.select("#treemapwrapper").select("svg").remove();
 
-    var margin = {top: 0, right: 5, bottom: 0, left: 7},
-        width = 650 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+    var margin = {top: 20, right: 30, bottom: 30, left: 30},
+        width = 700 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
     var svg = d3.select("#treemapwrapper")
         .append("svg")
@@ -122,25 +122,50 @@ var map=  svg
         .enter()
         .append("text")
         .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
-        .attr("y", function(d){ return d.y0+20})    // +20 to adjust position (lower)
-        .text(function(d){ return d.data.region.substring(0, 12);})
-        .attr("font-size", "13px")
+        .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
+        .text(function(d){ return d.data.region.substring(0, 9);})
+        .attr("font-size", "16px")
         .attr("fill", "white")
+
+    // map.selectAll('tspan')
+    //     .data(function(d){
+    //         console.log(d);
+    //         switch(d.data.region){
+    //             case "Berlin":
+    //             return d.data.region.substring(1, 4);
+
+    //             case "Berlin":
+    //                 return d.data.region.substring(1, 4);
+
+    //             case "Hamburg":
+    //                 return d.data.region.substring(1, 4);
+                
+
+    //         }
+    //     })
+    //     .enter()
+    //     .append('tspan')
 
 
         .append('svg:tspan')
         .attr('x', function(d){ return d.x0+5})
         .attr('dy', 20)
-        .text(function(d){ return d.data.region.substring(12, d.data.region.length);})
-        .attr("font-size", "13px")
+        .text(function(d){ return d.data.region.substring(9, 18);})
+        .attr("font-size", "16px")
         .attr("fill", "white")
 
         .append('svg:tspan')
         .attr('x', function(d){ return d.x0+5})
+        .attr('dy', 20)
+        .text(function(d){ return d.data.region.substring(18, d.data.region.length);})
+        .attr("font-size", "16px")
+        .attr("fill", "white")
+        .attr("textLength", function (d) { return d.x1 - d.x0 - 10; })
+        .append('svg:tspan')
+        .attr('x', function(d){ return d.x0+5})
         .attr('dy', 30)
         .text(function(d){ return d.data[monthparam]+"%"})
-        .attr("font-size", "15px")
-        .attr("font-weight", "bold")
+        .attr("font-size", "16px")
         .attr("fill", "white")
 
 

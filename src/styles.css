@@ -57,19 +57,17 @@ h1 {
 }
 
 #chartPlaceholderContainer{
-  height: 27vh;
+  height: 300px;
 }
 
 #titleContainer{
+  padding: 70px;
   background-color: teal;
   text-align: center;
-  font-size: 1.7rem;
+  font-size: 2rem;
   font-weight: bold;
   color: white;
-  height: 20vh;
-  display: flex;
-	align-items: center;
-	justify-content: center;
+  height: 250px;
 
 }
 
@@ -114,38 +112,21 @@ h1 {
   background-color: #e5f2f2;
 }
 #treemapContainer{
-  min-height: 60vh;
-  padding:50px;
-}
-#treemapwrapper{
-  display: flex;
-	align-items: center;
-	justify-content: center;
-}
-#iconContainer{
-  height:10vh; 
-  margin-bottom:0px;
-  display: flex;
-	align-items: center;
-	justify-content: center;
+  min-height: 100vh;
 }
 #wordCloudContainer{
   min-height: 100vh;
-  display: flex;
-	align-items: center;
-  justify-content: center;
-  padding:50px;
 }
 
 #lineChartContainer{
-  padding-top: 70px;
-  height: 20vh;
-  display: flex;
-	align-items:center;
-	justify-content: center;
+  padding-top: 20px;
+  padding-bottom: 30px;
+  height: 200px;
 }
 
-
+#treemapwrapper{
+  margin-left: 30px;
+}
 
 .modal {
   left: 0;
