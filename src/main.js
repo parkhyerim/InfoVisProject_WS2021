@@ -111,7 +111,7 @@ function initializeMap(){
                     } 
                     updateLineChart(mutation.target.id, newBLWasSelected)   
                     updateTreeMap(mutation.target.id, newBLWasSelected)
-                   // updateTreeMap(selectedBL, newBLWasSelected)
+                  //  updateTreeMap(selectedBL, newBLWasSelected)
                 }
             })  
         }) 

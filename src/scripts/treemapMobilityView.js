@@ -1,19 +1,80 @@
-let counterRegion = 0; // number of selected regions
-
+// let counterRegion = 0; // number of selected regions
+let regionNameList = [];
 export function UpdateSelectedRegionsList(regionParam, isRegionSelected, monthParam, monthChanged){
-//    console.log(regionParam)
-//    console.log(typeof regionParam == "string")
-//    console.log(Array.isArray(regionParam))
+   // Array or string (Array: select/unselect Regions, string: change Month)
+   // -> monthChanged 
+   // console.log(regionParam)
+  // console.log(typeof regionParam == "string")
+  // console.log(Array.isArray(regionParam))
+  console.log(regionParam, isRegionSelected, monthParam, monthChanged)
+  
+  
+//   let regionListlength;
+
+//   //if(Array.isArray(regionParam)){  //  if(!newMonthSelected)
+//   if(isRegionSelected){
+//   regionListlength = regionParam.length;
+//    for(var i = 0; i < regionListlength; i++){
+//     //   console.log(regionParam[i])
+    
+//        let region = ReplaceRegionName(regionParam[i]);
+//      //  console.log(regionNameList.includes(region))
+//        if(!regionNameList.includes(region)){
+//         regionNameList.push(region)
+//        }
+//        if(!isRegionSelected && regionNameList.includes(region) ){
+//            let index = regionNameList.findIndex(element => element === region)
+//          //  console.log("region" + region)
+//          //  console.log("index: " + index)
+//            regionNameList.splice(index, 1)
+//          //  console.log(regionNameList)
+//        }
+    
+//        if(!isRegionSelected){
+//         regionNameList = [];
+//     }
+  
+       
+//        //let index = selectedRegionsList.findIndex(element => element["region"] == regionParam)
+//     //     //     selectedRegionsList.splice(index, 1)
+
+//     //   console.log(region)
+//     //   console.log(regionNameList)
+//      //  console.log(region)
+//    //    const cretM = CreateMobilityData(region, month, newRegionAdded, newMonthSelected)
+//       // console.log(cretM)
+//    }
+//   }
  
 
 
     //  if(isRegionSelected === undefined) isRegionSelected = true;
     let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2);
-    let region = ReplaceRegionName(regionParam); // replace the german region name to the english one
-      // isSelected: true -> a new region selected, false -> a region unselected
+    let regionEng = ReplaceRegionName(regionParam); // replace the german region name to the english one
+      // isSelected: true -> a new region selected, false -> a region unselecte
     let newRegionAdded = isRegionSelected;
     let newMonthSelected = monthChanged;
-    CreateMobilityData(region, month, newRegionAdded, newMonthSelected); // params: region, month      
+
+    if(newRegionAdded){
+        CreateMobilityData(regionEng, month, newRegionAdded, newMonthSelected)
+    }
+
+    if(!newRegionAdded){
+        CreateFinishedArray([], regionEng, month, newRegionAdded)
+    }
+
+
+   // console.log(regionNameList.includes(regionEng))
+   
+    if(newRegionAdded && !regionNameList.includes(regionEng)){
+      //  regionNameList.push(regionEng)
+      
+    } else {
+         // regionNameList.
+    }
+    //if(regionNameList != null)
+
+   // CreateMobilityData(region, month, newRegionAdded, newMonthSelected); // params: region, month      
     // if(newRegionAdded){
     //     counterRegion++;
     //    // CreateMobilityData(region, month, isSelected); // params: region, month      
@@ -22,23 +83,8 @@ export function UpdateSelectedRegionsList(regionParam, isRegionSelected, monthPa
     //   //  CreateMobilityData(region, month, isSelected); // params: region, month
     // }
 
-    // let regionListlength;
-    // if(Array.isArray(regionParam)){
-    //  regionListlength = regionParam.length;
-    //  for(var i = 0; i < regionListlength; i++){
-    //      console.log(regionParam[i])
-    //      let region = ReplaceRegionName(regionParam[i]);
-    //      console.log(region)
-    //      CreateMobilityData(region, month, newRegionAdded, newMonthSelected)
-    //  }
-    // }
-   
-    // console.log(regionListlength)
- 
-
-
-
-
+  //  CreateMobilityData("Bavaria", "03", true, false)
+   // CreateMobilityData("Berlin", "03", true, false)
 }
 
 let selectedRegionsList = [];
@@ -46,38 +92,30 @@ let currentMonth = "";
 function CreateMobilityData(regionParam, monthParam, regionSelected, monthChanged){
     let mobilityGermanyData = [];
     console.log("selected Region: " + regionParam + " selected Month: " + monthParam + " nowAdded: " + regionSelected );
-
     currentMonth = monthParam;
-    if(monthChanged){
-        // mobilityGermanyData = [];
-        selectedRegionsList = [];
-        // if(selectedRegionsList !== null){
-        //     selectedRegionsList = [];
-        // }
-        // if(selectedRegionsList !== null){
-        //     let index = selectedRegionsList.findIndex(element => element["region"] == regionParam)
-        //     selectedRegionsList.splice(index, 1)
-        //    // console.log(selectedRegionsList)
-        // }
-    }
-    console.log(selectedRegionsList)
+    // if(monthChanged){
+    //     // mobilityGermanyData = [];
+    //     selectedRegionsList = [];
+    //     // if(selectedRegionsList !== null){
+    //     //     selectedRegionsList = [];
+    //     // }
+    //     // if(selectedRegionsList !== null){
+    //     //     let index = selectedRegionsList.findIndex(element => element["region"] == regionParam)
+    //     //     selectedRegionsList.splice(index, 1)
+    //     //    // console.log(selectedRegionsList)
+    //     // }
+    // }
 
-    function findRegion(elements){
-        return elements["region"] == regionParam
-    }
-    // element => element["region"] == regionParam
-
-    if(!regionSelected){
-        if(selectedRegionsList !== null){
-            console.log(selectedRegionsList)
-            let index = selectedRegionsList.findIndex(element => element["region"] == regionParam)
-            selectedRegionsList.splice(index, 1)
-            console.log(regionParam)
-            console.log("index: " + index)
-            console.log(selectedRegionsList)
-        }
-      //  console.log("unselected: " + regionParam)
-    }
+    // if(!regionSelected){
+    //     if(selectedRegionsList !== null){
+    //         console.log(selectedRegionsList)
+    //         let index = selectedRegionsList.findIndex(element => element["region"] == regionParam)
+    //         selectedRegionsList.splice(index, 1)
+    //         console.log(regionParam)
+    //         console.log("index: " + index)
+    //         console.log(selectedRegionsList)
+    //     }
+    // }
 
   
     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
@@ -88,7 +126,7 @@ function CreateMobilityData(regionParam, monthParam, regionSelected, monthChange
             }
         })
 
-       
+       console.log(mobilityGermanyData)
         // let num = 0;
         // if(counterRegion > 0 && counterRegion < 4){
         //    // emptyList.push(mobilityGermanyData)
@@ -96,16 +134,19 @@ function CreateMobilityData(regionParam, monthParam, regionSelected, monthChange
         //    selectedRegionsList.push(mobilityGermanyData);   
         // }
      
-        if(regionSelected && currentMonth == monthParam){
-            selectedRegionsList.push(mobilityGermanyData);   
-        } else if(!regionSelected){
-            //selectedRegionsList.findIndex(element => element["region"] == "Bavaria")
-          //  console.log(selectedRegionsList)
-        }
+    
+        
+        // if(regionSelected && currentMonth == monthParam){
+        //     selectedRegionsList.push(mobilityGermanyData);   
+        //     console.log(selectedRegionsList)
+        // } else if(!regionSelected){
+        //     //selectedRegionsList.findIndex(element => element["region"] == "Bavaria")
+        //   //  console.log(selectedRegionsList)
+        // }
         
        // selectedRegionsList.push(mobilityGermanyData);   
 
-        
+        //console.log(mobilityGermanyData)
          // Create a nested array 
          let nestedData = d3.group(mobilityGermanyData,  d => d.region, d => d.transportation_type)
         // nested array again and again to get data by transport
@@ -138,14 +179,40 @@ function CreateMobilityData(regionParam, monthParam, regionSelected, monthChange
         if(dataByWalking) CalculateMonthlyAverage(dataByWalking)
         if(dataByTransit) CalculateMonthlyAverage(dataByTransit)
         
-        for(var i = 0; i < counterRegion; i++){
+        // for(var i = 0; i < counterRegion; i++){
 
-        }
+        // }
 
-       createTreemapData(selectedRegionsList, monthParam)
+       CreateFinishedArray(mobilityGermanyData, regionParam, monthParam, regionSelected)
+      // createTreemapData(selectedRegionsList, monthParam)
     }); 
+  //  return selectedRegionsList;
 };
 
+
+let selArray = [];
+let regionList = [];
+function CreateFinishedArray(data, regionParam, monthPram, regionSelected){
+    let region = regionParam;
+    
+    if(regionSelected){
+        regionList.push(region)
+        selArray.push(data);
+    }
+    if(!regionSelected){
+       let index = regionList.findIndex(element => element == region)
+       regionList.splice(index, 1)
+       console.log(regionList)
+       selArray.splice(index, 1)
+
+    }
+   
+    console.log(regionList)
+    console.log(selArray)
+   // console.log(data)
+   // console.log(regionParam)
+    createTreemapData(selArray, monthPram)
+}
 
 
 // temporary: display the treemap for default params: Bavaria, January (without checkbox selection)
