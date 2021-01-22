@@ -3,7 +3,7 @@ let svg, xAxis, yAxis, currentDomain;
 const blDomainStorage = [];
 
     
-const margin = {top:10, right: 30, bottom: 60, left: 60},
+const margin = {top:10, right: 90, bottom: 80, left: 60},
   width = 600 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
@@ -23,6 +23,7 @@ export async function ShowDEData(selectedMonth, allData){
     svg.append("path")
       .datum(casesDE)
       .attr("fill", "none")
+      .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
       .attr("id", "DE-curve")
       //.attr("stroke", randomColor())
       //.attr("stroke-width", 1)
@@ -40,33 +41,41 @@ export async function ShowDEData(selectedMonth, allData){
     svg.append("path")
       .datum(casesDE)
       .attr("fill", "#b2dfdb")
+      .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
+      .style("opacity", 0.6) // default is 1.0
       .attr("class", "area")
       .attr("d", area);
 
 
     svg.append("text")
       .attr("class", "x-label")
+      .attr("text-anchor", "start")
+      .attr("transform", () => {
+         return `translate(${width/2}, ${height+margin.bottom})`
+      }) 
+      .text("Meldedatum");
+      /*.text("Gemeldete Fälle");
       .attr("text-anchor", "end")
       .attr("x", width)
       .attr("y", height - 6)
-      .text("Meldedatum"); 
+      .text("Meldedatum"); */
 
 
     svg.append("text")
       .attr("class", "y-label")
-      .attr("text-anchor", "start")
-      .attr("dy", ".75em")
-      .attr("dx", 8)
-      .attr("transform", "rotate(-360)")
-      .text("Gemeldete");
+      .attr("text-anchor", "middle")
+      .attr("transform", () => {
+         return `translate(0, ${height/2}) rotate(-90)`
+      }) 
+      .text("Gemeldete Fälle");
 
-    svg.append("text")
+    /*svg.append("text")
       .attr("class", "y-label")
       .attr("text-anchor", "start")
       .attr("dy", "1.75em")
       .attr("dx", 8)
       .attr("transform", "rotate(-360)")
-      .text("Fälle");
+      .text("Fälle");*/
 
     /*
     svg.append("text")
@@ -112,6 +121,7 @@ function visualiseCurve(svg, formattedData, classN, color){
     .attr("id", classN+"-curve")
     .attr("stroke", color)
     .attr("stroke-width", 1)
+    .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
     .attr("class", "curve" + " " + classN) //necessary to add a specific class for every Bundesland shown
     .attr("d", d3.line()
         .x(item => xAxis(new Date(item.Meldedatum)))
@@ -133,6 +143,7 @@ function visualiseCurve(svg, formattedData, classN, color){
       .enter()
       .append("circle")
         .attr("class", "circles" + " " + classN)
+        .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
         .attr("fill", "darkblue")
         .attr("stroke", "none")
         .attr("cx", item => xAxis(new Date(item.Meldedatum)))
@@ -151,6 +162,7 @@ function removeDEData(){
   svg.selectAll(".y-label").remove();
   svg.selectAll(".curve").remove();
   svg.selectAll(".circles").remove();
+  svg.selectAll(".grid").remove();
 }
 
  
@@ -184,12 +196,27 @@ function addAxes(data){
               .range([0, width]);
   const xA = d3.axisBottom(xAxis);
   xA.tickSizeOuter(0); // removes the last tick on the xAxis
-  const parseDate = d3.timeFormat("%B %d, %Y") //https://d3-wiki.readthedocs.io/zh_CN/master/Time-Scales/
+   d3.timeFormatDefaultLocale({
+        "decimal": ",",
+        "thousands": ".",
+        "grouping": [3],
+        "currency": ["€", ""],
+        "dateTime": "%a %b %e %X %Y",
+        "date": "%d.%m.%Y",
+        "time": "%H:%M:%S",
+        "periods": ["AM", "PM"],
+        "days": ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+        "shortDays": ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+        "months": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+        "shortMonths": ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
+    })
+  const parseDate = d3.timeFormat("%d %B") // "%B %d, %Y" https://d3-wiki.readthedocs.io/zh_CN/master/Time-Scales/
   xA.tickFormat(d => parseDate(d));
+
  
   // Appends the xAxis
   svg.append("g")
-      .attr("transform", `translate(0, ${height})`)
+      .attr("transform", `translate(60, ${height})`) // moves x axis to the right
       .attr("class", "x-axis")
       .call(xA)
       .selectAll("text")
@@ -205,9 +232,17 @@ function addAxes(data){
   // Appends the yAxis
   svg.append("g")
       .call(d3.axisLeft(yAxis))
+      .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
       .attr("class", "y-axis"); // Class added to be able to remove the axis;
 
-  
+  svg.append("g")
+      .attr("class", "grid")
+       .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
+      .style("stroke-width", 0.6)
+      .call(d3.axisLeft(yAxis)
+              .tickSize(-width)
+              .tickFormat("")
+      );
 
   const domain = d3.scaleLinear().domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
   currentDomain = domain.domain()[1]

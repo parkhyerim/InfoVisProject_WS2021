@@ -20,6 +20,16 @@ h1 {
   margin: auto;
 }
 
+.grid line {
+  stroke: lightgrey;
+  stroke-opacity: 1.0;
+  shape-rendering: crispEdges;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
 .side-bar{
   height: 100vh !important;
 }
