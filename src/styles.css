@@ -7,13 +7,11 @@ h1 {
     padding-top: 40px;
   }
 
-.jumbotron{
-    background-color: red;
-    color:#fff;
-}
-#visualisationContainer{
-    position: center;
-}
+
+  .h3{
+    font-size: 2.9rem;
+    margin:0px;
+  }
 
 .date-picker{
   width: 40%;
@@ -21,143 +19,173 @@ h1 {
 }
 
 
-.side-bar{
-  height: 100vh !important;
-}
+
 
 .button-width{
   width: 120px;
   display: table !important;
 }
 
-.add-padding{
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
 
-.map-germany {
+
+ .map-germany {
   display: block;
-  margin: auto;
+  margin-top: 30px;
+  
 }
 
 .svg-container {
   display: inline-block;
   position: relative;
   width: 100%;
-  padding-bottom: 70%; 
   vertical-align: middle; 
   overflow: hidden; 
 }
 .svg-content-responsive {
   display: inline-block;
-  position: absolute;
   top: 0;
   left: 0;
 
 }
 
 
-
-.popover {
-  background-color:   #fef9f9;
-  padding: 0px;
-
-}
-.popover-header {
-  background-color:   #3f0f0f;
-  color: #FFFFFF;
-  margin: 0px;
-
-}
-.popover-title {
-  font-size: 22px;
-  margin-left: 15px;;
-
-}
-.close{
-  position: absolute;
-  right: 10px;
-  top: -5px;
-  font-size: 36px;
-  color: #FFFFFF;
-}
-.popover-content {
-  color: black;
-  padding: 15px;
-}
-.bs-popover-top .arrow {
- /* Position at the bottom center */
- bottom: -16px;
- position: absolute;
- left: 50%;
-
- /* Border */
- background-color: #fef9f9;
- transform: translate(-50%, -50%) rotate(45deg);
-
- /* Size */
- height: 16px;
- width: 16px;
-
-}
-
-.bs-popover-left .arrow {
-  /* Position at the right center */
-  right: -16px;
-  position: absolute;
-  top: 50%;
- 
-  /* Border */
-  background-color: #fef9f9;
-  transform: translate(-50%, -50%) rotate(45deg);
- 
-  /* Size */
-  height: 16px;
-  width: 16px;
- 
- }
-
- .dropbtn {
-  background-color: #3498DB;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #2980B9;
-}
-
-.dropdown {
-  position: relative;
-  display: block;
-}
-
-#dateDropdown {
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  overflow: auto;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-#dateDropdown div {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-#dateDropdown div:hover {
-  background-color: #EBE7E7
-}
-
-
 .hidden {
   display: none;
 }
+
+#chartPlaceholderContainer{
+  height: 27vh;
+}
+
+#titleContainer{
+  background-color: teal;
+  text-align: center;
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: white;
+  height: 20vh;
+  display: flex;
+	align-items: center;
+	justify-content: center;
+
+}
+
+
+#btnContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-group>.btn-inactive {
+  background-color: #607d8b;
+  width: 110px;
+  margin-top: 3px;
+}
+
+.btn-group>.btn {
+  -webkit-box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 0px 0px rgba(0, 0, 0, 0), 0 0px 0px 0 rgba(0, 0, 0, 0);
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 0px 0px rgba(0, 0, 0, 0), 0 0px 0px 0 rgba(0, 0, 0, 0);
+}
+
+.btn-group>.btn-inactive:hover {
+  background-color: #728F9D;
+}
+.btn-group>.btn:hover {
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+#selectedDate{
+  background-color:teal;
+}
+#treemapOption{
+  background-color:teal;
+}
+
+#visualisationContainer{
+  min-height: 100vh;
+  background-color: #e5f2f2;
+}
+#treemapContainer{
+  min-height: 100vh;
+  padding:50px;
+}
+#treemapwrapper{
+  display: flex;
+	align-items: center;
+	justify-content: center;
+}
+#iconContainer{
+  height:10vh; 
+  margin-bottom:0px;
+  display: flex;
+	align-items: center;
+	justify-content: center;
+}
+#wordCloudContainer{
+  min-height: 100vh;
+  display: flex;
+	align-items: center;
+  justify-content: center;
+  padding:50px;
+}
+
+#lineChartContainer{
+  padding-top: 70px;
+  height: 20vh;
+  display: flex;
+	align-items:center;
+	justify-content: center;
+}
+
+
+
+.modal {
+  left: 0;
+  right: 0;
+  background-color: #fafafa;
+  padding: 0;
+  max-height: 40%;
+  width: 35%;
+  will-change: top, opacity;
+}
+
+#toast-container {
+
+  right: auto !important;
+  bottom: 50%;
+  left:4%;
+  top: auto !important;
+}
+
+.material-icons{
+  color: teal;
+}
+
+
+.tabs .tab a{
+  color:teal!important;
+  background-color: white;
+}
+.tabs .tab a:hover {
+  background-color:#cfd9dd!important;
+  color:white!important;
+}
+.tabs .tab a.active {
+  background-color:teal!important;
+  color:white!important;
+} /*Background and text color when a tab is active*/
+
+.tabs .indicator {
+  background-color:white!important;
+  height: 20px;;
+} /*Color of underline*/
+
+
+
 
 

@@ -1,9 +1,9 @@
 let svg, xAxis, yAxis, currentDomain;
 const blDomainStorage = [];
 
-const margin = {top:10, right: 30, bottom: 60, left: 60},
-  width = 600 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+const margin = {top:10, right: 30, bottom: 60, left: 100},
+  width = 1000 - margin.left - margin.right,
+  height = 200 - margin.top - margin.bottom;
 
 /** Saves the checked Bundesländer to the array `blDomainStorage` 
   and visualises the chosen Bundesland.
@@ -169,7 +169,7 @@ export function InitializeSVG(){
           .classed("svg-container", true) 
           .append("svg")
           .attr("preserveAspectRatio", "xMinYMin meet")
-          .attr("viewBox", "0 0 600 400")
+          .attr("viewBox", "0 0 1100 200")
           .classed("svg-content-responsive", true)
           .append("g")
           .attr("transform", `translate(${margin.left}, ${margin.top})`);             
@@ -293,14 +293,19 @@ function visualiseCurve(svg, formattedData, xAxis, yAxis, classN, color){
         .x(item => xAxis(new Date(item.Meldedatum)))
         .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
     );
+  
 
   // Appends name of the Bundesland to the corresponding path
   svg.append("text")
-    .attr("x", 200) // move the text from the start of the path
-    .attr("dy", -10) // move the text up
-    .append("textPath")
-      .attr("xlink:href","#"+classN+"-curve") // links the text to the element with the corresponding id, which was given to the path in the code block above
-      .text(formattedData[0].Infos.Bundesland);
+     .datum(formattedData)
+    .attr("transform", item => {
+      var xpos = xAxis(new Date(item[item.length-1].Meldedatum)) -20 ;
+      return "translate(" + xpos + "," + yAxis(item[item.length-1].Infos.AnzahlFall) + ")";
+  })
+  .attr("x", 15)
+  .attr("dy", ".35em")
+  .attr("class", "segmentText")
+  .text(formattedData[0].Infos.Bundesland);
 
   // Appends circles to the path at the dates where data is returned
   svg.selectAll("circles")
@@ -313,6 +318,10 @@ function visualiseCurve(svg, formattedData, xAxis, yAxis, classN, color){
         .attr("cx", item => xAxis(new Date(item.Meldedatum)))
         .attr("cy", item => yAxis(new Date(item.Infos.AnzahlFall)))
         .attr("r", 2)
+
+
+  
+
 }
 
 function updateExistingCurvesCircles(storageArray){
@@ -338,3 +347,4 @@ function randomColor() {
   }
   return color;
 }
+
