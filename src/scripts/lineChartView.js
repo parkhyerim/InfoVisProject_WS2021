@@ -192,28 +192,27 @@ function addAxes(data){
     xA.tickValues([new Date(data[0].Meldedatum), new Date(data[1].Meldedatum), new Date(data[2].Meldedatum)])
   */
   xAxis = d3.scaleTime()
-              .domain(d3.extent(data, item => new Date(item.Meldedatum)))
+               .domain(d3.extent(data, item => new Date(item.Meldedatum)))
               .range([0, width]);
   const xA = d3.axisBottom(xAxis);
   xA.tickSizeOuter(0); // removes the last tick on the xAxis
-   d3.timeFormatDefaultLocale({
-        "decimal": ",",
-        "thousands": ".",
-        "grouping": [3],
-        "currency": ["€", ""],
-        "dateTime": "%a %b %e %X %Y",
-        "date": "%d.%m.%Y",
-        "time": "%H:%M:%S",
-        "periods": ["AM", "PM"],
-        "days": ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
-        "shortDays": ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
-        "months": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
-        "shortMonths": ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
-    })
+  d3.timeFormatDefaultLocale({
+      "decimal": ",",
+      "thousands": ".",
+      "grouping": [3],
+      "currency": ["€", ""],
+      "dateTime": "%a %b %e %X %Y",
+      "date": "%d.%m.%Y",
+      "time": "%H:%M:%S",
+      "periods": ["AM", "PM"],
+      "days": ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+      "shortDays": ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+      "months": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+      "shortMonths": ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
+  })
   const parseDate = d3.timeFormat("%d %B") // "%B %d, %Y" https://d3-wiki.readthedocs.io/zh_CN/master/Time-Scales/
   xA.tickFormat(d => parseDate(d));
 
- 
   // Appends the xAxis
   svg.append("g")
       .attr("transform", `translate(60, ${height})`) // moves x axis to the right
@@ -222,6 +221,12 @@ function addAxes(data){
       .selectAll("text")
       .attr("transform", "rotate(330)") //rotates the labels of the x axis by 
       .style("text-anchor", "end"); //makes sure that the end of the text string is anchored to the ticks
+
+  /** Hides the last label, because that would display the next month which might be misleading.
+    Makes sure that still all the data of the month is fetched.
+  */    
+  const labelNodelist = svg.selectAll("text")._groups[0];
+  labelNodelist[labelNodelist.length-1].style.visibility = "hidden"
 
   // Initializes and formats the yAxis
   yAxis = d3.scaleLinear()
@@ -237,7 +242,7 @@ function addAxes(data){
 
   svg.append("g")
       .attr("class", "grid")
-       .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
+      .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
       .style("stroke-width", 0.6)
       .call(d3.axisLeft(yAxis)
               .tickSize(-width)
