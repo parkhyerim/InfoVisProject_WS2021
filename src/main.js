@@ -1,5 +1,5 @@
 import { InitializeSVG, UpdateLineChartPathMonth, ShowDEData, AddBundeslandToLineChart, RemoveBundeslandFromLineChart } from './scripts/lineChartView.js';
-import { GetDateForFetch } from './scripts/datePicker.js';
+import { GetDateForFetch, allMonths } from './scripts/datePicker.js';
 import { GetCasesDE } from './scripts/getLineChartData.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
@@ -8,8 +8,10 @@ const mapButton = document.getElementById('mapButton');
 const datePickerButton = document.getElementById('datePickerButton');
 const dateButtons = document.getElementsByClassName('date');
 let selectedBL = [];
+const allDataTempArray = [];
+let allData = {};
 
-function InitialiseEvents(){
+function initialiseEvents(){
 
     // Initially load map. The map gets hidden in mapGermany.js 
     LoadMap();
@@ -20,10 +22,41 @@ function InitialiseEvents(){
     //Adds event listener on datePickerButton and each droopdown DateButton element
     eventListenerDatePicker();
 
-    // Add line chart for all DE cases
-    ShowDEData(GetDateForFetch())
+    // Gather data for all months for DE and add line chart for all DE cases   
+    gatherData().then(() => {
+        allData = allDataTempArray.reduce((accumulator, currentValue) => {
+
+            let month = new Date(currentValue[0].Meldedatum).getMonth();
+            
+            if(accumulator[month] === undefined){
+                accumulator[month] = currentValue
+            }
+            return accumulator
+        }, {})
+        document.getElementById("spinner").classList.remove("active");
+        ShowDEData(GetDateForFetch(), allData)
+    })
 
 }
+
+async function gatherData(){
+    document.getElementById("spinner").classList.add("active");
+
+    const startDate = new Date()
+    const promises = [];
+
+    for(let i=0; i<allMonths.length; i++){
+        promises.push(
+            GetCasesDE(allMonths[i]).then(casesDE => {
+                const endDate = new Date()
+                console.log((endDate-startDate)/1000)
+                allDataTempArray.push(casesDE)
+            })
+        )
+    }
+    return Promise.all(promises)
+}
+
 
 function eventListenerDatePicker() {
   //toggle date picker dropdown
@@ -38,23 +71,16 @@ function eventListenerDatePicker() {
             datePickerButton.textContent = date.textContent;
 
             document.getElementById("dateDropdown").classList.toggle("hidden");
-            document.getElementById("spinner").classList.add("active");
             date.classList.add('selectedDate');
             
-            // ShowDEData returns a promise. This guarantees that the axes are loaded
-            ShowDEData(GetDateForFetch()).then(() => {
-                
-                selectedBL.forEach((bundesland) => {
-                    UpdateLineChartPathMonth(bundesland, GetDateForFetch())
+           
+            ShowDEData(GetDateForFetch(), allData)
 
-                //when date is selected: update lineChart for every checked BL in the map    
-                })
-            })
+            //when date is selected: update lineChart for every checked BL in the map    
+            selectedBL.forEach((bundesland) => {
+                UpdateLineChartPathMonth(bundesland, GetDateForFetch())
 
-            
-            
-            
-            
+            })   
           //Displaymobilitydata(GetDateForFetch());
         })
             
@@ -129,7 +155,5 @@ function initializeMap(){
 }
 
 InitializeSVG();
-InitialiseEvents(); 
+initialiseEvents(); 
 
-/* Alle Monate als Objekt
-GetCasesDE(selectedMonth).then((casesDE)=>{*/

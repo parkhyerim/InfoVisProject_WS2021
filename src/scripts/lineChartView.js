@@ -9,75 +9,77 @@ const margin = {top:10, right: 30, bottom: 60, left: 60},
 
 
 
-export async function ShowDEData(selectedMonth){
+export async function ShowDEData(selectedMonth, allData){
+    const month = new Date(selectedMonth[0]).getMonth();
+    const casesDE = allData[month];
 
     removeDEData();
     /** Function should load the axis and the graph for DE when loading the page (default month)
     and when the month is updates
     */
-    await GetCasesDE(selectedMonth).then((casesDE)=>{
-      addAxes(casesDE)
-    
-      svg.append("path")
-        .datum(casesDE)
-        .attr("fill", "none")
-        .attr("id", "DE-curve")
-        //.attr("stroke", randomColor())
-        //.attr("stroke-width", 1)
-        .attr("class", "curve" + " " + "DE") //necessary to add a specific class for every Bundesland shown
-        .attr("d", d3.line()
-            .x(item => xAxis(new Date(item.Meldedatum)))
-            .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
-        );
 
-      let area = d3.area()
-        .x(d => xAxis(new Date(d.Meldedatum)))
-        .y0(d => height)
-        .y1(d => yAxis(new Date(d.Infos.AnzahlFall)))
+    addAxes(casesDE)
+  
+    svg.append("path")
+      .datum(casesDE)
+      .attr("fill", "none")
+      .attr("id", "DE-curve")
+      //.attr("stroke", randomColor())
+      //.attr("stroke-width", 1)
+      .attr("class", "curve" + " " + "DE") //necessary to add a specific class for every Bundesland shown
+      .attr("d", d3.line()
+          .x(item => xAxis(new Date(item.Meldedatum)))
+          .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
+      );
 
-      svg.append("path")
-        .datum(casesDE)
-        .attr("fill", "#b2dfdb")
-        .attr("class", "area")
-        .attr("d", area);
+    let area = d3.area()
+      .x(d => xAxis(new Date(d.Meldedatum)))
+      .y0(d => height)
+      .y1(d => yAxis(new Date(d.Infos.AnzahlFall)))
+
+    svg.append("path")
+      .datum(casesDE)
+      .attr("fill", "#b2dfdb")
+      .attr("class", "area")
+      .attr("d", area);
 
 
-      svg.append("text")
-        .attr("class", "x-label")
+    svg.append("text")
+      .attr("class", "x-label")
+      .attr("text-anchor", "end")
+      .attr("x", width)
+      .attr("y", height - 6)
+      .text("Meldedatum"); 
+
+
+    svg.append("text")
+      .attr("class", "y-label")
+      .attr("text-anchor", "start")
+      .attr("dy", ".75em")
+      .attr("dx", 8)
+      .attr("transform", "rotate(-360)")
+      .text("Gemeldete");
+
+    svg.append("text")
+      .attr("class", "y-label")
+      .attr("text-anchor", "start")
+      .attr("dy", "1.75em")
+      .attr("dx", 8)
+      .attr("transform", "rotate(-360)")
+      .text("Fälle");
+
+    /*
+    svg.append("text")
+        .attr("class", "y label")
         .attr("text-anchor", "end")
-        .attr("x", width)
-        .attr("y", height - 6)
-        .text("Meldedatum"); 
-
-
-      svg.append("text")
-        .attr("class", "y-label")
-        .attr("text-anchor", "start")
+        .attr("y", 6)
         .attr("dy", ".75em")
-        .attr("dx", 8)
-        .attr("transform", "rotate(-360)")
-        .text("Gemeldete");
+        .attr("transform", "rotate(-90)")
+        .text("Fallzahlen gesamt");
+    */
 
-      svg.append("text")
-        .attr("class", "y-label")
-        .attr("text-anchor", "start")
-        .attr("dy", "1.75em")
-        .attr("dx", 8)
-        .attr("transform", "rotate(-360)")
-        .text("Fälle");
-
-      /*
-      svg.append("text")
-          .attr("class", "y label")
-          .attr("text-anchor", "end")
-          .attr("y", 6)
-          .attr("dy", ".75em")
-          .attr("transform", "rotate(-90)")
-          .text("Fallzahlen gesamt");
-      */
-
-    }); 
-    document.getElementById("spinner").classList.remove("active");
+  
+    //document.getElementById("spinner").classList.remove("active");
  
 }
 
@@ -204,6 +206,8 @@ function addAxes(data){
   svg.append("g")
       .call(d3.axisLeft(yAxis))
       .attr("class", "y-axis"); // Class added to be able to remove the axis;
+
+  
 
   const domain = d3.scaleLinear().domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
   currentDomain = domain.domain()[1]
