@@ -15,6 +15,7 @@ export function LoadMap(){
 		const width = 650;
 		const height =450;
 
+
 		const svg = d3  
 			.select("#mapGermany")
 			.classed("svg-container", true)   
@@ -26,6 +27,8 @@ export function LoadMap(){
 			.attr("id", "svgMap")
 			.attr("width", width)  
 			.attr("height", height);
+
+
 
 		const projection = d3.geoMercator();
 		projection.fitSize([width, height],geojson)
