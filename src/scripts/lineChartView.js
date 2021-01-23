@@ -3,7 +3,7 @@ let svg, xAxis, yAxis, currentDomain;
 const blDomainStorage = [];
 
     
-const margin = {top:10, right: 90, bottom: 80, left: 60},
+const margin = {top:10, right: 160, bottom: 80, left: 60},
   width = 600 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
@@ -111,6 +111,7 @@ export function AddBundeslandToLineChart(bundesland, selectedMonth){
 export function RemoveBundeslandFromLineChart(bundesland){
   svg.select(".curve."+bundesland).remove();
   svg.selectAll(".circles."+bundesland).remove();
+  svg.select(".segment-text." +bundesland).remove();
 }
 
 
@@ -128,6 +129,17 @@ function visualiseCurve(svg, formattedData, classN, color){
         .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
     );
 
+  // Appends name of the Bundesland to the corresponding path
+  svg.append("text")
+    .datum(formattedData)
+    .attr("transform", item => {
+      const xpos = xAxis(new Date(item[item.length-1].Meldedatum)) + 50;
+      return `translate(${xpos}, ${yAxis(item[item.length-1].Infos.AnzahlFall)})`;
+    })
+    .attr("x", 15)
+    .attr("dy", ".35em")
+    .attr("class", "segment-text " + formattedData[0].Infos.Bundesland)
+    .text(formattedData[0].Infos.Bundesland);
 
   // Appends name of the Bundesland to the corresponding path
   /*svg.append("text")
@@ -163,6 +175,7 @@ function removeDEData(){
   svg.selectAll(".curve").remove();
   svg.selectAll(".circles").remove();
   svg.selectAll(".grid").remove();
+  svg.selectAll(".segment-text").remove();
 }
 
  
@@ -215,7 +228,7 @@ function addAxes(data){
 
   // Appends the xAxis
   svg.append("g")
-      .attr("transform", `translate(60, ${height})`) // moves x axis to the right
+      .attr("transform", `translate(${margin.left}, ${height})`) // moves x axis to the right
       .attr("class", "x-axis")
       .call(xA)
       .selectAll("text")

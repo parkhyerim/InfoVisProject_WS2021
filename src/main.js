@@ -22,6 +22,9 @@ function initialiseEvents(){
     //Adds event listener on datePickerButton and each droopdown DateButton element
     eventListenerDatePicker();
 
+    Displaymobilitydata(GetDateForFetch());
+
+
     // Gather data for all months for DE and add line chart for all DE cases   
     gatherData().then(() => {
         allData = allDataTempArray.reduce((accumulator, currentValue) => {
@@ -81,7 +84,7 @@ function eventListenerDatePicker() {
                 UpdateLineChartPathMonth(bundesland, GetDateForFetch())
 
             })   
-          //Displaymobilitydata(GetDateForFetch());
+        Displaymobilitydata(GetDateForFetch());
         })
             
     } 
@@ -118,7 +121,6 @@ function updateLineChart(bl, newBLWasSelected){
 }
 
 function initializeMap(){
-    //Displaymobilitydata(GetDateForFetch());
     
     const mapSelectedBl = document.getElementsByTagName('text');
         /** MutationObserver looks at all the html text elements and has a look if their

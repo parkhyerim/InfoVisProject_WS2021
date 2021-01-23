@@ -1,10 +1,9 @@
-export function Displaymobilitydata(monthparam, param="driving"){
+export function Displaymobilitydata(selectedMonth, param="driving"){
     let mobilityData = [];
     let month, day;
     var temp = [];
-    monthparam = monthparam[0].substr((monthparam[0].indexOf("-")+1), 2);
-
-
+    let monthparam = selectedMonth[0].substr((selectedMonth[0].indexOf("-")+1), 2);
+    
     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
         data.forEach(element => temp.push(element));
         temp.forEach(function(element) {
