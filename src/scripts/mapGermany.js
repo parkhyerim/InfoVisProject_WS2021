@@ -25,8 +25,6 @@ export function LoadMap(){
           	.attr("viewBox", "0 0 600 450")
           	.classed("svg-content-responsive", true)
 			.attr("id", "svgMap")
-			.attr("width", width)  
-			.attr("height", height);
 
 
 
@@ -49,7 +47,7 @@ export function LoadMap(){
 			.attr("stroke-width", 0.5);  
 			
 
-		svg.append("g")  
+	var g = svg.append("g")  
 			.selectAll("text")  
 			.data(geojson.features)  
 			.enter()  
@@ -85,11 +83,15 @@ export function LoadMap(){
 			.on("mouseout", resetBlColor)
 			.on("click", clickEvent)
 			.style("cursor", "pointer");  
+			
+			//d3.select("#Hessen").dispatch('click');
+			//d3.select("#Hessen").dispatch('mouseover');
+
 	});
 
-	// Hide map
-	document.getElementById('mapGermany').style.display = 'none'
+	
 }
+
 
 
 function highlightBl(){
@@ -120,6 +122,7 @@ function resetBlColor(){
 }
 
 function clickEvent(){
+	console.log("triggered");
 	const clickedBl = d3.select(this)._groups[0][0].id;
 
 	// Check if a Bundesland has already been clicked

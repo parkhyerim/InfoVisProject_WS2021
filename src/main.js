@@ -7,7 +7,7 @@ import { Displaymobilitydata } from './scripts/treeMapView.js';
 const mapButton = document.getElementById('mapButton');
 const datePicked = '';
 const dateButton = document.getElementsByClassName('date');
-let selectedBL = [];
+let selectedBL = ["Hessen"];
 
 
 function InitialiseEvents(){
@@ -24,6 +24,9 @@ function InitialiseEvents(){
   $(document).ready(function(){
     $('.tabs').tabs();
   });
+
+
+  
     
 }
 
@@ -48,6 +51,7 @@ function eventListenerDatePicker() {
     })
 
   });
+  document.getElementById("März").click();
 
 }
 

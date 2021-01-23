@@ -119,7 +119,7 @@ function createTreeChart(data, monthparam){
 
 
     // and to add the text labels
-var map=  svg
+      svg
         .selectAll("text")
         .data(treemap.leaves())
         .enter()
