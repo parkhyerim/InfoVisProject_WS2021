@@ -12,20 +12,23 @@ export function LoadMap(){
 	// Source http://opendatalab.de/projects/geojson-utilities/
 	d3.json('../src/data/bundeslaender.geojson').then((geojson)=>{
 				
-		const width = 900;
-		const height =500;
+		const width = 600;
+		const height =450;
+
 
 		const svg = d3  
 			.select("#mapGermany")
 			.classed("svg-container", true)   
 			.append("svg")
 			.attr("class", "map-germany")
-			//.attr("preserveAspectRatio", "xMinYMin meet")
-          	//.attr("viewBox", "0 0 600 400")
-          	//.classed("svg-content-responsive", true)
+			.attr("preserveAspectRatio", "xMinYMin meet")
+          	.attr("viewBox", "0 0 600 450")
+          	.classed("svg-content-responsive", true)
 			.attr("id", "svgMap")
 			.attr("width", width)  
 			.attr("height", height);
+
+
 
 		const projection = d3.geoMercator();
 		projection.fitSize([width, height],geojson)
@@ -138,7 +141,8 @@ function clickEvent(){
 		d3.select(this)._groups[0][0].classList.add('selected-bl'); 
 	}  
 	else if(clickedBlArray.length == 1){
-		alert("Mindestens 1 Bundesland muss ausgewählt sein.")
+		M.toast({html: 'Mindestens 1 Bundesland muss ausgewählt sein.'}, 3000);
+		// alert("Mindestens 1 Bundesland muss ausgewählt sein.")
 	}
 
 	/** If it has been clicked before the selection is revoked by changing the stroke coloring and removing the 
@@ -160,6 +164,7 @@ function clickEvent(){
 	} 
 	// Alert when more when the user wants to select more than 4 Bundesländer. This would get too messy for the line chart.
 	else if(clickedBlArray.length == 3){
-		alert("Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.")
+		M.toast({html: 'Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.'}, 3000);
+		// alert("Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.")
 	} 
 }

@@ -27,54 +27,112 @@
     <script type="module" src="scripts/datePicker.js" ></script>
     <script type="module" src="scripts/treeMapView.js"></script>
     <script type="module" src="scripts/treemapMobilityView.js" ></script>
+    <script type="text/javascript" src="scripts/popover.js"></script>
+
 </head>
 
-<body class="teal lighten-5">
-    <header class="teal section">
-        <h2 class="center white-text">Visualisierung der Fallzahlen und Mobilitätsdaten</h2>
-        <h5 class="flow text grey-text center text-lighten-2">Auswirkungen der Covid-19-Pandemie auf die Mobilität</h5>
-    </header>   
+<body>
+
+
              
-    <div> 
-        <div class="row">
-            <div class="col s2 teal lighten-2 side-bar">
-                <!--<h5 class="low text white-text">Wähle einen Monat</h5>-->
-                <div id="datePicker" class="date-picker add-padding">
-                    <a id="datePickerButton" class="waves-effect waves-light btn button-width">März 2020</a>
-                    <div id="dateDropdown" class="dropdown hidden">
-                      <div class="date ">März 2020</div>
-                      <div class="date">April 2020</div>
-                      <div class="date">Mai 2020</div>
-                      <div class="date">Juni 2020</div>
-                      <div class="date">Juli 2020</div>
-                      <div class="date">August 2020</div>
-                      <div class="date">September 2020</div>
-                      <div class="date">Oktober 2020</div>
-                      <div class="date">November 2020</div>
-                      <div class="date">Dezember 2020</div>
-                    </div>
+    <div class="row">
+        <div class="col s4">
+            <div class="row" id="titleContainer">
+                Auswirkungen der Covid-19 Pandemie auf die Mobilität
+            </div>
+            <div class = "row" id="btnContainer"> 
+
+   
+               <div > 
+   
+                   <div class="btn-group" role="group" >
+                       <button type="button" class="btn btn-inactive date tooltipped" data-position="top" data-tooltip="I am a tooltip">März</button>
+                       <button type="button" class="btn btn-inactive date">April</button>
+                       <button type="button" class="btn btn-inactive date">Mai</button>
+                       <button type="button" class="btn btn-inactive date">Juni</button>
+                       <button type="button" class="btn btn-inactive date">Juli</button>
+                       <button type="button" class="btn btn-inactive date">August</button>
+                       <button type="button" class="btn btn-inactive date">September</button>
+                       <button type="button" class="btn btn-inactive date">Oktober</button>
+                       <button type="button" class="btn btn-inactive date">November</button>
+                       <button type="button" class="btn btn-inactive date">Dezember</button>
+                       
+                     </div>
+   
+               </div>
+                  
+           </div>
+           <div class="row">
+            <div id="mapGermany" class="map-germany"></div> 
+            </div>
+        </div> 
+        <div class="col s8"  id="visualisationContainer">
+
+            <div class ="row" id="chartPlaceholderContainer">
+
+                <div class="col s12 hidden" id="lineChartContainer">
                 </div>
+    
+            </div>
+            <div class="row" >
+
+
+                <div class="col s7" id="treemapContainer">
+                    <div class="row">
+                        <div class="col s12">
+                          <ul class="tabs">
+                            <li class="tab col s6"><a class="active" href="#treemap1">Deutschland gesamt</a></li>
+                            <li class="tab col s6"><a href="#treemap2">Ausgewähle Bundesländer</a></li>
+                          </ul>
+                        </div>
+
+                        <div id="treemap1" class="col s12">
+                            <div class="row " id="iconContainer">  
+                                <div class="col s11"> 
+                                    <div > Icons</div>
+                                </div>   
+                                <div class="col s1"> 
+                                    <!-- Modal Trigger -->
+                                    <a class="modal-trigger" href="#demo-modal" > <i class="small material-icons">info</i></a>    
+                                </div> 
+                               
+                            </div>
+                            <div class="row">                                                
+                                <!-- Container for Treemap with Mobility -->
+                                <div id="treemapwrapper"></div> 
+
+                            </div>
+    
+
+          
+                        </div>
+                        <div id="treemap2" class="col s12">Treemap2</div>
+                        </div>
+                    </div>
+
+                    <div class="col s5" id="wordCloudContainer">
+                        WordCircle
+                    </div>
+
             </div>
 
-            <div class="col s10">
-                <div class="center-align add-padding">
-                    <a id="mapButton" class="waves-effect waves-light btn"><i class="material-icons right">map</i>Bundesländer</a>
-                </div>
-                
-                <div id="mapGermany" class="map-germany"></div>   
-                <div class="row">
-                    <div class="col s6">
-                        <div id="lineChartContainer"></div>
-                    </div>
-                     <!-- Container for Treemap with Mobility -->
-                    <!-- <div class="col s6">      
-                        <div id="treemapwrapper"></div>
-                    </div> -->
-                      <!-- Container for Treemap with Mobility For selected Regions-->
-                   <div class="col s6">
-                      <div id="treemapMobility"></div>
-                    </div> 
+            
+        </div> 
+
+        <!-- Modal Structure -->
+        <div id="demo-modal" class="modal">
+            <div class="modal-content">
+            <h4>A Demo of small modal</h4>
+            <p>Content of the modal goes here. Place marketing text or other information here.
+            </p>
+        
+            </div>
+            <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-red btn brown darken-3">Close</a>
+            </div>
         </div>
+
+
     </div> 
 </body>
 </html>
