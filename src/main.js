@@ -96,7 +96,7 @@ function eventListenerDatePicker() {
 
 function updateTreeMap(bl, newBLWasSelected){
     let monthChanged = false;
-   // console.log(bl, newBLWasSelected)
+    console.log(bl, newBLWasSelected)
     if(newBLWasSelected === undefined) {
         newBLWasSelected = true;
         monthChanged = true;
@@ -121,14 +121,16 @@ function mutationObserverMap(){
                     //add selected BL to selectedBL array
                     selectedBL.push(mutation.target.id);
                     AddBundeslandToLineChart(mutation.target.id, GetDateForFetch());
+                    updateTreeMap(mutation.target.id, newBLWasSelected) 
                 } else {
                     newBLWasSelected = false;
                     //add selected BL to selectedBL array
                     const index = selectedBL.indexOf(mutation.target.id)
                     selectedBL.splice(index, 1);
                     RemoveBundeslandFromLineChart(mutation.target.id);
+                    updateTreeMap(mutation.target.id, newBLWasSelected) 
                 } 
-                updateTreeMap(mutation.target.id, newBLWasSelected)  
+               // updateTreeMap(mutation.target.id, newBLWasSelected)  
                 //document.getElementById("lineChartContainer").classList.remove("hidden");
                 //updateLineChart(mutation.target.id, newBLWasSelected)            
                 //updateLineChart(mutation.target.id, newBLWasSelected)            
