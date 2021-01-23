@@ -64,12 +64,11 @@ function updateLineChart(bl, newBLWasSelected){
     // newBLWasSelected only true if a new Bundesland was selected
     // false when only the date was changed
     VisualiseChosenBL(bl, newBLWasSelected, GetDateForFetch());
-  //  UpdateSelectedRegionsList(bl, newBLWasSelected, GetDateForFetch());
 }
 
 function updateTreeMap(bl, newBLWasSelected){
     let monthChanged = false;
-   
+    console.log(bl, newBLWasSelected)
     if(newBLWasSelected === undefined) {
         newBLWasSelected = true;
         monthChanged = true;
