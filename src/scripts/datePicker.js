@@ -5,7 +5,7 @@ export function GetDateForFetch(){
   switch (document.getElementById('selectedDate').textContent) {
     case "März":
       return ["2020-03-01", "2020-03-31"]
-    case "April 2020":
+    case "April":
       return ["2020-04-01", "2020-04-30"]
     case "Mai":
       return ["2020-05-01", "2020-05-31"]

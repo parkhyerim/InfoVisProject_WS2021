@@ -33,17 +33,17 @@
 <body>
 
 
-             
+
     <div class="row">
         <div class="col s4">
             <div class="row" id="titleContainer">
                 Auswirkungen der Covid-19 Pandemie auf die Mobilität
             </div>
-            <div class = "row" id="btnContainer"> 
+            <div class = "row" id="btnContainer">
 
-   
-               <div > 
-   
+
+               <div >
+
                    <div class="btn-group" role="group" >
                        <button type="button" class="btn btn-inactive date tooltipped" data-position="top" data-tooltip="I am a tooltip">März</button>
                        <button type="button" class="btn btn-inactive date">April</button>
@@ -55,23 +55,23 @@
                        <button type="button" class="btn btn-inactive date">Oktober</button>
                        <button type="button" class="btn btn-inactive date">November</button>
                        <button type="button" class="btn btn-inactive date">Dezember</button>
-                       
+
                      </div>
-   
+
                </div>
-                  
+
            </div>
            <div class="row">
-            <div id="mapGermany" class="map-germany"></div> 
+            <div id="mapGermany" class="map-germany"></div>
             </div>
-        </div> 
+        </div>
         <div class="col s8"  id="visualisationContainer">
 
             <div class ="row" id="chartPlaceholderContainer">
 
                 <div class="col s12 hidden" id="lineChartContainer">
                 </div>
-    
+
             </div>
             <div class="row" >
 
@@ -86,24 +86,30 @@
                         </div>
 
                         <div id="treemap1" class="col s12">
-                            <div class="row " id="iconContainer">  
-                                <div class="col s11"> 
-                                    <div > Icons</div>
-                                </div>   
-                                <div class="col s1"> 
+                            <div class="row " id="iconContainer">
+                                <div class="col s11">
+                                    <div>
+                                        <img src="../src/img/Auto_icon.png" alt="Auto icon" width="110px" class="transport" name="driving">
+
+                                        <img src="../src/img/Walking_icon.png" alt="Walking icon" width="80px" class="transport" name="walking">
+
+                                        <img src="../src/img/Transit_icon.png" alt="Transit icon" width="90px" class="transport" name="transit">
+                                        Icons</div>
+                                </div>
+                                <div class="col s1">
                                     <!-- Modal Trigger -->
-                                    <a class="modal-trigger" href="#demo-modal" > <i class="small material-icons">info</i></a>    
-                                </div> 
-                               
+                                    <a class="modal-trigger" href="#demo-modal" > <i class="small material-icons">info</i></a>
+                                </div>
+
                             </div>
-                            <div class="row">                                                
+                            <div class="row">
                                 <!-- Container for Treemap with Mobility -->
-                                <div id="treemapwrapper"></div> 
+                                <div id="treemapwrapper"></div>
 
                             </div>
-    
 
-          
+
+
                         </div>
                         <div id="treemap2" class="col s12">Treemap2</div>
                         </div>
@@ -115,8 +121,8 @@
 
             </div>
 
-            
-        </div> 
+
+        </div>
 
         <!-- Modal Structure -->
         <div id="demo-modal" class="modal">
@@ -124,7 +130,7 @@
             <h4>A Demo of small modal</h4>
             <p>Content of the modal goes here. Place marketing text or other information here.
             </p>
-        
+
             </div>
             <div class="modal-footer">
             <a href="#!" class="modal-action modal-close waves-effect waves-red btn brown darken-3">Close</a>
@@ -132,6 +138,6 @@
         </div>
 
 
-    </div> 
+    </div>
 </body>
 </html>
