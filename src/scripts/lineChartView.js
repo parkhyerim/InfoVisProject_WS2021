@@ -4,7 +4,7 @@ const blDomainStorage = [];
 
 const margin = {top:40, right: 160, bottom: 80, left: 60},
   width = 1000 - margin.left - margin.right,
-  height = 250 - margin.top - margin.bottom;
+  height = 350 - margin.top - margin.bottom;
 
 export async function ShowDEData(selectedMonth, allData){
     const month = new Date(selectedMonth[0]).getMonth();
@@ -78,7 +78,7 @@ export function AddBundeslandToLineChart(bundesland, selectedMonth){
 
   // Fetching the data of the newly selected Bundesland
   FetchData(bundesland, selectedMonth).then((data) => {
-    visualiseCurve(svg, data, bundesland, randomColor());
+    visualiseCurve(svg, data, bundesland, "#D58E00");
   })     
 }
 
@@ -95,7 +95,7 @@ function visualiseCurve(svg, formattedData, classN, color){
     .attr("fill", "none")
     .attr("id", classN+"-curve")
     .attr("stroke", color)
-    .attr("stroke-width", 1)
+    .attr("stroke-width", 2.5)
     .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
     .attr("class", "curve" + " " + classN) //necessary to add a specific class for every Bundesland shown
     .attr("d", d3.line()
@@ -123,7 +123,7 @@ function visualiseCurve(svg, formattedData, classN, color){
       .append("circle")
         .attr("class", "circles" + " " + classN)
         .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
-        .attr("fill", "darkblue")
+        .attr("fill", "#D58E00")
         .attr("stroke", "none")
         .attr("cx", item => xAxis(new Date(item.Meldedatum)))
         .attr("cy", item => yAxis(new Date(item.Infos.AnzahlFall)))
@@ -152,7 +152,7 @@ export function InitializeSVG(){
           .classed("svg-container", true) 
           .append("svg")
           .attr("preserveAspectRatio", "xMinYMin meet")
-          .attr("viewBox", "0 0 1100 300")
+          .attr("viewBox", "0 0 1100 400")
           .classed("svg-content-responsive", true)
           .append("g")
           .attr("transform", `translate(${margin.left}, ${margin.top})`);             

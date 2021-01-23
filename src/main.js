@@ -24,7 +24,7 @@ function initialiseEvents(){
         $('.tabs').tabs();
     });
 
-    Displaymobilitydata(GetDateForFetch());
+    //Displaymobilitydata(GetDateForFetch());
 
 
     // Gather data for all months for DE and add line chart for all DE cases   
@@ -79,14 +79,13 @@ function eventListenerDatePicker() {
            
             ShowDEData(GetDateForFetch(), allData);
 
-            console.log(selectedBL);
             //when date is selected: update lineChart for every checked BL in the map    
             selectedBL.forEach((bundesland) => {
                 UpdateLineChartPathMonth(bundesland, GetDateForFetch())
 
             })
 
-            Displaymobilitydata(GetDateForFetch());
+            //Displaymobilitydata(GetDateForFetch());
         })
             
     } 
@@ -94,7 +93,7 @@ function eventListenerDatePicker() {
 
 
 function mutationObserverMap(){
-    const mapSelectedBl = document.getElementsByTagName('text');
+    const mapSelectedBl = document.getElementsByTagName('path');
     //console.log(mapSelectedBl)
     /** MutationObserver looks at all the html text elements and has a look if their
         attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
@@ -105,7 +104,7 @@ function mutationObserverMap(){
             if(mutation.attributeName === 'class'){
                 let newBLWasSelected;
 
-                if(mutation.target.classList[0] === 'selected-bl'){
+                if(mutation.target.classList[2] === 'selected-bl'){
                     newBLWasSelected = true;
                     //add selected BL to selectedBL array
                     selectedBL.push(mutation.target.id);
@@ -123,7 +122,7 @@ function mutationObserverMap(){
                 //updateLineChart(mutation.target.id, newBLWasSelected)            
                 //UpdateLineChartBundesland(mutation.target.id, newBLWasSelected);
             }
-        })  
+        }) 
     }) 
     const config = { attributes: true };
     

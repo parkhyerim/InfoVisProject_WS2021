@@ -6,6 +6,8 @@ let labelBlArray = [];
 // `clickedBlArray` stores the names of all the Bundesländer which have been selected via click
 let clickedBlArray = [];
 
+let colors = ["#f17066", "#7e5f99", "#a22a57"]
+
 
 export async function LoadMap(){
 
@@ -41,7 +43,7 @@ export async function LoadMap(){
 			.enter()  
 			.append("path")  
 			.attr("d", path) 
-			.attr("class", d => "path " + d.properties.GEN) // Sets the name of the Bundesland as the classname
+			.attr("class", d => d.properties.GEN + " path") // Sets the name of the Bundesland as the classname
 			.attr("id", d => d.properties.GEN) // Sets the name of the Bundesland as the id
 			.attr("fill", "#e5f2f2")  
 			.attr("stroke", "#008080")  
@@ -56,10 +58,12 @@ export async function LoadMap(){
 			.enter()  
 			.append("text")  
 			.attr("text-anchor", "middle") 
-			.attr("font-size", 11)
-			.style("fill", "#009688")
+			.attr("font-size", 20)
+			.style("fill", "#D58E00")
+			.style("font-weight", "bold")
+			.style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
 			.style("visibility", "hidden")
-			.attr("class", d => "label " + d.properties.GEN) // Sets the name of the Bundesland as the ID
+			.attr("class", d => d.properties.GEN + " label") // Sets the name of the Bundesland as the ID
 			.attr("x", d => {
 				const bl = d.properties.GEN;
 				if(offset[bl] != undefined) {
@@ -80,14 +84,14 @@ export async function LoadMap(){
 				})
 				if(textBool === false) {
 					labelBlArray.push(d.properties.GEN)	
-					return d.properties.GEN;
+					return d.properties.GEN.toUpperCase();
 				}
 				
 			})
 			//.on("mouseover", highlightBl)
 			//.on("mouseout", resetBlColor)
-			//.on("click", clickEvent)
-			//.style("cursor", "pointer");  
+			.on("click", clickEvent)
+			.style("cursor", "pointer");  
 			
 
 	});
@@ -126,11 +130,11 @@ function resetBlColor(){
 
 function clickEvent(){
 
+	//const clickedBl = d3.select(this)._groups[0][0].id;
 
-	const clickedBl = d3.select(this)._groups[0][0].id;
+	const className = d3.select(this)._groups[0][0].className.baseVal;
+	const clickedBl = className.substr(0, (className.indexOf(" ")));
 
-	d3.select(".label ." + clickedBl).style("visibility", "hidden")
-	console.log(clickedBl)
 	// Check if a Bundesland has already been clicked
 	let clickedBool = false;
 	
@@ -142,14 +146,14 @@ function clickEvent(){
 
 	// If the clicked on Bundesland wasn't clicked before, it is marked and added to `clickedBlArray`
 	if(clickedBool === false & clickedBlArray.length <= 2) {
-		d3.select("."+d3.select(this)._groups[0][0].id)
-			.attr("fill", "#009688")
-			.attr("stroke", "#01579b")  
-			.attr("stroke-width", 0.75);
+		d3.select("."+clickedBl)
+			.attr("fill", colors[0])
 
-		clickedBlArray.push(blHoovered);
+		//d3.select(".label." + clickedBl)._groups[0][0].style.visibility = "visible";
+
+		clickedBlArray.push(clickedBl);
 		// Necessary to get the selected Bundesland in main.js
-		d3.select(this)._groups[0][0].classList.add('selected-bl'); 
+		d3.select(this)._groups[0][0].classList.add('selected-bl'); //!
 	}  
 	else if(clickedBlArray.length == 1){
 		M.toast({html: 'Mindestens 1 Bundesland muss ausgewählt sein.'}, 3000);
@@ -160,21 +164,19 @@ function clickEvent(){
 		Bundesland from the array.
 	*/
 	else if(clickedBool === true){	
-		d3.select("."+d3.select(this)._groups[0][0].id)
+		d3.select("."+clickedBl)
 			.attr("stroke", "white")
-			.attr("fill", colorBackground)
-			.attr("stroke", "#01579b")  
-			.attr("stroke-width", 0.5) 
-
-		d3.select(this)
-			.style("fill", colorText)
+			.attr("fill", "#e5f2f2")
+			.attr("stroke", "#008080")  
+			.attr("stroke-width", 0.75)
 
 		// Guarantees that at least one Bundesland is always selected after the map was initialized
 		if(clickedBlArray.length > 1){
+			d3.select(".label." + clickedBl)._groups[0][0].style.visibility = "hidden"; // hides the Bundesland label
 			const index = clickedBlArray.indexOf(clickedBl);
 			clickedBlArray.splice(index, 1);
 			// Necessary to get the selected Bundesland in main.js
-			d3.select(this)._groups[0][0].classList.remove('selected-bl'); 	
+			d3.select(this)._groups[0][0].classList.remove('selected-bl'); 	//!
 		} 
 	} 
 	// Alert when more when the user wants to select more than 4 Bundesländer. This would get too messy for the line chart.
@@ -182,4 +184,11 @@ function clickEvent(){
 		M.toast({html: 'Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.'}, 3000);
 		// alert("Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.")
 	} 
+	// Removes the just used color from the first place of the array to the last
+	const firstColor = colors[0];
+	colors.shift();
+	console.log(colors)
+	colors.splice(colors.length, 0, firstColor);
+	console.log(colors)
+
 }
