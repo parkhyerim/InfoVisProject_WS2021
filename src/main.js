@@ -15,8 +15,8 @@ let allData = {};
 
 function initialiseEvents(){
 
-    // Initially load map. The map gets hidden in mapGermany.js 
-    LoadMap();
+    // Load map and add the mutation observer to its text fields
+    LoadMap().then(() => mutationObserverMap());
 
     eventListenerDatePicker();
     
@@ -25,6 +25,7 @@ function initialiseEvents(){
     });
 
     Displaymobilitydata(GetDateForFetch());
+
 
     // Gather data for all months for DE and add line chart for all DE cases   
     gatherData().then(() => {
@@ -67,6 +68,7 @@ function eventListenerDatePicker() {
      //adds an event listener for every Date in the Dropdown
     for(let date of dateButtons){
         date.addEventListener('click', ()=> {
+            mutationObserverMap();
                 
             //datePickerButton.textContent = date.textContent;
             if(document.getElementById('selectedDate') !== null){
@@ -75,15 +77,15 @@ function eventListenerDatePicker() {
 
             date.setAttribute("id", "selectedDate");
            
-            ShowDEData(GetDateForFetch(), allData)
+            ShowDEData(GetDateForFetch(), allData);
 
+            console.log(selectedBL);
             //when date is selected: update lineChart for every checked BL in the map    
             selectedBL.forEach((bundesland) => {
                 UpdateLineChartPathMonth(bundesland, GetDateForFetch())
 
             })
 
-            initializeMap();
             Displaymobilitydata(GetDateForFetch());
         })
             
@@ -91,38 +93,38 @@ function eventListenerDatePicker() {
 }
 
 
-function initializeMap(){
-
+function mutationObserverMap(){
     const mapSelectedBl = document.getElementsByTagName('text');
-        /** MutationObserver looks at all the html text elements and has a look if their
-            attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
-            has been selected in the map
-        */
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if(mutation.attributeName === 'class'){
-                    let newBLWasSelected;
+    //console.log(mapSelectedBl)
+    /** MutationObserver looks at all the html text elements and has a look if their
+        attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
+        has been selected in the map
+    */
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if(mutation.attributeName === 'class'){
+                let newBLWasSelected;
 
-                    if(mutation.target.classList[0] === 'selected-bl'){
-                        newBLWasSelected = true;
-                        //add selected BL to selectedBL array
-                        selectedBL.push(mutation.target.id);
-                        AddBundeslandToLineChart(mutation.target.id, GetDateForFetch());
-                    } else {
-                        newBLWasSelected = false;
-                        //add selected BL to selectedBL array
-                        const index = selectedBL.indexOf(mutation.target.id)
-                        selectedBL.splice(index, 1);
-                        RemoveBundeslandFromLineChart(mutation.target.id);
-                    } 
+                if(mutation.target.classList[0] === 'selected-bl'){
+                    newBLWasSelected = true;
+                    //add selected BL to selectedBL array
+                    selectedBL.push(mutation.target.id);
+                    AddBundeslandToLineChart(mutation.target.id, GetDateForFetch());
+                } else {
+                    newBLWasSelected = false;
+                    //add selected BL to selectedBL array
+                    const index = selectedBL.indexOf(mutation.target.id)
+                    selectedBL.splice(index, 1);
+                    RemoveBundeslandFromLineChart(mutation.target.id);
+                } 
 
-                    //document.getElementById("lineChartContainer").classList.remove("hidden");
-                    //updateLineChart(mutation.target.id, newBLWasSelected)            
-                    //updateLineChart(mutation.target.id, newBLWasSelected)            
-                    //UpdateLineChartBundesland(mutation.target.id, newBLWasSelected);
-                }
-            })  
-        }) 
+                //document.getElementById("lineChartContainer").classList.remove("hidden");
+                //updateLineChart(mutation.target.id, newBLWasSelected)            
+                //updateLineChart(mutation.target.id, newBLWasSelected)            
+                //UpdateLineChartBundesland(mutation.target.id, newBLWasSelected);
+            }
+        })  
+    }) 
     const config = { attributes: true };
     
     for (let blMap of mapSelectedBl){

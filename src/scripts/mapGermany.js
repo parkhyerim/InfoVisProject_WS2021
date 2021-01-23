@@ -7,10 +7,10 @@ let labelBlArray = [];
 let clickedBlArray = [];
 
 
-export function LoadMap(){
+export async function LoadMap(){
 
 	// Source http://opendatalab.de/projects/geojson-utilities/
-	d3.json('../src/data/bundeslaender.geojson').then((geojson)=>{
+	await d3.json('../src/data/bundeslaender.geojson').then((geojson)=>{
 				
 		const width = 600;
 		const height =450;
@@ -41,10 +41,13 @@ export function LoadMap(){
 			.enter()  
 			.append("path")  
 			.attr("d", path) 
-			.attr("class", d => d.properties.GEN) // Sets the name of the Bundesland as the classname
-			.attr("fill", "#e1f5fe")  
-			.attr("stroke", "#01579b")  
-			.attr("stroke-width", 0.75);  
+			.attr("class", d => "path " + d.properties.GEN) // Sets the name of the Bundesland as the classname
+			.attr("id", d => d.properties.GEN) // Sets the name of the Bundesland as the id
+			.attr("fill", "#e5f2f2")  
+			.attr("stroke", "#008080")  
+			.attr("stroke-width", 0.75)
+			.style("cursor", "pointer")
+			.on("click", clickEvent);
 			
 
 		 svg.append("g")  
@@ -55,7 +58,8 @@ export function LoadMap(){
 			.attr("text-anchor", "middle") 
 			.attr("font-size", 11)
 			.style("fill", "#009688")
-			.attr("id", d => d.properties.GEN) // Sets the name of the Bundesland as the ID
+			.style("visibility", "hidden")
+			.attr("class", d => "label " + d.properties.GEN) // Sets the name of the Bundesland as the ID
 			.attr("x", d => {
 				const bl = d.properties.GEN;
 				if(offset[bl] != undefined) {
@@ -80,10 +84,10 @@ export function LoadMap(){
 				}
 				
 			})
-			.on("mouseover", highlightBl)
-			.on("mouseout", resetBlColor)
-			.on("click", clickEvent)
-			.style("cursor", "pointer");  
+			//.on("mouseover", highlightBl)
+			//.on("mouseout", resetBlColor)
+			//.on("click", clickEvent)
+			//.style("cursor", "pointer");  
 			
 
 	});
@@ -121,8 +125,12 @@ function resetBlColor(){
 }
 
 function clickEvent(){
+
+
 	const clickedBl = d3.select(this)._groups[0][0].id;
 
+	d3.select(".label ." + clickedBl).style("visibility", "hidden")
+	console.log(clickedBl)
 	// Check if a Bundesland has already been clicked
 	let clickedBool = false;
 	

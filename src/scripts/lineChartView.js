@@ -50,6 +50,7 @@ export async function ShowDEData(selectedMonth, allData){
       .attr("transform", () => {
          return `translate(${width/2}, ${height+margin.bottom})`
       }) 
+      .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
       .text("Meldedatum");
 
     svg.append("text")
@@ -58,6 +59,7 @@ export async function ShowDEData(selectedMonth, allData){
       .attr("transform", () => {
          return `translate(0, ${height/2}) rotate(-90)`
       }) 
+      .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
       .text("Gemeldete Fälle");
   
     //document.getElementById("spinner").classList.remove("active");
@@ -111,6 +113,7 @@ function visualiseCurve(svg, formattedData, classN, color){
     .attr("x", 15)
     .attr("dy", ".35em")
     .attr("class", "segment-text " + formattedData[0].Infos.Bundesland)
+    .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
     .text(formattedData[0].Infos.Bundesland);
 
   // Appends circles to the path at the dates where data is returned
@@ -191,7 +194,8 @@ function addAxes(data){
       .call(xA)
       .selectAll("text")
       .attr("transform", "rotate(330)") //rotates the labels of the x axis by 
-      .style("text-anchor", "end"); //makes sure that the end of the text string is anchored to the ticks
+      .style("text-anchor", "end") //makes sure that the end of the text string is anchored to the ticks
+      .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif");
 
   /** Hides the last label, because that would display the next month which might be misleading.
     Makes sure that still all the data of the month is fetched.
