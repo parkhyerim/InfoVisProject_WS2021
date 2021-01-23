@@ -25,7 +25,9 @@ function initialiseEvents(){
     });
 
     Displaymobilitydata(GetDateForFetch());
-
+    // temporal: test for treemap
+    // updateTreeMap("Bayern", true);
+   // UpdateSelectedRegionsList("Bayern", true, GetDateForFetch(), false);
 
     // Gather data for all months for DE and add line chart for all DE cases   
     gatherData().then(() => {

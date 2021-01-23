@@ -1,7 +1,7 @@
 
 // Get Information of selected regions and month from main.js(From Landkarte and DatePicker)
 export function UpdateSelectedRegionsList(regionParam, regionSelected, monthParam, monthChanged){
-    // console.log(regionParam, regionSelected, monthParam, monthChanged)
+     console.log(regionParam, regionSelected, monthParam, monthChanged)
      let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2); // get only month string(ex. "03")
      let regionEng = ReplaceRegionNameWithEng(regionParam); // replace the German region name with the English one
      let newRegionAdded = regionSelected;
