@@ -62,7 +62,7 @@ function createTreeChart(data, monthparam){
     //in case new treemap shall be loaded, the one before gets removed
     d3.select("#treemapwrapper").select("svg").remove();
 
-    var margin = {top: 20, right: 30, bottom: 30, left: 30},
+    var margin = {top: 0, right: 30, bottom: 30, left: 30},
         width = 700 - margin.left - margin.right,
         height = 450 - margin.top - margin.bottom;
 

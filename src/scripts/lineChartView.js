@@ -2,9 +2,9 @@ import { GetCasesDE, FetchData } from './getLineChartData.js';
 let svg, xAxis, yAxis, currentDomain;
 const blDomainStorage = [];
 
-const margin = {top:10, right: 160, bottom: 80, left: 60},
-  width = 600 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+const margin = {top:40, right: 160, bottom: 80, left: 60},
+  width = 1000 - margin.left - margin.right,
+  height = 250 - margin.top - margin.bottom;
 
 export async function ShowDEData(selectedMonth, allData){
     const month = new Date(selectedMonth[0]).getMonth();
@@ -149,7 +149,7 @@ export function InitializeSVG(){
           .classed("svg-container", true) 
           .append("svg")
           .attr("preserveAspectRatio", "xMinYMin meet")
-          .attr("viewBox", "0 0 1100 200")
+          .attr("viewBox", "0 0 1100 300")
           .classed("svg-content-responsive", true)
           .append("g")
           .attr("transform", `translate(${margin.left}, ${margin.top})`);             
