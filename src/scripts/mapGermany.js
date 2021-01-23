@@ -25,8 +25,6 @@ export function LoadMap(){
           	.attr("viewBox", "0 0 600 450")
           	.classed("svg-content-responsive", true)
 			.attr("id", "svgMap")
-			.attr("width", width)  
-			.attr("height", height);
 
 
 
@@ -49,7 +47,7 @@ export function LoadMap(){
 			.attr("stroke-width", 0.75);  
 			
 
-		svg.append("g")  
+		 svg.append("g")  
 			.selectAll("text")  
 			.data(geojson.features)  
 			.enter()  
@@ -86,8 +84,13 @@ export function LoadMap(){
 			.on("mouseout", resetBlColor)
 			.on("click", clickEvent)
 			.style("cursor", "pointer");  
+			
+
 	});
+
+	
 }
+
 
 
 function highlightBl(){
