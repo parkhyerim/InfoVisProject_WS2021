@@ -25,6 +25,7 @@
     <script type="module" language="javascript" src="main.js"></script>
     <script type="module" src="scripts/mapGermany.js"></script>
     <script type="module" src="scripts/datePicker.js" ></script>
+    <script type="module" src="scripts/getLineChartData.js" ></script>
     <script type="module" src="scripts/treeMapView.js"></script>
     <script type="text/javascript" src="scripts/popover.js"></script>
 
@@ -45,7 +46,7 @@
                <div > 
    
                    <div class="btn-group" role="group" >
-                       <button type="button" class="btn btn-inactive date tooltipped" data-position="top" data-tooltip="I am a tooltip">März</button>
+                       <button id="selectedDate" type="button" class="btn btn-inactive date" data-position="top">März</button>
                        <button type="button" class="btn btn-inactive date">April</button>
                        <button type="button" class="btn btn-inactive date">Mai</button>
                        <button type="button" class="btn btn-inactive date">Juni</button>
@@ -69,12 +70,22 @@
 
             <div class ="row" id="chartPlaceholderContainer">
 
+                <div id="spinner" class="preloader-wrapper small inactive">
+                    <div class="spinner-layer spinner-green-only">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+                </div>
                 <div class="col s12 hidden" id="lineChartContainer">
                 </div>
     
             </div>
             <div class="row" >
-
 
                 <div class="col s7" id="treemapContainer">
                     <div class="row">
@@ -102,17 +113,11 @@
 
                             </div>
     
-
-          
                         </div>
                         <div id="treemap2" class="col s12">Treemap2</div>
-                        </div>
                     </div>
-
-                    <div class="col s5" id="wordCloudContainer">
-                        WordCircle
-                    </div>
-
+                </div>
+                <div class="col s5" id="wordCloudContainer">WordCircle</div>
             </div>
 
             

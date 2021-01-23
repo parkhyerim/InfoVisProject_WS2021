@@ -1,72 +1,98 @@
-import { InitializeSVG, VisualiseChosenBL } from './scripts/lineChartView.js';
-import { GetDateForFetch } from './scripts/datePicker.js';
+import { InitializeSVG, UpdateLineChartPathMonth, ShowDEData, AddBundeslandToLineChart, RemoveBundeslandFromLineChart } from './scripts/lineChartView.js';
+import { GetDateForFetch, allMonths } from './scripts/datePicker.js';
+import { GetCasesDE } from './scripts/getLineChartData.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
 
 
 const mapButton = document.getElementById('mapButton');
-const datePicked = '';
-const dateButton = document.getElementsByClassName('date');
+const dateButtons = document.getElementsByClassName('date');
+
 let selectedBL = [];
+const allDataTempArray = [];
+let allData = {};
 
 
-function InitialiseEvents(){
+function initialiseEvents(){
 
     // Initially load map. The map gets hidden in mapGermany.js 
     LoadMap();
 
-
-    //Adds event listener on datePickerButton and each droopdown DateButton element
     eventListenerDatePicker();
-
     
+    $(document).ready(function(){
+        $('.tabs').tabs();
+    });
 
-  $(document).ready(function(){
-    $('.tabs').tabs();
-  });
-    
-}
+    Displaymobilitydata(GetDateForFetch());
 
-function eventListenerDatePicker() {
-//adds an event listener for every Datebutton
-  Array.prototype.forEach.call(dateButton, function(date){
-    date.addEventListener('click', ()=> {
+    // Gather data for all months for DE and add line chart for all DE cases   
+    gatherData().then(() => {
+        allData = allDataTempArray.reduce((accumulator, currentValue) => {
 
-     // datePickerButton.textContent = date.textContent;
-     if(document.getElementById('selectedDate') != null){
-        document.getElementById('selectedDate').removeAttribute("id");
-     }
-        
-      date.setAttribute("id", "selectedDate");
-      //when date is selected: update lineChart for every checked BL in the map
-      selectedBL.forEach((bl) => {
-        updateLineChart(bl);
-      })
-      initializeMap();
-    document.getElementById('mapGermany').style.display = 'inline';
-      Displaymobilitydata(GetDateForFetch());
+            let month = new Date(currentValue[0].Meldedatum).getMonth();
+            
+            if(accumulator[month] === undefined){
+                accumulator[month] = currentValue
+            }
+            return accumulator
+        }, {})
+        document.getElementById("spinner").classList.remove("active");
+        ShowDEData(GetDateForFetch(), allData)
     })
 
-  });
+}
 
+async function gatherData(){
+    document.getElementById("spinner").classList.add("active");
+
+    //const startDate = new Date()
+    const promises = [];
+
+    for(let i=0; i<allMonths.length; i++){
+        promises.push(
+            GetCasesDE(allMonths[i]).then(casesDE => {
+                //const endDate = new Date()
+                //console.log((endDate-startDate)/1000)
+                allDataTempArray.push(casesDE)
+            })
+        )
+    }
+    return Promise.all(promises)
 }
 
 
+function eventListenerDatePicker() {
 
-function updateLineChart(bl, newBLWasSelected){
-    /** Adds the curve for the selected Bundesland to the line chart
-        `checked` indicates if the mutated element was a Bundesland selected on the map.
-        It is `false` if another element mutated somehow.
-    */
+     //adds an event listener for every Date in the Dropdown
+    for(let date of dateButtons){
+        date.addEventListener('click', ()=> {
+                
+            //datePickerButton.textContent = date.textContent;
+            if(document.getElementById('selectedDate') !== null){
+                document.getElementById('selectedDate').removeAttribute("id");
+            }
 
-    // newBLWasSelected only true if a new Bundesland was selected
-    // false when only the date was changed
-    VisualiseChosenBL(bl, newBLWasSelected, GetDateForFetch());
+            date.setAttribute("id", "selectedDate");
+           
+            ShowDEData(GetDateForFetch(), allData)
+
+            //when date is selected: update lineChart for every checked BL in the map    
+            selectedBL.forEach((bundesland) => {
+                UpdateLineChartPathMonth(bundesland, GetDateForFetch())
+
+            })
+
+            initializeMap();
+            Displaymobilitydata(GetDateForFetch());
+        })
+            
+    } 
 }
+
 
 function initializeMap(){
-    Displaymobilitydata(GetDateForFetch());
-    
+
     const mapSelectedBl = document.getElementsByTagName('text');
         /** MutationObserver looks at all the html text elements and has a look if their
             attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
@@ -81,14 +107,19 @@ function initializeMap(){
                         newBLWasSelected = true;
                         //add selected BL to selectedBL array
                         selectedBL.push(mutation.target.id);
+                        AddBundeslandToLineChart(mutation.target.id, GetDateForFetch());
                     } else {
                         newBLWasSelected = false;
                         //add selected BL to selectedBL array
                         const index = selectedBL.indexOf(mutation.target.id)
                         selectedBL.splice(index, 1);
+                        RemoveBundeslandFromLineChart(mutation.target.id);
                     } 
-                    document.getElementById("lineChartContainer").classList.remove("hidden");
-                    updateLineChart(mutation.target.id, newBLWasSelected)            
+
+                    //document.getElementById("lineChartContainer").classList.remove("hidden");
+                    //updateLineChart(mutation.target.id, newBLWasSelected)            
+                    //updateLineChart(mutation.target.id, newBLWasSelected)            
+                    //UpdateLineChartBundesland(mutation.target.id, newBLWasSelected);
                 }
             })  
         }) 
@@ -99,6 +130,5 @@ function initializeMap(){
     }
 }
 
-
 InitializeSVG();
-InitialiseEvents();
+initialiseEvents(); 
