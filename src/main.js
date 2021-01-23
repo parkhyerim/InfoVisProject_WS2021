@@ -3,7 +3,7 @@ import { GetDateForFetch, allMonths } from './scripts/datePicker.js';
 import { GetCasesDE } from './scripts/getLineChartData.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
-
+import { UpdateSelectedRegionsList } from './scripts/treemapMobilityView.js';
 
 const mapButton = document.getElementById('mapButton');
 const dateButtons = document.getElementsByClassName('date');
@@ -83,6 +83,7 @@ function eventListenerDatePicker() {
             //when date is selected: update lineChart for every checked BL in the map    
             selectedBL.forEach((bundesland) => {
                 UpdateLineChartPathMonth(bundesland, GetDateForFetch())
+                updateTreeMap(bundesland);
 
             })
 
@@ -92,6 +93,16 @@ function eventListenerDatePicker() {
     } 
 }
 
+
+function updateTreeMap(bl, newBLWasSelected){
+    let monthChanged = false;
+   // console.log(bl, newBLWasSelected)
+    if(newBLWasSelected === undefined) {
+        newBLWasSelected = true;
+        monthChanged = true;
+    } 
+    UpdateSelectedRegionsList(bl, newBLWasSelected, GetDateForFetch(), monthChanged);
+}
 
 function mutationObserverMap(){
     const mapSelectedBl = document.getElementsByTagName('text');
@@ -117,7 +128,7 @@ function mutationObserverMap(){
                     selectedBL.splice(index, 1);
                     RemoveBundeslandFromLineChart(mutation.target.id);
                 } 
-
+                updateTreeMap(mutation.target.id, newBLWasSelected)  
                 //document.getElementById("lineChartContainer").classList.remove("hidden");
                 //updateLineChart(mutation.target.id, newBLWasSelected)            
                 //updateLineChart(mutation.target.id, newBLWasSelected)            
