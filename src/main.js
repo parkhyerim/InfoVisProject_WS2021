@@ -22,7 +22,13 @@ function initialiseEvents(){
     
     $(document).ready(function(){
         $('.tabs').tabs();
+        $('.tooltipped').tooltip();
+        $('.modal').modal();
+
+        getBlDichte();
     });
+
+    
 
     Displaymobilitydata(GetDateForFetch());
     // temporal: test for treemap
@@ -71,6 +77,8 @@ function eventListenerDatePicker() {
     for(let date of dateButtons){
         date.addEventListener('click', ()=> {
             mutationObserverMap();
+
+            getBlDichte();
                 
             //datePickerButton.textContent = date.textContent;
             if(document.getElementById('selectedDate') !== null){
@@ -123,7 +131,8 @@ function mutationObserverMap(){
                     //add selected BL to selectedBL array
                     selectedBL.push(mutation.target.id);
                     AddBundeslandToLineChart(mutation.target.id, GetDateForFetch());
-                    updateTreeMap(mutation.target.id, newBLWasSelected) 
+                    updateTreeMap(mutation.target.id, newBLWasSelected)
+                     
                 } else {
                     newBLWasSelected = false;
                     //add selected BL to selectedBL array
@@ -137,7 +146,9 @@ function mutationObserverMap(){
                 //updateLineChart(mutation.target.id, newBLWasSelected)            
                 //updateLineChart(mutation.target.id, newBLWasSelected)            
                 //UpdateLineChartBundesland(mutation.target.id, newBLWasSelected);
+                getBlDichte();
             }
+           
         })  
     }) 
     const config = { attributes: true };
@@ -145,6 +156,38 @@ function mutationObserverMap(){
     for (let blMap of mapSelectedBl){
         observer.observe(blMap, config);    
     }
+
+
+}
+
+
+function getBlDichte() {
+    console.log(selectedBL);
+    let container = document.getElementById("BevölkerungsdichteContainer").children;
+    let blData =[];
+    d3.csv("../src/data/Bundesland-Dichte.csv").then(function(data) {
+        data.forEach((e) => {
+            if(e.Bundesland == selectedBL){
+                console.log(e.insgesamt + e.Bundesland);
+            }
+           
+
+        })
+        console.log(data[0]);
+        blData.push(data[0]);
+        blData.push(data[1]);
+        blData.push(data[2]);
+
+        container[0].children[0].innerHTML = blData[0].Bundesland;
+        container[0].children[1].innerHTML = blData[0].jeKM2 +" je km²";
+        container[1].children[0].innerHTML = blData[1].Bundesland;
+        container[1].children[1].innerHTML = blData[1].jeKM2 +" je km²";
+        container[2].children[0].innerHTML = blData[2].Bundesland;
+        container[2].children[1].innerHTML = blData[2].jeKM2 +" je km²";
+      });
+    
+
+    
 }
 
 InitializeSVG();

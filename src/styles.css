@@ -41,7 +41,7 @@ display: table !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
 
 }
 
@@ -87,6 +87,7 @@ display: table !important;
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
+  width: 5;
 }
 
 .btn-group>.btn-inactive {
@@ -156,9 +157,22 @@ display: table !important;
 }
 
 #BevölkerungsdichteContainer{
+  margin-top: 20px;;
   display: flex;
   align-items:center;
   justify-content: center;
+}
+#BevölkerungsdichteContainer>div{
+  border-top: solid 4px teal;
+  border-bottom: solid 4px teal;
+  margin-left: auto;
+  margin-right: auto;
+  color: teal;
+  font-weight: bold;
+  text-align: center;
+} 
+#BevölkerungsdichteContainer>div>p{
+  margin: 0;
 }
 
 .modal {

@@ -28,7 +28,6 @@
     <script type="module" src="scripts/getLineChartData.js" ></script>
     <script type="module" src="scripts/treeMapView.js"></script>
     <script type="module" src="scripts/treemapMobilityView.js"></script>
-    <script type="text/javascript" src="scripts/popover.js"></script>
 
 </head>
 
@@ -48,6 +47,7 @@
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">Mai</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">Juni</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">Juli</button>
+                    <br/>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">August</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">September</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">Oktober</button>
@@ -60,9 +60,18 @@
                 <div id="mapGermany" class="map-germany col 12"></div> 
             </div>
            <div class="row " id="BevölkerungsdichteContainer">
-                <!--<div class="col s3"> Bevölkerungsdichte</div> 
-                <div class="col s3"> Bevölkerungsdichte</div> 
-                <div class="col s3"> Bevölkerungsdichte</div> -->
+                <div class="col s3"> 
+                    <p style="font-size: 16px; margin-top: 10px;"></p>
+                    <p style="margin-bottom: 10px;"></p>
+                </div> 
+                <div class="col s3">
+                    <p style="font-size: 16px; margin-top: 10px;"></p>
+                    <p style="margin-bottom: 10px;"></p>
+                </div> 
+                <div class="col s3"> 
+                    <p style="font-size: 16px; margin-top: 10px;"></p>
+                    <p style="margin-bottom: 10px;"></p>
+                </div>
             </div>
             
         </div> 
@@ -126,8 +135,8 @@
         <!-- Modal Structure -->
         <div id="demo-modal" class="modal">
             <div class="modal-content">
-            <h4>A Demo of small modal</h4>
-            <p>Content of the modal goes here. Place marketing text or other information here.
+            <h4>Verkehrmittel-Nutzung in Deutschland</h4>
+            <p>Diese Treemap zeigt die monatliche Nutzung verschiedener Vekehrsmittel im Jahr 2020 im Vergleich zum ersten Monat des Jahres. Klicke auf die Transport Symbole um die Informationen des jeweiligen Transportmittels zu sehen.
             </p>
         
             </div>
