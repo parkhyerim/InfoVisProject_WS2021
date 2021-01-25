@@ -78,12 +78,8 @@ function eventListenerDatePicker() {
             date.setAttribute("id", "selectedDate");
            
             ShowDEData(GetDateForFetch(), allData);
-
             //when date is selected: update lineChart for every checked BL in the map    
-            selectedBL.forEach((bundesland) => {
-                UpdateLineChartPathMonth(bundesland, GetDateForFetch())
-
-            })
+            UpdateLineChartPathMonth(GetDateForFetch(), selectedBL)
 
             //Displaymobilitydata(GetDateForFetch());
         })
@@ -108,13 +104,15 @@ function mutationObserverMap(){
                     newBLWasSelected = true;
                     //add selected BL to selectedBL array
                     selectedBL.push(mutation.target.id);
-                    AddBundeslandToLineChart(mutation.target.id, GetDateForFetch());
+
+                    const selectedColor = mutation.target.getAttribute('fill');
+                    AddBundeslandToLineChart(mutation.target.id, GetDateForFetch(), selectedBL, selectedColor);
                 } else {
                     newBLWasSelected = false;
                     //add selected BL to selectedBL array
                     const index = selectedBL.indexOf(mutation.target.id)
                     selectedBL.splice(index, 1);
-                    RemoveBundeslandFromLineChart(mutation.target.id);
+                    RemoveBundeslandFromLineChart(mutation.target.id, selectedBL);
                 } 
 
                 //document.getElementById("lineChartContainer").classList.remove("hidden");

@@ -28,13 +28,14 @@ h1 {
   stroke-width: 0;
 }
 
-
-
 .button-width{
 width: 120px;
 display: table !important;
 }
 
+#y-axis .tick line{
+  visibility:hidden;
+}
 
 
 .map-germany {
