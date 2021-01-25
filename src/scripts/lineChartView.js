@@ -131,7 +131,7 @@ function clickBar(){
 function updateCaseNumbers(){
 
   if(clickedBar !== undefined){
-      
+
     const clickedMeldedatum = clickedBar._groups[0][0].__data__.Meldedatum;
 
     const shownCurves = svg.selectAll(".curve.selected-bl")._groups[0]
@@ -300,6 +300,8 @@ function removeDEData(){
   svg.selectAll(".grid").remove();
   svg.selectAll(".case-numbers").remove(); 
   svg.select(".case-numbers-label").remove(); 
+  svg.select(".gemeldete-infektionen").remove();
+  svg.select(".cases-germany").remove(); 
 }
 
 
