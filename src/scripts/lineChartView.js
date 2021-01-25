@@ -1,10 +1,10 @@
 import { GetCasesDE, FetchData } from './getLineChartData.js';
-let svg, xAxis, yAxis, currentDomain;
+let svg, xAxis, yAxis, currentDomain, clickedBar;
 const blDomainStorage = [];
 
 const margin = {top:40, right: 160, bottom: 80, left: 60},
   width = 1000 - margin.left - margin.right,
-  height = 250 - margin.top - margin.bottom;
+  height = 350 - margin.top - margin.bottom;
 
 export async function ShowDEData(selectedMonth, allData){
     const month = new Date(selectedMonth[0]).getMonth();
@@ -17,7 +17,7 @@ export async function ShowDEData(selectedMonth, allData){
 
     addAxes(casesDE)
   
-    svg.append("path")
+    /*svg.append("path")
       .datum(casesDE)
       .attr("fill", "none")
       .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
@@ -41,17 +41,29 @@ export async function ShowDEData(selectedMonth, allData){
       .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
       .style("opacity", 0.6) // default is 1.0
       .attr("class", "area")
-      .attr("d", area);
+      .attr("d", area);*/
 
+    svg.selectAll(".bar")
+      .data(casesDE)
+      .enter().append("rect")
+      .attr("class", "bar")
+      .attr("fill", "#b2dfdb")
+      .attr("x", d => xAxis(new Date(d.Meldedatum))-6)
+      .attr("y", d => yAxis(new Date(d.Infos.AnzahlFall)))
+      .attr("width", 15)
+      .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
+      .attr("height", d => height - yAxis(new Date(d.Infos.AnzahlFall)))
+      .on("mouseover", mouseOverBar)
+      .on("click", clickBar)
 
-    svg.append("text")
+    /*svg.append("text")
       .attr("class", "x-label")
       .attr("text-anchor", "start")
       .attr("transform", () => {
          return `translate(${width/2}, ${height+margin.bottom})`
       }) 
       .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-      .text("Meldedatum");
+      .text("Meldedatum");*/
 
     svg.append("text")
       .attr("class", "y-label")
@@ -60,32 +72,178 @@ export async function ShowDEData(selectedMonth, allData){
          return `translate(0, ${height/2}) rotate(-90)`
       }) 
       .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-      .text("Gemeldete Fälle");
+      .text("Gemeldete Infektionen");
   
     //document.getElementById("spinner").classList.remove("active");
  
 }
 
-export function UpdateLineChartPathMonth(bundesland, selectedMonth){
 
-  RemoveBundeslandFromLineChart(bundesland)
-  
-  AddBundeslandToLineChart(bundesland, selectedMonth)
+function mouseOverBar(){
+  d3.select(this)
+    .style("cursor", "pointer")
+}
+
+function clickBar(){
+  // Reset previously clicked bar
+  if(clickedBar != undefined){
+    clickedBar
+      .attr("fill", "#b2dfdb")
+      .classed("clicked-bar", false)
+  }
+  clickedBar = d3.select(this);
+  clickedBar.classed("clicked-bar", true);
+
+  d3.select(this)
+    .attr("fill", "#008080"); 
+
+
+  const cases = clickedBar._groups[0][0].__data__.Infos.AnzahlFall;
+
+  svg.select(".gemeldete-infektionen").remove();
+  svg.select(".cases-germany").remove(); 
+
+  svg.append("text")
+    .attr("text-anchor", "start")
+    .attr("class", "gemeldete-infektionen")
+    .attr("fill", "#008080")
+    .style("font-weight", "bold")
+    .attr("transform", `translate(${width+70}, ${30})`)
+    .attr("x", 15)
+    .attr("dy", ".35em")
+    .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+    .text("Gemeldete Infektionen");
+
+  // Appends the case number from the bar currently hoovered over
+  svg.append("text")
+    .attr("text-anchor", "start")
+    .attr("class", "cases-germany")
+    .attr("transform", `translate(${width+70}, ${50})`)
+    .attr("x", 15)
+    .attr("dy", ".35em")
+    .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+    .text(cases);
+
+  updateCaseNumbers();
+
+}
+
+function updateCaseNumbers(){
+
+  if(clickedBar !== undefined){
+      
+    const clickedMeldedatum = clickedBar._groups[0][0].__data__.Meldedatum;
+
+    const shownCurves = svg.selectAll(".curve.selected-bl")._groups[0]
+
+    svg.selectAll(".case-numbers").remove(); 
+    svg.select(".case-numbers-label").remove(); 
+    
+    if(shownCurves !== undefined){
+
+      shownCurves.forEach((curve, i) => {
+        const curveData = curve.__data__;
+        const curveColor = curve.attributes[2].value;
+        
+        curveData.forEach((dates) => {
+          if(dates.Meldedatum == clickedMeldedatum){
+              // Appends the case number from the bar currently hoovered over
+            svg.append("text")
+              .attr("text-anchor", "start")
+              .attr("fill", curveColor)
+              .attr("class", "case-numbers " + dates.Infos.Bundesland)
+              .attr("transform", `translate(${width+70}, ${(i*20)+80})`)
+              .attr("x", 15)
+              .attr("dy", ".35em")
+              .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+              .text(dates.Infos.AnzahlFall);
+          }
+        })
+      })
+    }
+  }
+}
+
+export function UpdateLineChartPathMonth(selectedMonth, selectedBL){
+
+  selectedBL.forEach(bundesland => {
+    const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
+    RemoveBundeslandFromLineChart(bundesland, selectedBL) 
+    AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, usedColor)
+  })
 }
 
 
-export function AddBundeslandToLineChart(bundesland, selectedMonth){
-
+export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, selectedColor){
   // Fetching the data of the newly selected Bundesland
-  FetchData(bundesland, selectedMonth).then((data) => {
-    visualiseCurve(svg, data, bundesland, randomColor());
-  })     
+  FetchData(bundesland, selectedMonth)
+    .then((data) => {
+      visualiseCurve(svg, data, bundesland, selectedColor); //"#D58E00"
+    })
+    .then(() => {
+      adjustLegend(selectedBL, bundesland);
+      // Needed for intersection detection in lineChartView.js
+      d3.select(".curve."+bundesland)._groups[0][0].classList.add('selected-bl');
+      updateCaseNumbers();   
+    })  
 }
 
-export function RemoveBundeslandFromLineChart(bundesland){
+export function RemoveBundeslandFromLineChart(bundesland, selectedBL){
+  //svg.select(".case-numbers."+bundesland).remove();
   svg.select(".curve."+bundesland).remove();
   svg.selectAll(".circles."+bundesland).remove();
-  svg.select(".segment-text." +bundesland).remove();
+  adjustLegend(selectedBL, bundesland);
+  updateCaseNumbers();
+}
+
+function adjustLegend(selectedBL, bl){
+
+  svg.selectAll(".legend").remove();
+  
+  selectedBL.forEach((bundesland, i) => {
+    const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
+
+    const position1 = (width+margin.left)/4
+  
+    if(i === 0) {
+      svg.append("text")
+        .attr("class", "legend " + bundesland)
+        .attr("text-anchor", "middle")
+        .attr("fill", usedColor)
+        .style("font-weight", "bold")
+        .attr("transform", () => {
+           return `translate(${position1}, ${height+margin.bottom-10})`
+        }) 
+        .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+        .text(bundesland);
+    }
+
+    if(i === 1) {
+      svg.append("text")
+        .attr("class", "legend " + bundesland)
+        .attr("text-anchor", "middle")
+        .attr("fill", usedColor)
+        .style("font-weight", "bold")
+        .attr("transform", () => {
+           return `translate(${2*position1}, ${height+margin.bottom-10})`
+        }) 
+        .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+        .text(bundesland);
+    }
+
+    if(i === 2) {
+      svg.append("text")
+        .attr("class", "legend " + bundesland)
+        .attr("text-anchor", "middle")
+        .attr("fill", usedColor)
+        .style("font-weight", "bold")
+        .attr("transform", () => {
+           return `translate(${3*position1}, ${height+margin.bottom-10})`
+        }) 
+        .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+        .text(bundesland);
+    }  
+  })
 }
 
 
@@ -95,7 +253,7 @@ function visualiseCurve(svg, formattedData, classN, color){
     .attr("fill", "none")
     .attr("id", classN+"-curve")
     .attr("stroke", color)
-    .attr("stroke-width", 1)
+    .attr("stroke-width", 2.5)
     .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
     .attr("class", "curve" + " " + classN) //necessary to add a specific class for every Bundesland shown
     .attr("d", d3.line()
@@ -104,7 +262,7 @@ function visualiseCurve(svg, formattedData, classN, color){
     );
 
   // Appends name of the Bundesland to the corresponding path
-  svg.append("text")
+  /*svg.append("text")
     .datum(formattedData)
     .attr("transform", item => {
       const xpos = xAxis(new Date(item[item.length-1].Meldedatum)) + 50;
@@ -114,7 +272,7 @@ function visualiseCurve(svg, formattedData, classN, color){
     .attr("dy", ".35em")
     .attr("class", "segment-text " + formattedData[0].Infos.Bundesland)
     .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-    .text(formattedData[0].Infos.Bundesland);
+    .text(formattedData[0].Infos.Bundesland);*/
 
   // Appends circles to the path at the dates where data is returned
   svg.selectAll("circles")
@@ -123,7 +281,7 @@ function visualiseCurve(svg, formattedData, classN, color){
       .append("circle")
         .attr("class", "circles" + " " + classN)
         .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
-        .attr("fill", "darkblue")
+        .attr("fill", color)
         .attr("stroke", "none")
         .attr("cx", item => xAxis(new Date(item.Meldedatum)))
         .attr("cy", item => yAxis(new Date(item.Infos.AnzahlFall)))
@@ -137,12 +295,11 @@ function removeDEData(){
   svg.select(".x-axis").remove();
   svg.select(".area").remove();
   svg.select(".DE").remove();
-  svg.select(".x-label").remove();
-  svg.selectAll(".y-label").remove();
-  svg.selectAll(".curve").remove();
-  svg.selectAll(".circles").remove();
+  svg.selectAll(".bar").remove();
+  svg.selectAll(".y-label").remove();  
   svg.selectAll(".grid").remove();
-  svg.selectAll(".segment-text").remove();
+  svg.selectAll(".case-numbers").remove(); 
+  svg.select(".case-numbers-label").remove(); 
 }
 
 
@@ -152,7 +309,7 @@ export function InitializeSVG(){
           .classed("svg-container", true) 
           .append("svg")
           .attr("preserveAspectRatio", "xMinYMin meet")
-          .attr("viewBox", "0 0 1100 300")
+          .attr("viewBox", "0 0 1100 400")
           .classed("svg-content-responsive", true)
           .append("g")
           .attr("transform", `translate(${margin.left}, ${margin.top})`);             
@@ -195,7 +352,7 @@ function addAxes(data){
       .selectAll("text")
       .attr("transform", "rotate(330)") //rotates the labels of the x axis by 
       .style("text-anchor", "end") //makes sure that the end of the text string is anchored to the ticks
-      .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif");
+      .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
 
   /** Hides the last label, because that would display the next month which might be misleading.
     Makes sure that still all the data of the month is fetched.
@@ -211,14 +368,17 @@ function addAxes(data){
   
   // Appends the yAxis
   svg.append("g")
-      .call(d3.axisLeft(yAxis))
+      .call(d3.axisLeft(yAxis).tickSizeOuter(0))
       .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
-      .attr("class", "y-axis"); // Class added to be able to remove the axis;
+      .attr("class", "y-axis") // Class added to be able to remove the axis;
+      .attr("id", "y-axis")
+      .call(g => g.select(".domain").remove());
+
 
   svg.append("g")
       .attr("class", "grid")
       .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
-      .style("stroke-width", 0.6)
+      .style("stroke-width", 0.8)
       .call(d3.axisLeft(yAxis)
               .tickSize(-width)
               .tickFormat("")
@@ -226,14 +386,4 @@ function addAxes(data){
 
   const domain = d3.scaleLinear().domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
   currentDomain = domain.domain()[1]
-}
-
-
-function randomColor() {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
 }
