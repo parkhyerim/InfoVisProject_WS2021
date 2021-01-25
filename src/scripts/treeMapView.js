@@ -4,27 +4,27 @@ export function Displaymobilitydata(selectedMonth, param="driving"){
     var temp = [];
     let monthparam = selectedMonth[0].substr((selectedMonth[0].indexOf("-")+1), 2);
 
-    d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
-        data.forEach(element => temp.push(element));
-        temp.forEach(function(element) {
-            if (element.country == "Germany" && 
-            element["sub-region"] == "" && 
+    d3.csv('../src/data/Apple_mobility_shortened_german.csv').then(function(data){
+        data.forEach(function(element) {
+            if (element.country == "Germany" &&
+            element["sub-region"] == "" &&
             element["transportation_type"]==param) {
                 mobilityData.push(element);
             }
         });
-     
+
         //calculate average value for every month
         for (let m=1; m<13; m++){
 
-            //since each month has a different number of days and the data has some gaps for two days we need to store the individual number of days each month in the variable div
-            let div = 0;
-
-            // if clause to make the month valuefitting to the formatting in the dataset
+            // if clause to make the month value fitting to the formatting in the dataset
             if (m<10) month="0"+m;
             else month=m;
 
-            for (let d=1; d<32; d++){
+            for (let i=0; i< mobilityData.length; i++){
+                //since each month has a different number of days and the data has some gaps for two days we need to store the individual number of days each month in the variable div
+                let div = 0;
+
+                for (let d=1; d<32; d++){
 
                 // if clause to make the day value fitting to the formatting in the dataset
                 if (d<10) day="0"+d;
@@ -33,23 +33,17 @@ export function Displaymobilitydata(selectedMonth, param="driving"){
                 //format of the date stored in a variable
                 let s = "2020-"+month+"-"+day;
 
-                mobilityData.forEach(function(element){
-                    if (element[s] !== undefined && element[s] !== "") {
+                    if (mobilityData[i][s] !== undefined && mobilityData[i][s] !== "") {
                         div++;
-                        if (element[month]== null) 
-                        element[month]= element[s];
+                        if (mobilityData[i][month]== null)
+                            mobilityData[i][month]= mobilityData[i][s];
 
-                        else {element[month]= parseFloat(element[month]) + parseFloat(element[s]);}
+                        else {mobilityData[i][month]= parseFloat(mobilityData[i][month]) + parseFloat(mobilityData[i][s]);}
                     }
-                });
+                }
+
+                mobilityData[i][month]=(parseFloat(mobilityData[i][month])/div).toFixed(2);
             }
-
-            //div needs to be divided by 16 since it gets count up in the forEach loop for all 16 German regions
-            div = div/16;
-
-            mobilityData.forEach(function(element){
-                element[month]=(parseFloat(element[month])/div).toFixed(2);
-            });
         }
 
         //generate TreeChart from the provided Dateset
@@ -58,6 +52,8 @@ export function Displaymobilitydata(selectedMonth, param="driving"){
 };
 
 function createTreeChart(data, monthparam){
+
+    var substring;
 
     //in case new treemap shall be loaded, the one before gets removed
     d3.select("#treemapwrapper").select("svg").remove();
@@ -93,14 +89,12 @@ function createTreeChart(data, monthparam){
         .padding(4)
         (hgroup)
 
-
     // Determine the color of each field
     // Explanation from https://stackoverflow.com/questions/42546344/how-to-apply-specific-colors-to-d3-js-map-based-on-data-values?rq=1
     var color= d3.scale.linear().domain([50, 180]).range(["blue", "green"]);
 
     var blName= data[0].region;
     //console.log(treemap.leaves());
-
 
     // use this information to add rectangles:
     svg
@@ -116,7 +110,6 @@ function createTreeChart(data, monthparam){
         .style("fill", function(d) {
             return color(d.data[monthparam]);});
 
-
     // and to add the text labels
       svg
         .selectAll("text")
@@ -125,18 +118,17 @@ function createTreeChart(data, monthparam){
         .append("text")
         .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
         .attr("y", function(d){ return d.y0+20})    // +20 to adjust position (lower)
-        .text(function(d){ return d.data.region.substring(0, 12);})
+        .each(function (d){
+        substring = d.data.region.substring(0, d.data.region.indexOf("-")+1);
+        if (substring == "")
+            d3.select(this).text(d.data.region)
+        else{
+            d3.select(this).text(d.data.region.substring(0, d.data.region.indexOf("-")+1));
+            d3.select(this).append('svg:tspan').attr('x', function(d){ return d.x0+5}).attr('dy', 20).text(d.data.region.substring(d.data.region.indexOf("-")+1, d.data.region.length))
+        }
+        })
         .attr("font-size", "14px")
         .attr("fill", "white")
-
-
-        .append('svg:tspan')
-        .attr('x', function(d){ return d.x0+5})
-        .attr('dy', 20)
-        .text(function(d){ return d.data.region.substring(12, d.data.region.length);})
-        .attr("font-size", "14px")
-        .attr("fill", "white")
-
         .append('svg:tspan')
         .attr('x', function(d){ return d.x0+5})
         .attr('dy', 30)
@@ -144,7 +136,4 @@ function createTreeChart(data, monthparam){
         .attr("font-size", "16px")
         .attr("font-weight", "bold")
         .attr("fill", "white")
-
-
-
 }

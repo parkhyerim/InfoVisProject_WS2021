@@ -28,6 +28,9 @@ h1 {
   stroke-width: 0;
 }
 
+img{
+  padding: 20px;
+}
 
 
 .button-width{
@@ -115,6 +118,11 @@ display: table !important;
 #selectedDate{
   background-color:teal;
   color: white
+}
+#selectedTransport{
+  background-color: #cfd9dd;
+  border: solid teal;
+  cursor: pointer;
 }
 #treemapOption{
   background-color:teal;

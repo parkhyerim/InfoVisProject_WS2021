@@ -5,8 +5,8 @@ import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
 import { UpdateSelectedRegionsList } from './scripts/treemapMobilityView.js';
 
-const mapButton = document.getElementById('mapButton');
 const dateButtons = document.getElementsByClassName('date');
+const transportButton = document.getElementsByClassName('transport')
 
 let selectedBL = [];
 const allDataTempArray = [];
@@ -31,10 +31,7 @@ function initialiseEvents(){
     
 
     Displaymobilitydata(GetDateForFetch());
-    // temporal: test for treemap
-    // updateTreeMap("Bayern", true);
-   // UpdateSelectedRegionsList("Bayern", true, GetDateForFetch(), false);
-
+    
     // Gather data for all months for DE and add line chart for all DE cases   
     gatherData().then(() => {
         allData = allDataTempArray.reduce((accumulator, currentValue) => {
@@ -50,6 +47,32 @@ function initialiseEvents(){
         ShowDEData(GetDateForFetch(), allData)
     })
 
+    eventListenerTreemap();
+    transportButton[0].setAttribute("id", "selectedTransport");
+}
+
+function eventListenerDatePicker() {
+
+     //adds an event listener for every Date in the Dropdown
+    for(let date of dateButtons){
+        date.addEventListener('click', ()=> {
+            mutationObserverMap();
+                
+            //datePickerButton.textContent = date.textContent;
+            if(document.getElementById('selectedDate') !== null){
+                document.getElementById('selectedDate').removeAttribute("id");
+            }
+
+            date.setAttribute("id", "selectedDate");
+           
+            ShowDEData(GetDateForFetch(), allData);
+            //when date is selected: update lineChart for every checked BL in the map    
+            UpdateLineChartPathMonth(GetDateForFetch(), selectedBL)
+
+            Displaymobilitydata(GetDateForFetch(), document.getElementById('selectedTransport').name);
+        })
+            
+    } 
 }
 
 async function gatherData(){
@@ -70,38 +93,22 @@ async function gatherData(){
     return Promise.all(promises)
 }
 
+function eventListenerTreemap(){
 
-function eventListenerDatePicker() {
+    for (let count=0; count < transportButton.length; count++){
+        transportButton[count].addEventListener('click', (event) =>{
 
-     //adds an event listener for every Date in the Dropdown
-    for(let date of dateButtons){
-        date.addEventListener('click', ()=> {
-            mutationObserverMap();
-
-            getBlDichte();
-                
-            //datePickerButton.textContent = date.textContent;
-            if(document.getElementById('selectedDate') !== null){
-                document.getElementById('selectedDate').removeAttribute("id");
+            if(document.getElementById('selectedTransport') != null){
+                document.getElementById('selectedTransport').removeAttribute("id");
             }
 
-            date.setAttribute("id", "selectedDate");
-           
-            ShowDEData(GetDateForFetch(), allData);
+            event.target.setAttribute("id", "selectedTransport");
 
-            console.log(selectedBL);
-            //when date is selected: update lineChart for every checked BL in the map    
-            selectedBL.forEach((bundesland) => {
-                UpdateLineChartPathMonth(bundesland, GetDateForFetch())
-                updateTreeMap(bundesland);
-
-            })
-
-            Displaymobilitydata(GetDateForFetch());
+            Displaymobilitydata(GetDateForFetch(), event.target.name)
         })
-            
-    } 
+    }
 }
+
 
 
 function updateTreeMap(bl, newBLWasSelected){
@@ -152,17 +159,15 @@ function mutationObserverMap(){
         })  
     }) 
     const config = { attributes: true };
-    
+
     for (let blMap of mapSelectedBl){
-        observer.observe(blMap, config);    
+        observer.observe(blMap, config);
     }
-
-
 }
 
 
 function getBlDichte() {
-    console.log(selectedBL);
+
     let container = document.getElementById("BevölkerungsdichteContainer").children;
     let blData =[];
     d3.csv("../src/data/Bundesland-Dichte.csv").then(function(data) {
@@ -170,10 +175,7 @@ function getBlDichte() {
             if(e.Bundesland == selectedBL){
                 console.log(e.insgesamt + e.Bundesland);
             }
-           
-
         })
-        console.log(data[0]);
         blData.push(data[0]);
         blData.push(data[1]);
         blData.push(data[2]);
@@ -184,10 +186,7 @@ function getBlDichte() {
         container[1].children[1].innerHTML = blData[1].jeKM2 +" je km²";
         container[2].children[0].innerHTML = blData[2].Bundesland;
         container[2].children[1].innerHTML = blData[2].jeKM2 +" je km²";
-      });
-    
-
-    
+      }); 
 }
 
 InitializeSVG();
