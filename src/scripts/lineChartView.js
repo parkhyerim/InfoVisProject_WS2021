@@ -1,5 +1,5 @@
 import { GetCasesDE, FetchData } from './getLineChartData.js';
-let svg, xAxis, yAxis, currentDomain;
+let svg, xAxis, yAxis, currentDomain, clickedBar;
 const blDomainStorage = [];
 
 const margin = {top:40, right: 160, bottom: 80, left: 60},
@@ -81,53 +81,85 @@ export async function ShowDEData(selectedMonth, allData){
 
 function mouseOverBar(){
   d3.select(this)
-   // .attr("fill", "#008080")
     .style("cursor", "pointer")
 }
-
-let clickedBar;
 
 function clickBar(){
   // Reset previously clicked bar
   if(clickedBar != undefined){
-    clickedBar.attr("fill", "#b2dfdb");
+    clickedBar
+      .attr("fill", "#b2dfdb")
+      .classed("clicked-bar", false)
   }
   clickedBar = d3.select(this);
+  clickedBar.classed("clicked-bar", true);
 
-  svg.select(".case-numbers").remove(); 
-  svg.select(".case-numbers-label").remove(); 
   d3.select(this)
     .attr("fill", "#008080"); 
 
-  //console.log(d3.select(this)._groups[0][0].__data__.Infos.AnzahlFall)
-  const cases = d3.select(this)._groups[0][0].__data__.Infos.AnzahlFall;
+
+  const cases = clickedBar._groups[0][0].__data__.Infos.AnzahlFall;
+
+  svg.select(".gemeldete-infektionen").remove();
+  svg.select(".cases-germany").remove(); 
+
+  svg.append("text")
+    .attr("text-anchor", "start")
+    .attr("class", "gemeldete-infektionen")
+    .attr("fill", "#008080")
+    .style("font-weight", "bold")
+    .attr("transform", `translate(${width+70}, ${30})`)
+    .attr("x", 15)
+    .attr("dy", ".35em")
+    .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+    .text("Gemeldete Infektionen");
 
   // Appends the case number from the bar currently hoovered over
   svg.append("text")
-    .attr("text-anchor", "end")
-    .attr("class", "case-numbers")
-    .attr("transform", `translate(${width+230}, ${50})`)
+    .attr("text-anchor", "start")
+    .attr("class", "cases-germany")
+    .attr("transform", `translate(${width+70}, ${50})`)
     .attr("x", 15)
     .attr("dy", ".35em")
     .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
     .text(cases);
 
-  svg.append("text")
-    .attr("text-anchor", "end")
-    .attr("class", "case-numbers-label")
-    .attr("fill", "#008080")
-    .style("font-weight", "bold")
-    .attr("transform", `translate(${width+230}, ${30})`)
-    .attr("x", 15)
-    .attr("dy", ".35em")
-    .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-    .text("Gemeldete Infektionen");
+  updateCaseNumbers();
+
 }
 
-/*function mouseOutBar(){
-  d3.select(this)
-    .attr("fill", "#b2dfdb");
-}*/
+function updateCaseNumbers(){
+  
+  const clickedMeldedatum = clickedBar._groups[0][0].__data__.Meldedatum;
+
+  const shownCurves = svg.selectAll(".curve.selected-bl")._groups[0]
+
+  svg.selectAll(".case-numbers").remove(); 
+  svg.select(".case-numbers-label").remove(); 
+  
+  if(shownCurves !== undefined){
+
+    shownCurves.forEach((curve, i) => {
+      const curveData = curve.__data__;
+      const curveColor = curve.attributes[2].value;
+      
+      curveData.forEach((dates) => {
+        if(dates.Meldedatum == clickedMeldedatum){
+            // Appends the case number from the bar currently hoovered over
+          svg.append("text")
+            .attr("text-anchor", "start")
+            .attr("fill", curveColor)
+            .attr("class", "case-numbers " + dates.Infos.Bundesland)
+            .attr("transform", `translate(${width+70}, ${(i*20)+80})`)
+            .attr("x", 15)
+            .attr("dy", ".35em")
+            .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+            .text(dates.Infos.AnzahlFall);
+        }
+      })
+    })
+  }
+}
 
 export function UpdateLineChartPathMonth(selectedMonth, selectedBL){
 
@@ -141,17 +173,24 @@ export function UpdateLineChartPathMonth(selectedMonth, selectedBL){
 
 export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, selectedColor){
   // Fetching the data of the newly selected Bundesland
-  FetchData(bundesland, selectedMonth).then((data) => {
-    visualiseCurve(svg, data, bundesland, selectedColor); //"#D58E00"
-  })  
-  adjustLegend(selectedBL, bundesland)   
+  FetchData(bundesland, selectedMonth)
+    .then((data) => {
+      visualiseCurve(svg, data, bundesland, selectedColor); //"#D58E00"
+    })
+    .then(() => {
+      adjustLegend(selectedBL, bundesland);
+      // Needed for intersection detection in lineChartView.js
+      d3.select(".curve."+bundesland)._groups[0][0].classList.add('selected-bl');
+      updateCaseNumbers();   
+    })  
 }
 
 export function RemoveBundeslandFromLineChart(bundesland, selectedBL){
+  //svg.select(".case-numbers."+bundesland).remove();
   svg.select(".curve."+bundesland).remove();
   svg.selectAll(".circles."+bundesland).remove();
-  //svg.selectAll(".legend."+bundesland).remove();
-  adjustLegend(selectedBL, bundesland)
+  adjustLegend(selectedBL, bundesland);
+  updateCaseNumbers();
 }
 
 function adjustLegend(selectedBL, bl){
@@ -254,13 +293,9 @@ function removeDEData(){
   svg.select(".area").remove();
   svg.select(".DE").remove();
   svg.selectAll(".bar").remove();
-  //svg.select(".x-label").remove();
-  svg.selectAll(".y-label").remove();
-  //svg.selectAll(".curve").remove();
-  //svg.selectAll(".circles").remove();
+  svg.selectAll(".y-label").remove();  
   svg.selectAll(".grid").remove();
-  //svg.selectAll(".segment-text").remove();
-  svg.select(".case-numbers").remove(); 
+  svg.selectAll(".case-numbers").remove(); 
   svg.select(".case-numbers-label").remove(); 
 }
 
@@ -314,7 +349,7 @@ function addAxes(data){
       .selectAll("text")
       .attr("transform", "rotate(330)") //rotates the labels of the x axis by 
       .style("text-anchor", "end") //makes sure that the end of the text string is anchored to the ticks
-      .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif");
+      .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
 
   /** Hides the last label, because that would display the next month which might be misleading.
     Makes sure that still all the data of the month is fetched.

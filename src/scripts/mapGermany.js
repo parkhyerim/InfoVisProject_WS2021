@@ -7,7 +7,7 @@ let labelBlArray = [];
 let clickedBlArray = [];
 
 let colors = ["#e29578", "#c16a70", "#A4AA88"]
-
+//let colors = ["#806680", "#668cb3", "#b2b366"]
 
 export async function LoadMap(){
 
