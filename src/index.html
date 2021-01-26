@@ -38,7 +38,7 @@
     <div class="row">
         <div class="col s4">
             <div class="row" id="titleContainer">
-                Auswirkungen der Covid-19 Pandemie auf die Mobilität
+                Auswirkungen der Covid-19 Pandemie auf die Mobilität 2020
             </div>
 
             <div class="row" id="btnContainer" >
@@ -122,18 +122,11 @@
                                     <div class="col s4" id="transit"> <img src="../src/img/Transit_icon.png" alt="Transit icon"   class="transport responsive-img" name="transit"> </div>
                                     
                                    
-                                    <!-- <div class="row" id="icons">
-                                        
-                                        <div class="col s4"> </div>
-                                        <div class="col s4"> </div>
-                                        <div class="col s4"> </div>
-                                        
-
-                                    </div> -->
+    
                                 </div>
                                 <div class="col s1">
                                     <!-- Modal Trigger -->
-                                    <a class="modal-trigger" href="#demo-modal" > <i class="small material-icons">info</i></a>
+                                    <a class="modal-trigger" href="#modalTM1" > <i class="small material-icons">info</i></a>
                                 </div>
 
                             </div>
@@ -143,7 +136,16 @@
 
                             </div>
                         </div>
-                        <div id="treemap2" class="col s12">Treemap2</div>
+                        <div id="treemap2" class="col s12">
+                            <div class="row " id="iconContainer">
+                                
+                                <div class="col s1">
+                                    <!-- Modal Trigger -->
+                                    <a class="modal-trigger" href="#modalTM2" > <i class="small material-icons">info</i></a>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col s5" id="wordCloudContainer">WordCircle</div>
@@ -153,10 +155,23 @@
         </div>
 
         <!-- Modal Structure -->
-        <div id="demo-modal" class="modal">
+        <div id="modalTM1" class="modal">
             <div class="modal-content">
             <h4>Verkehrmittel-Nutzung in Deutschland</h4>
-            <p>Diese Treemap zeigt die monatliche Nutzung verschiedener Vekehrsmittel im Jahr 2020 im Vergleich zum ersten Monat des Jahres. Klicke auf die Transport Symbole um die Informationen des jeweiligen Transportmittels zu sehen.
+            <p>Diese Treemap zeigt die monatliche Nutzung verschiedener Vekehrsmittel (Auto, Gehen, Nahverkehr) in %. Die Werte sind relativ im Verhältnis zum 13.Januar 2020, welcher die 100% Baseline darstellt. Wähle ein Transportmittel, um die jeweiligen Informationen zu erhalten.
+            </p>
+
+            </div>
+            <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-red btn brown darken-3">Close</a>
+            </div>
+        </div>
+
+        <!-- Modal Structure -->
+        <div id="modalTM2" class="modal">
+            <div class="modal-content">
+            <h4>Verkehrmittel-Nutzung in Deutschland</h4>
+            <p>Diese Treemap zeigt die monatliche Nutzung verschiedener Vekehrsmittel (Auto, Gehen, Nahverkehr) in %. Die Werte sind relativ im Verhältnis zum 13.Januar 2020, welcher die 100% Baseline darstellt. Wähle bis zu 3 Bundesländer aus.
             </p>
 
             </div>
