@@ -8,7 +8,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
  
      // Update array when new region is selected or deselected
      if(newRegionAdded){ 
-         CreateMobilityData(regionEng, month, newRegionAdded, newMonthSelected)
+         CreateMobilityData(regionEng, month, newRegionAdded, newMonthSelected) 
      } else {
          // if the region is deselected´
          CreateArrayForTreemap([], regionEng, month, newRegionAdded, newMonthSelected)
@@ -19,6 +19,8 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
  // Create filtered data according to the region and the month selected
  function CreateMobilityData(regionParam, monthParam, regionSelected, monthChanged){
      let mobilityData = [];
+     const regionColor = d3.select("."+regionParam+".map")._groups[0][0].getAttribute('fill');
+            console.log(regionColor);
   
     // Filter data only for Germany and the selected region and month only
      d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
@@ -121,12 +123,12 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
         (hgroup)
  
      // color options
-     var color= d3.scale.linear().domain([60, 200]).range(["orange", "indianred"]);
-     var color1 = d3.scale.category10();
-     var color2 = d3.scale.category20();         
-     var color3 = d3.scale.category20b();  
-     var color4 = d3.scale.category20c();  
-   //  var color5 = d3.scaleOrdinal().domain(["1","2","3"]).range([ "#402D54", "#D18975", "#8FD175"])
+     var color = d3.scale.category20(); 
+    
+     //const color6 = d3.select("."+regionEng+".map")._groups[0][0].getAttribute('fill');
+    
+   
+    
  
  
      // Add a opacity scale
@@ -146,7 +148,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
          .attr('width', function (d) { return d.x1 - d.x0; })
          .attr('height', function (d) { return d.y1 - d.y0})
          .style("fill", function(d) {
-             return color2(d.data[month]);})
+             return color(d.data[month]);})
          // .style("opacity", function(d) {
          //     return opacity(d.data[month])
          // });
