@@ -16,9 +16,11 @@ let allData = {};
 function initialiseEvents(){
 
     // Load map and add the mutation observer to its text fields
-    LoadMap().then(() => mutationObserverMap());
-
-    LoadMap().then(() => mutationObserverTreeMap());
+    // LoadMap().then(() => mutationObserverMap());
+    LoadMap().then(function(){
+        mutationObserverMap();
+        mutationObserverTreeMap();
+    } );
 
     eventListenerDatePicker();
     
