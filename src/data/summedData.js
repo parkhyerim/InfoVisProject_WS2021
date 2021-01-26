@@ -1854,12 +1854,6 @@ export const AllData =
       "Infos": {
         "AnzahlFall": 38474
       }
-    },
-    {
-      "Meldedatum": "Fri Jan 01 2021 01:00:00 GMT+0100 (Central European Standard Time)",
-      "Infos": {
-        "AnzahlFall": 10287
-      }
     }
   ]
 }

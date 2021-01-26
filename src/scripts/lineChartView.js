@@ -24,14 +24,20 @@ export async function ShowDEData(selectedMonth, allData){
       .enter().append("rect")
       .attr("class", "bar")
       .attr("fill", "#b2dfdb")
-      .attr("x", d => xAxis(new Date(d.Meldedatum))-6)
+      .attr("x", d => xAxis(new Date(d.Meldedatum))-8)
       .attr("y", d => yAxis(new Date(d.Infos.AnzahlFall)))
-      .attr("width", 15)
+      .attr("width", 16)
       .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
       .attr("height", d => height - yAxis(new Date(d.Infos.AnzahlFall)))
       .on("mouseover", mouseOverBar)
       .on("click", clickBar)
 
+    // Only half of the width is applied to the first and the last bar to avoid visual overflow. Plus the first bar is moved to the right  
+    const labelNodelist = svg.selectAll(".bar")._groups[0];
+    labelNodelist[0].x.baseVal.value = 0;
+    labelNodelist[0].style.width = 8;
+    labelNodelist[labelNodelist.length-1].style.width = 8;
+        
     svg.append("text")
       .attr("class", "y-label")
       .attr("text-anchor", "middle")
@@ -40,6 +46,9 @@ export async function ShowDEData(selectedMonth, allData){
       }) 
       .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
       .text("Gemeldete Infektionen");
+
+   
+
    
 }
 
@@ -286,7 +295,7 @@ function addAxes(data){
     xA.tickValues([new Date(data[0].Meldedatum), new Date(data[1].Meldedatum), new Date(data[2].Meldedatum)])
   */
   xAxis = d3.scaleTime()
-               .domain(d3.extent(data, item => new Date(item.Meldedatum)))
+              .domain(d3.extent(data, item => new Date(item.Meldedatum)))
               .range([0, width]);
   const xA = d3.axisBottom(xAxis);
   xA.tickSizeOuter(0); // removes the last tick on the xAxis
