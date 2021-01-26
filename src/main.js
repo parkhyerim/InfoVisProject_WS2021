@@ -18,6 +18,8 @@ function initialiseEvents(){
     // Load map and add the mutation observer to its text fields
     LoadMap().then(() => mutationObserverMap());
 
+    LoadMap().then(() => mutationObserverTreeMap());
+
     eventListenerDatePicker();
     
     $(document).ready(()=>{
@@ -69,7 +71,7 @@ function eventListenerDatePicker() {
             Displaymobilitydata(GetDateForFetch(), document.getElementById('selectedTransport').name);
 
             selectedBL.forEach(bl =>{
-                updateTreeMap(bl)
+                updateTreeMap(bl, undefined)
             })
         })
             
@@ -112,6 +114,7 @@ function eventListenerTreemap(){
 
 
 function updateTreeMap(bl, newBLWasSelected){
+      // console.log(bl+ " " + newBLWasSelected)
     let monthChanged = false;
     if(newBLWasSelected === undefined) {
         newBLWasSelected = true;
@@ -139,9 +142,6 @@ function mutationObserverMap(){
 
                     const selectedColor = mutation.target.getAttribute('fill');
                     AddBundeslandToLineChart(mutation.target.id, GetDateForFetch(), selectedBL, selectedColor);
-
-                    updateTreeMap(mutation.target.id, newBLWasSelected)
-
                 } else {
                     newBLWasSelected = false;
                     //add selected BL to selectedBL array
@@ -149,13 +149,8 @@ function mutationObserverMap(){
                     selectedBL.splice(index, 1);
 
                     RemoveBundeslandFromLineChart(mutation.target.id, selectedBL);
-                    updateTreeMap(mutation.target.id, newBLWasSelected); 
                 } 
-               // updateTreeMap(mutation.target.id, newBLWasSelected)  
-                //document.getElementById("lineChartContainer").classList.remove("hidden");
-                //updateLineChart(mutation.target.id, newBLWasSelected)            
-                //updateLineChart(mutation.target.id, newBLWasSelected)            
-                //UpdateLineChartBundesland(mutation.target.id, newBLWasSelected);
+
                 getBlDichte();
             }
         })  
@@ -167,6 +162,36 @@ function mutationObserverMap(){
     }
 }
 
+
+function mutationObserverTreeMap(){
+    const mapSelectedBl = document.getElementsByTagName('path');
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if(mutation.attributeName === 'class'){
+                let newBLWasSelected;
+
+                if(mutation.target.classList[2] === 'selected-bl'){
+                    newBLWasSelected = true;
+                    //add selected BL to selectedBL array
+                    selectedBL.push(mutation.target.id);            
+                  
+                } else {
+                    newBLWasSelected = false;
+                    //add selected BL to selectedBL array
+                    const index = selectedBL.indexOf(mutation.target.id)
+                    selectedBL.splice(index, 1)
+                } 
+                  updateTreeMap(mutation.target.id, newBLWasSelected)
+            }
+        })  
+    }) 
+    const config = { attributes: true };
+
+    for (let blMap of mapSelectedBl){
+        observer.observe(blMap, config);
+    }
+}
 
 function getBlDichte() {
     let container = document.getElementById("BevölkerungsdichteContainer").children;
