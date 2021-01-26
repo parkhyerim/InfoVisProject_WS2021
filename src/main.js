@@ -115,14 +115,15 @@ function eventListenerTreemap(){
 
 
 
-function updateTreeMap(bl, newBLWasSelected){
+function updateTreeMap(bl, newBLWasSelected, selectedColor){
       // console.log(bl+ " " + newBLWasSelected)
     let monthChanged = false;
     if(newBLWasSelected === undefined) {
         newBLWasSelected = true;
         monthChanged = true;
     } 
-    UpdateSelectedRegionsList(bl, newBLWasSelected, GetDateForFetch(), monthChanged);
+    
+    UpdateSelectedRegionsList(bl, newBLWasSelected, GetDateForFetch(), monthChanged, selectedColor, selectedBL);
 }
 
 function mutationObserverMap(){
@@ -184,7 +185,8 @@ function mutationObserverTreeMap(){
                     const index = selectedBL.indexOf(mutation.target.id)
                     selectedBL.splice(index, 1)
                 } 
-                  updateTreeMap(mutation.target.id, newBLWasSelected)
+                const selectedColor = mutation.target.getAttribute('fill');
+                  updateTreeMap(mutation.target.id, newBLWasSelected, selectedColor)
             }
         })  
     }) 

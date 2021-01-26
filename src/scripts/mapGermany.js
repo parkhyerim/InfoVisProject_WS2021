@@ -100,7 +100,9 @@ export async function LoadMap(){
 }
 
 
-
+export function getClickedBlArray(){
+	return clickedBlArray;
+}
 /*function highlightBl(){
 
 	// Get the name of the Bundesland currently hoovered over via the ID of the HTML element

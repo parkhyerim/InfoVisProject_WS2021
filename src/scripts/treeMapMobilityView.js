@@ -1,14 +1,20 @@
-
+import{getClickedBlArray} from './scripts/lineChartView.js';
+let selectedCol; 
+let selectedBundesland;
+let selectedRegionNames = [];
 // Get Information of selected regions and month from main.js(From Landkarte and DatePicker)
-export function UpdateSelectedRegionsList(regionParam, regionSelected, monthParam, monthChanged){
-     let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2); // get only month string(ex. "03")
+export function UpdateSelectedRegionsList(regionParam, regionSelected, monthParam, monthChanged, selectedColor, selectedBL){
+    
+    selectedBundesland = selectedBL;
+    selectedCol = selectedColor;
+    let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2); // get only month string(ex. "03")
      let regionEng = ReplaceRegionNameWithEng(regionParam); // replace the German region name with the English one
      let newRegionAdded = regionSelected;
      let newMonthSelected = monthChanged;
  
      // Update array when new region is selected or deselected
      if(newRegionAdded){ 
-         CreateMobilityData(regionEng, month, newRegionAdded, newMonthSelected) 
+         CreateMobilityData(regionEng, month, newRegionAdded, newMonthSelected, selectedColor) 
      } else {
          // if the region is deselected´
          CreateArrayForTreemap([], regionEng, month, newRegionAdded, newMonthSelected)
@@ -17,10 +23,11 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
  
  
  // Create filtered data according to the region and the month selected
- function CreateMobilityData(regionParam, monthParam, regionSelected, monthChanged){
+ function CreateMobilityData(regionParam, monthParam, regionSelected, monthChanged, selectedColor){
      let mobilityData = [];
-     const regionColor = d3.select("."+regionParam+".map")._groups[0][0].getAttribute('fill');
-            console.log(regionColor);
+     console.log(selectedColor);
+    //  const regionColor = d3.select("."+regionParam+".map")._groups[0][0].getAttribute('fill');
+    //         console.log(regionColor);
   
     // Filter data only for Germany and the selected region and month only
      d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
@@ -77,6 +84,12 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
  
  
  function HierarchyTreemapData(data, month){
+    selectedRegionNames=[];
+     data.forEach((d) =>{
+        selectedRegionNames.push(d[0].region);
+     })
+     console.log(selectedRegionNames);
+    
      let groupArray = [];
  
      data.forEach(region => {
@@ -122,19 +135,22 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
         .round(true)
         (hgroup)
  
-     // color options
-     var color = d3.scale.category20(); 
+
+    
     
      //const color6 = d3.select("."+regionEng+".map")._groups[0][0].getAttribute('fill');
     
    
-    
- 
+         // color options
+         var color = d3.scale.linear()
+         .domain([1, 3])
+         .range(getColorRange())
+         
  
      // Add a opacity scale
      var opacity =d3.scaleLinear()
                  .domain([90, 200])
-                 .range([.6,1])
+                 .range([1,3])
  
      // use this information to add rectangles:
      svg
@@ -142,18 +158,35 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
          .data(treemap.leaves())
          .enter()
          .append("rect")
+         .attr("class", "BlLeaf")
          .attr("id", (d) =>{return d.id;})
          .attr('x', function (d) { return d.x0; })
          .attr('y', function (d) { return d.y0})
          .attr('width', function (d) { return d.x1 - d.x0; })
          .attr('height', function (d) { return d.y1 - d.y0})
-         .style("fill", function(d) {
-             return color(d.data[month]);})
-         // .style("opacity", function(d) {
-         //     return opacity(d.data[month])
-         // });
+         .style("fill", function(d){ 
+             let chosenColor;
+             let index;
+             selectedRegionNames.forEach((blName,i) => {
+                 if(blName == d.data.region){
+                     if(i== 0){
+                         chosenColor= "#e29578";
+                     } else if(i== 1){
+                        chosenColor= "#c16a70";
+                     } else if(i == 2){
+                        chosenColor= "#A4AA88";
+                     }
+                 }
+             })
+
+              return d3.color(chosenColor)
+            })
+         .style("opacity", function(d) {
+             return opacity(d.data[month])
+         });
  
-         
+            
+
      // and to add the text labelsd
      svg
      .selectAll("text")
@@ -175,6 +208,19 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      .attr("font-size", "14px")
      .attr("fill", "white")
      .attr("font-weight","bold")
+ }
+
+ function getColorRange(){
+     switch (selectedCol){
+        case "#e29578":
+            return [" #E29578", "#763219"];
+        case "#c16a70":
+            return["#c16a70", "#733035"];
+        case "#A4AA88":
+            return ["#A4AA88", "#5A5F44" ];
+     }
+    
+
  }
  
  
