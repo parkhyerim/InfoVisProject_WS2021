@@ -62,23 +62,16 @@
             </div>
            <div class="row " id="BevölkerungsdichteContainer">
                 <div class="col s3"> 
-                    <div class="row">                     
-                        <p class="col s12 blPar" style="font-size: 0.9vw; "></p>
-                        <p  class="col s12 blPar" style="font-size: 0.8vw; "></p>
-                    </div>
-
+                    <p style="font-size: 16px; margin-top: 10px;"></p>
+                    <p style="margin-bottom: 10px;"></p>
                 </div> 
                 <div class="col s3">
-                    <div class="row">                     
-                        <p class="col s12 blPar" style="font-size: 0.9vw; "></p>
-                        <p  class="col s12 blPar" style="font-size: 0.8vw; "></p>
-                    </div>
+                    <p style="font-size: 16px; margin-top: 10px;"></p>
+                    <p style="margin-bottom: 10px;"></p>
                 </div> 
                 <div class="col s3"> 
-                    <div class="row">                     
-                        <p class="col s12 blPar" style="font-size: 0.9vw; "></p>
-                        <p  class="col s12 blPar" style="font-size: 0.8vw; "></p>
-                    </div>
+                    <p style="font-size: 16px; margin-top: 10px;"></p>
+                    <p style="margin-bottom: 10px;"></p>
                 </div>
             </div>
             
@@ -116,24 +109,18 @@
 
                         <div id="treemap1" class="col s12">
                             <div class="row " id="iconContainer">
-                                <div class="col s11"  id="icons">
-                                    <div class="col s4" id="car" > <img src="../src/img/Auto_icon.png" alt="Auto icon" class="transport responsive-img" name="driving"></div>
-                                    <div class="col s4" id="walk"> <img src="../src/img/Walking_icon.png" alt="Walking icon"  class="transport  responsive-img" name="walking"></div>
-                                    <div class="col s4" id="transit"> <img src="../src/img/Transit_icon.png" alt="Transit icon"   class="transport responsive-img" name="transit"> </div>
-                                    
-                                   
-                                    <!-- <div class="row" id="icons">
-                                        
-                                        <div class="col s4"> </div>
-                                        <div class="col s4"> </div>
-                                        <div class="col s4"> </div>
-                                        
+                                <div class="col s11">
+                                    <div>
+                                        <img src="../src/img/Auto_icon.png" alt="Auto icon" width="110px" class="transport" name="driving">
 
-                                    </div> -->
+                                        <img src="../src/img/Walking_icon.png" alt="Walking icon" width="80px" class="transport" name="walking">
+
+                                        <img src="../src/img/Transit_icon.png" alt="Transit icon" width="90px" class="transport" name="transit">
+                                        Icons</div>
                                 </div>
                                 <div class="col s1">
                                     <!-- Modal Trigger -->
-                                    <a class="modal-trigger" href="#demo-modal" > <i class="small material-icons">info</i></a>
+                                    <a class="modal-trigger" href="#modal-TM1" > <i class="small material-icons">info</i></a>
                                 </div>
 
                             </div>
@@ -143,7 +130,15 @@
 
                             </div>
                         </div>
-                        <div id="treemap2" class="col s12">Treemap2</div>
+                        <div id="treemap2" class="col s12">
+                            <div class="row " id="iconContainer">
+                                <div class="col s1">
+                                    <!-- Modal Trigger -->
+                                    <a class="modal-trigger" href="#modal-TM2" > <i class="small material-icons">info</i></a>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col s5" id="wordCloudContainer">WordCircle</div>
@@ -153,7 +148,20 @@
         </div>
 
         <!-- Modal Structure -->
-        <div id="demo-modal" class="modal">
+        <div id="modal-TM1" class="modal">
+            <div class="modal-content">
+            <h4>Verkehrmittel-Nutzung in Deutschland</h4>
+            <p>Diese Treemap zeigt die monatliche Nutzung verschiedener Vekehrsmittel im Jahr 2020 im Vergleich zum ersten Monat des Jahres. Klicke auf die Transport Symbole um die Informationen des jeweiligen Transportmittels zu sehen.
+            </p>
+
+            </div>
+            <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-red btn brown darken-3">Close</a>
+            </div>
+        </div>
+
+        <!-- Modal Structure -->
+        <div id="modal-TM2" class="modal">
             <div class="modal-content">
             <h4>Verkehrmittel-Nutzung in Deutschland</h4>
             <p>Diese Treemap zeigt die monatliche Nutzung verschiedener Vekehrsmittel im Jahr 2020 im Vergleich zum ersten Monat des Jahres. Klicke auf die Transport Symbole um die Informationen des jeweiligen Transportmittels zu sehen.
