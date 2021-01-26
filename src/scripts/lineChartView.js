@@ -305,6 +305,7 @@ function removeDEData(){
 }
 
 
+
 export function InitializeSVG(){
   svg = d3.select("#lineChartContainer")
           .append("div")
@@ -358,7 +359,8 @@ function addAxes(data){
 
   /** Hides the last label, because that would display the next month which might be misleading.
     Makes sure that still all the data of the month is fetched.
-  */    
+  */ 
+
   const labelNodelist = svg.selectAll("text")._groups[0];
   labelNodelist[labelNodelist.length-1].style.visibility = "hidden"
 

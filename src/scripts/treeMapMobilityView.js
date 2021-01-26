@@ -53,6 +53,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
  
  let selectedRegionsData = [];
  let regNameList = [];
+
  // Create Array to send to visualize the treemap
  function CreateArrayForTreemap(data, regionParam, monthPram, regionSelected, monthChanged){
      let region = regionParam;

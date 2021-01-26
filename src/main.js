@@ -11,6 +11,8 @@ const transportButton = document.getElementsByClassName('transport')
 let selectedBL = [];
 const allDataTempArray = [];
 let allData = {};
+let blData =[];
+let colors = ["#e29578", "#c16a70", "#A4AA88"]
 
 
 function initialiseEvents(){
@@ -23,6 +25,8 @@ function initialiseEvents(){
     } );
 
     eventListenerDatePicker();
+
+    readBLDichte();
     
     $(document).ready(()=>{
         $('.tabs').tabs();
@@ -197,26 +201,33 @@ function mutationObserverTreeMap(){
 
 function getBlDichte() {
     let container = document.getElementById("BevölkerungsdichteContainer").children;
-    let blData =[];
+    
+    console.log(selectedBL)
+    selectedBL.forEach((bundesland,i) =>{
 
-    container[0].children[0].innerHTML = "";
-    container[0].children[1].innerHTML = "";
-    
-    container[1].children[0].innerHTML = "";
-    container[1].children[1].innerHTML = "";
-    
-    container[2].children[0].innerHTML = "";
-    container[2].children[1].innerHTML = "";
+        blData.forEach((bl, j) =>{
+            if(bl.Bundesland == bundesland){
+                container[i].children[0].children[0].innerHTML = bl.Bundesland;
+                container[i].children[0].children[1].innerHTML = bl.jeKM2 +" je km²";
+                container[i].style["border-top"] = "solid 4px " + colors[i];
+                container[i].style["border-bottom"] = "solid 4px " + colors[i];
+                container[i].style["color"] = colors[i];
+
+
+            }
+        });
+
+        
+    });
+}
+
+function readBLDichte() {
+   
 
     d3.csv("../src/data/Bundesland-Dichte.csv").then(function(data) {
         data.forEach(obj => {
-
-            selectedBL.forEach((bundesland,i) =>{
-                if(obj.Bundesland == bundesland){
-                    //container[i].children[0].innerHTML = obj.Bundesland;
-                    //container[i].children[1].innerHTML = obj.jeKM2 +" je km²";
-                }
-            }) 
+            
+            blData.push(obj);
         })
     });
 }
