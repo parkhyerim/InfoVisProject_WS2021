@@ -9,7 +9,7 @@ const dateButtons = document.getElementsByClassName('date');
 const transportButton = document.getElementsByClassName('transport')
 
 let selectedBL = [];
-let blData =[];
+let blData ={};
 let colors = ["#e29578", "#c16a70", "#A4AA88"]
 
 function initialiseEvents(){
@@ -107,14 +107,15 @@ function mutationObserverMap(){
         mutations.forEach((mutation) => {
             if(mutation.attributeName === 'class'){
                 let newBLWasSelected;
-                const selectedColor = mutation.target.getAttribute('fill');
 
                 if(mutation.target.classList[2] === 'selected-bl'){
+                    const selectedColor = mutation.target.getAttribute('fill');
                     newBLWasSelected = true;
                     //add selected BL to selectedBL array
                     selectedBL.push(mutation.target.id);
 
                     AddBundeslandToLineChart(mutation.target.id, GetDateForFetch(), selectedBL, selectedColor);
+                    getBlDichte(selectedColor)
                 } else {
                     newBLWasSelected = false;
                     //add selected BL to selectedBL array
@@ -124,7 +125,7 @@ function mutationObserverMap(){
                     RemoveBundeslandFromLineChart(mutation.target.id, selectedBL);
                 } 
                 updateTreeMap(mutation.target.id, newBLWasSelected)
-                getBlDichte(selectedColor);
+                getBlDichte();
             }
         })  
     }) 
@@ -138,26 +139,37 @@ function mutationObserverMap(){
 
 function getBlDichte(selectedColor) {
     let container = document.getElementById("BevölkerungsdichteContainer").children;
+    for(let i=0; i<3; i++){
+       // console.log(container[i].children[0].innerHTML)
+        if(container[i].children[0].children[0] !== undefined & container[i].children[0].children[1] !== undefined){
+            container[i].children[0].children[0].innerHTML = "";
+            container[i].children[0].children[1].innerHTML = "";  
+            container[i].style.visibility = "hidden";  
+        }
+    }
     
     selectedBL.forEach((bundesland,i) =>{
+        container[i].style.visibility = "visible";
+        const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
 
-        blData.forEach((bl, j) =>{
-            if(bl.Bundesland == bundesland){
-                container[i].children[0].children[0].innerHTML = bl.Bundesland;
-                container[i].children[0].children[1].innerHTML = bl.jeKM2 +" je km²";
-                container[i].style["border-top"] = "solid 4px " + colors[i];
-                container[i].style["border-bottom"] = "solid 4px " + colors[i];
-                container[i].style["color"] = colors[i];
-            }
-        });        
+        container[i].children[0].children[0].innerHTML = blData[bundesland].Bundesland;
+        container[i].children[0].children[1].innerHTML = blData[bundesland].jeKM2 +" je km²";
+        
+        container[i].style["border-top"] = "solid 4px " + usedColor;
+        container[i].style["border-bottom"] = "solid 4px " + usedColor;
+        container[i].style["color"] = usedColor;       
     });
 }
 
 function readBLDichte() {
     d3.csv("../src/data/Bundesland-Dichte.csv").then(function(data) {
-        data.forEach(obj => {        
-            blData.push(obj);
-        })
+        blData = data.reduce((accumulator, currentvalue) => {
+            let bundesland = currentvalue.Bundesland
+            if(accumulator[bundesland] === undefined){
+                accumulator[bundesland] = currentvalue
+            }
+            return accumulator;
+        }, {});
     });
 }
 

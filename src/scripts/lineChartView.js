@@ -145,7 +145,7 @@ export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, 
   const dataOfSelectedMonthBl = gatheredMonthlyData[month][bundesland];
   visualiseCurve(svg, dataOfSelectedMonthBl, bundesland, selectedColor);
 
-  adjustLegend(selectedBL, bundesland);
+  //adjustLegend(selectedBL, bundesland);
   // Needed for intersection detection in lineChartView.js
   d3.select(".curve."+bundesland)._groups[0][0].classList.add('selected-curve');
   updateCaseNumbers(); 
@@ -165,7 +165,7 @@ export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, 
 export function RemoveBundeslandFromLineChart(bundesland, selectedBL){
   svg.select(".curve."+bundesland).remove();
   svg.selectAll(".circles."+bundesland).remove();
-  adjustLegend(selectedBL, bundesland);
+  //adjustLegend(selectedBL, bundesland);
   updateCaseNumbers();
 }
 
