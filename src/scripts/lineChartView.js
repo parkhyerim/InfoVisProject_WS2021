@@ -1,4 +1,4 @@
-import { GetCasesDE, FetchData } from './getLineChartData.js';
+import { FetchData } from './getLineChartData.js';
 let svg, xAxis, yAxis, currentDomain, clickedBar;
 const blDomainStorage = [];
 
@@ -17,31 +17,6 @@ export async function ShowDEData(selectedMonth, allData){
 
     addAxes(casesDE)
   
-    /*svg.append("path")
-      .datum(casesDE)
-      .attr("fill", "none")
-      .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
-      .attr("id", "DE-curve")
-      //.attr("stroke", randomColor())
-      //.attr("stroke-width", 1)
-      .attr("class", "curve" + " " + "DE") //necessary to add a specific class for every Bundesland shown
-      .attr("d", d3.line()
-          .x(item => xAxis(new Date(item.Meldedatum)))
-          .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
-      );
-
-    let area = d3.area()
-      .x(d => xAxis(new Date(d.Meldedatum)))
-      .y0(d => height)
-      .y1(d => yAxis(new Date(d.Infos.AnzahlFall)))
-
-    svg.append("path")
-      .datum(casesDE)
-      .attr("fill", "#b2dfdb")
-      .attr("transform", `translate(${margin.left}, 0)`) // moves y axis to the right
-      .style("opacity", 0.6) // default is 1.0
-      .attr("class", "area")
-      .attr("d", area);*/
 
     svg.selectAll(".bar")
       .data(casesDE)
@@ -56,15 +31,6 @@ export async function ShowDEData(selectedMonth, allData){
       .on("mouseover", mouseOverBar)
       .on("click", clickBar)
 
-    /*svg.append("text")
-      .attr("class", "x-label")
-      .attr("text-anchor", "start")
-      .attr("transform", () => {
-         return `translate(${width/2}, ${height+margin.bottom})`
-      }) 
-      .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-      .text("Meldedatum");*/
-
     svg.append("text")
       .attr("class", "y-label")
       .attr("text-anchor", "middle")
@@ -73,9 +39,7 @@ export async function ShowDEData(selectedMonth, allData){
       }) 
       .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
       .text("Gemeldete Infektionen");
-  
-    //document.getElementById("spinner").classList.remove("active");
- 
+   
 }
 
 
@@ -134,7 +98,7 @@ function updateCaseNumbers(){
 
     const clickedMeldedatum = clickedBar._groups[0][0].__data__.Meldedatum;
 
-    const shownCurves = svg.selectAll(".curve.selected-bl")._groups[0]
+    const shownCurves = svg.selectAll(".curve.selected-curve")._groups[0]
 
     svg.selectAll(".case-numbers").remove(); 
     svg.select(".case-numbers-label").remove(); 
@@ -183,13 +147,12 @@ export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, 
     .then(() => {
       adjustLegend(selectedBL, bundesland);
       // Needed for intersection detection in lineChartView.js
-      d3.select(".curve."+bundesland)._groups[0][0].classList.add('selected-bl');
+      d3.select(".curve."+bundesland)._groups[0][0].classList.add('selected-curve');
       updateCaseNumbers();   
     })  
 }
 
 export function RemoveBundeslandFromLineChart(bundesland, selectedBL){
-  //svg.select(".case-numbers."+bundesland).remove();
   svg.select(".curve."+bundesland).remove();
   svg.selectAll(".circles."+bundesland).remove();
   adjustLegend(selectedBL, bundesland);
@@ -260,19 +223,6 @@ function visualiseCurve(svg, formattedData, classN, color){
         .x(item => xAxis(new Date(item.Meldedatum)))
         .y(item => yAxis(new Date(item.Infos.AnzahlFall)))
     );
-
-  // Appends name of the Bundesland to the corresponding path
-  /*svg.append("text")
-    .datum(formattedData)
-    .attr("transform", item => {
-      const xpos = xAxis(new Date(item[item.length-1].Meldedatum)) + 50;
-      return `translate(${xpos}, ${yAxis(item[item.length-1].Infos.AnzahlFall)})`;
-    })
-    .attr("x", 15)
-    .attr("dy", ".35em")
-    .attr("class", "segment-text " + formattedData[0].Infos.Bundesland)
-    .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-    .text(formattedData[0].Infos.Bundesland);*/
 
   // Appends circles to the path at the dates where data is returned
   svg.selectAll("circles")

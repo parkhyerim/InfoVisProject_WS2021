@@ -1,16 +1,17 @@
 import { InitializeSVG, UpdateLineChartPathMonth, ShowDEData, AddBundeslandToLineChart, RemoveBundeslandFromLineChart } from './scripts/lineChartView.js';
 import { GetDateForFetch, allMonths } from './scripts/datePicker.js';
-import { GetCasesDE } from './scripts/getLineChartData.js';
+import { AllBundes } from './scripts/getLineChartData.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
 import { UpdateSelectedRegionsList } from './scripts/treemapMobilityView.js';
+import { AllData } from './data/summedData.js';
 
 const dateButtons = document.getElementsByClassName('date');
 const transportButton = document.getElementsByClassName('transport')
 
 let selectedBL = [];
-const allDataTempArray = [];
-let allData = {};
+let ow = [];
+let finalObject = {};
 
 
 function initialiseEvents(){
@@ -27,22 +28,34 @@ function initialiseEvents(){
        // getBlDichte();    
     })
 
+    allMonths.forEach(month => {
+        AllBundes(month)
+        .then((rar) =>{
+            let monthparam = Number(month[0].substr((month[0].indexOf("-")+1), 2));
+            monthparam.toString();
+                 
+            ow.push({[monthparam]: rar})
+        }).then(()=> {
+
+            let monthKey = Object.keys(ow[ow.length-1])[0];
+            if(finalObject[monthKey] === undefined){
+                finalObject[monthKey] = ow[ow.length-1];
+            }
+            console.log(finalObject)
+        
+            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(finalObject));
+            var dlAnchorElem = document.getElementById('downloadAnchorElem');
+            dlAnchorElem.setAttribute("href",     dataStr     );
+            dlAnchorElem.setAttribute("download", "dataforEveryMonth.json");
+            dlAnchorElem.click(); 
+           
+        })
+    })
+    
+
     Displaymobilitydata(GetDateForFetch());
     
-    // Gather data for all months for DE and add line chart for all DE cases   
-    gatherData().then(() => {
-        allData = allDataTempArray.reduce((accumulator, currentValue) => {
-
-            let month = new Date(currentValue[0].Meldedatum).getMonth();
-            
-            if(accumulator[month] === undefined){
-                accumulator[month] = currentValue
-            }
-            return accumulator
-        }, {})
-        document.getElementById("spinner").classList.remove("active");
-        ShowDEData(GetDateForFetch(), allData)
-    })
+    ShowDEData(GetDateForFetch(), AllData)
 
     eventListenerTreemap();
     transportButton[0].setAttribute("id", "selectedTransport");
@@ -53,7 +66,7 @@ function eventListenerDatePicker() {
      //adds an event listener for every Date in the Dropdown
     for(let date of dateButtons){
         date.addEventListener('click', ()=> {
-            mutationObserverMap();
+            //mutationObserverMap();
 
             //datePickerButton.textContent = date.textContent;
             if(document.getElementById('selectedDate') !== null){
@@ -62,7 +75,7 @@ function eventListenerDatePicker() {
 
             date.setAttribute("id", "selectedDate");
            
-            ShowDEData(GetDateForFetch(), allData);
+            ShowDEData(GetDateForFetch(), AllData);
             //when date is selected: update lineChart for every checked BL in the map    
             UpdateLineChartPathMonth(GetDateForFetch(), selectedBL)
 
@@ -76,23 +89,6 @@ function eventListenerDatePicker() {
     } 
 }
 
-async function gatherData(){
-    document.getElementById("spinner").classList.add("active");
-
-    //const startDate = new Date()
-    const promises = [];
-
-    for(let i=0; i<allMonths.length; i++){
-        promises.push(
-            GetCasesDE(allMonths[i]).then(casesDE => {
-                //const endDate = new Date()
-                //console.log((endDate-startDate)/1000)
-                allDataTempArray.push(casesDE)
-            })
-        )
-    }
-    return Promise.all(promises)
-}
 
 function eventListenerTreemap(){
 

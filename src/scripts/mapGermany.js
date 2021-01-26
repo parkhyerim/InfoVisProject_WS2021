@@ -50,83 +50,8 @@ export async function LoadMap(){
 			.attr("stroke-width", 0.75)
 			.style("cursor", "pointer")
 			.on("click", clickEvent);
-			
-
-		 svg.append("g")  
-			.selectAll("text")  
-			.data(geojson.features)  
-			.enter()  
-			.append("text")  
-			.attr("text-anchor", "middle") 
-			.attr("font-size", 20)
-			.style("fill", "#D58E00")
-			.style("font-weight", "bold")
-			.style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-			.style("visibility", "hidden")
-			.attr("class", d => d.properties.GEN + " label") // Sets the name of the Bundesland as the ID
-			.attr("x", d => {
-				const bl = d.properties.GEN;
-				if(offset[bl] != undefined) {
-					return projection(offset[bl])[0];	
-				}
-			})  
-			.attr("y", d => {
-				const bl = d.properties.GEN;
-				if(offset[bl] != undefined) return projection(offset[bl])[1];
-			})
-			.text(d => {
-				// Only fill the text if there is no text for the Bundesland yet
-				let textBool = false;
-				labelBlArray.forEach(bl => {
-					if(bl === d.properties.GEN || d.properties.GEN.includes("Bodensee")) {
-						textBool = true; // Bodensee needs to be mentioned explicitly
-					}
-				})
-				if(textBool === false) {
-					labelBlArray.push(d.properties.GEN)	
-					return d.properties.GEN.toUpperCase();
-				}
-				
-			})
-			//.on("mouseover", highlightBl)
-			//.on("mouseout", resetBlColor)
-			.on("click", clickEvent)
-			.style("cursor", "pointer");  
-			
-
-	});
-
-	
+	});	
 }
-
-
-
-/*function highlightBl(){
-
-	// Get the name of the Bundesland currently hoovered over via the ID of the HTML element
-	blHoovered = d3.select(this)._groups[0][0].id
-	
-	// The name of the Bundesland was given as a class name to each path and with its help gets filled now
-	if(d3.select(this)._groups[0][0].classList[0] != 'selected-bl'){
-		colorBackground = d3.select("."+blHoovered).attr("fill");
-	}
-
-	d3.select("."+blHoovered).attr("fill", "#009688");
-
-	colorText = d3.select(this).style("fill");
-	d3.select(this)
-		.style("fill", "white")
-		.attr("font-weight", "bold");		
-}
-
-function resetBlColor(){	
-	if(d3.select(this)._groups[0][0].classList[0] != 'selected-bl'){
-		d3.select("."+blHoovered).attr("fill", colorBackground);
-		d3.select(this)
-			.style("fill", colorText)
-			.attr("font-weight", "normal");	
-	} 
-}*/
 
 
 function clickEvent(){
@@ -155,7 +80,7 @@ function clickEvent(){
 		clickedBlArray.push(clickedBl);
 		
 		// Necessary to get the selected Bundesland in main.js
-		d3.select(".label."+clickedBl)._groups[0][0].classList.add('selected-bl');
+		//d3.select(".label."+clickedBl)._groups[0][0].classList.add('selected-bl');
 		d3.select(".map."+clickedBl)._groups[0][0].classList.add('selected-bl');
 
 		//d3.select(".label."+clickedBl)._groups[0][0].classList.add(firstColor);
@@ -181,12 +106,12 @@ function clickEvent(){
 			.attr("stroke", "#008080")  
 			.attr("stroke-width", 0.75)
 
-		d3.select(".label." + clickedBl)._groups[0][0].style.visibility = "hidden"; // hides the Bundesland label
+		//d3.select(".label." + clickedBl)._groups[0][0].style.visibility = "hidden"; // hides the Bundesland label
 		const indexBundesland = clickedBlArray.indexOf(clickedBl);
 		clickedBlArray.splice(indexBundesland, 1);
 		
 		// Necessary to get the selected Bundesland in main.js
-		d3.select(".label."+clickedBl)._groups[0][0].classList.remove('selected-bl'); 	
+		//d3.select(".label."+clickedBl)._groups[0][0].classList.remove('selected-bl'); 	
 		d3.select(".map."+clickedBl)._groups[0][0].classList.remove('selected-bl'); 
 
 		//d3.select(".label."+clickedBl)._groups[0][0].classList.remove(revokedColor); 	

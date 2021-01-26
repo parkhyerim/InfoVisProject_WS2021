@@ -1,6 +1,12 @@
+import { allMonths } from './datePicker.js';
+
 const allBundesländer = ["Schleswig-Holstein", "Hamburg", "Nordrhein-Westfalen", "Bayern", "Baden-Württemberg", 
 "Hessen", "Niedersachsen", "Mecklenburg-Vorpommern", "Rheinland-Pfalz", "Saarland", "Sachsen", "Thüringen", 
 "Sachsen-Anhalt", "Brandenburg", "Bremen", "Berlin"];
+const allDataTempArray = [];
+let allData = {};
+let dataBundesland = {};
+const dataBundeslandTempArray = [];
 
 export async function GetCasesDE(selectedMonth){
   let arrayDE = [];
@@ -46,11 +52,24 @@ export async function GetCasesDE(selectedMonth){
 }
 
 
+export async function AllBundes(month){
+  let promis = [];
+  let rar = {};
 
+  for(let i=0; i<allBundesländer.length; i++){
+
+    await FetchData(allBundesländer[i], month)
+            .then((dataArray) => {
+              if(rar[allBundesländer[i]] === undefined){
+                rar[allBundesländer[i]] = dataArray
+              }
+            })
+  }
+  return rar;
+}
 
 
 export function FetchData(bundesland, selectedMonth){
-
     return fetch(
       `https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query?where=Meldedatum%20%3E%3D%20TIMESTAMP%20%27${selectedMonth[0]}%2000%3A00%3A00%27%20AND%20Meldedatum%20%3C%3D%20TIMESTAMP%20%27${selectedMonth[selectedMonth.length-1]}%2000%3A00%3A00%27%20AND%20Bundesland%20%3D%20%27${bundesland}%27&outFields=Bundesland,AnzahlFall,Meldedatum,IdBundesland&outSR=4326&f=json`,
         {
@@ -82,7 +101,11 @@ export function FetchData(bundesland, selectedMonth){
                         });
                   });
               }
-              //console.log(casesData)
+              /*var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(groupDataByDate(casesData)));
+              var dlAnchorElem = document.getElementById('downloadAnchorElem');
+              dlAnchorElem.setAttribute("href",     dataStr     );
+              dlAnchorElem.setAttribute("download", "finalallData.json");
+              dlAnchorElem.click();   */           
               return groupDataByDate(casesData)
 
          } else {
@@ -99,6 +122,7 @@ export function FetchData(bundesland, selectedMonth){
             feed.forEach(elem => {
               casesData1.push(elem.attributes);
             });
+
             return groupDataByDate(casesData1)
           }
           
@@ -143,6 +167,46 @@ function groupDataByDate(casesData){
   })
   // Sorts the array containing the summed up cases by `Meldedatum`
   reportArr.sort((a, b) => new Date(a.Meldedatum) - new Date(b.Meldedatum))
-  //console.log(reportArr)
+  
   return reportArr;
 }
+
+
+async function gatherData(){
+    document.getElementById("spinner").classList.add("active");
+
+    //const startDate = new Date()
+    const promises = [];
+
+    for(let i=0; i<allMonths.length; i++){
+        promises.push(
+            GetCasesDE(allMonths[i]).then(casesDE => {
+                //const endDate = new Date()
+                //console.log((endDate-startDate)/1000)
+                allDataTempArray.push(casesDE)
+            })
+        )
+    }
+    return Promise.all(promises)
+}
+
+
+// Gather data for all months for DE and add line chart for all DE cases   
+/*gatherData().then(() => {
+    allData = allDataTempArray.reduce((accumulator, currentValue) => {
+
+        let month = new Date(currentValue[0].Meldedatum).getMonth();
+        
+        if(accumulator[month] === undefined){
+            accumulator[month] = currentValue
+        }
+        return accumulator
+    }, {})
+    document.getElementById("spinner").classList.remove("active");
+    //ShowDEData(GetDateForFetch(), allData)
+
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData));
+    var dlAnchorElem = document.getElementById('downloadAnchorElem');
+    dlAnchorElem.setAttribute("href",     dataStr     );
+    dlAnchorElem.setAttribute("download", "scene.json");
+})*/
