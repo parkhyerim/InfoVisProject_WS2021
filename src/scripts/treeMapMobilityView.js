@@ -1,6 +1,7 @@
 
 // Get Information of selected regions and month from main.js(From Landkarte and DatePicker)
 export function UpdateSelectedRegionsList(regionParam, regionSelected, monthParam, monthChanged){
+    // console.log(regionParam +  regionSelected + monthParam + monthChanged)
      let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2); // get only month string(ex. "03")
      let regionEng = ReplaceRegionNameWithEng(regionParam); // replace the German region name with the English one
      let newRegionAdded = regionSelected;
@@ -69,8 +70,9 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
          }
      } 
      // console.log(regNameList)
-     // console.log(selectedRegionsData)
- 
+    // console.log(selectedRegionsData)
+    
+    // if(selectedRegionsData.length != 0)
      HierarchyTreemapData(selectedRegionsData, monthPram)
  }
  
@@ -98,82 +100,86 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
  
  
  function createTreeChart(hgroup, month){
-     // Old treemap gets removed
-     d3.select("#treemap2").select("svg").remove();
- 
-     var margin = {top: 10, right: 10, bottom: 10, left: 10};
-     var width = 400;
-     var height = 400;
- 
-     var svg = d3.select("#treemap2")
-     .append("svg")
-     .attr("width", width + 20)
-     .attr("height", height)
-     .append("g")
-     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
- 
-     // Then d3.treemap computes the position of each element of the hierarchy
-     // The coordinates are added to the root object above
-    const treemap= d3.treemap()
-        .size([width, height])
-        .padding(2)
-        .paddingInner(2)
-        .round(true)
-        (hgroup)
- 
-     // color options
-     var color= d3.scale.linear().domain([60, 200]).range(["orange", "indianred"]);
-     var color1 = d3.scale.category10();
-     var color2 = d3.scale.category20();         
-     var color3 = d3.scale.category20b();  
-     var color4 = d3.scale.category20c();  
-   //  var color5 = d3.scaleOrdinal().domain(["1","2","3"]).range([ "#402D54", "#D18975", "#8FD175"])
- 
- 
-     // Add a opacity scale
-     var opacity =d3.scaleLinear()
-                 .domain([90, 200])
-                 .range([.6,1])
- 
-     // use this information to add rectangles:
-     svg
-         .selectAll("rect")
-         .data(treemap.leaves())
-         .enter()
-         .append("rect")
-         .attr("id", (d) =>{return d.id;})
-         .attr('x', function (d) { return d.x0; })
-         .attr('y', function (d) { return d.y0})
-         .attr('width', function (d) { return d.x1 - d.x0; })
-         .attr('height', function (d) { return d.y1 - d.y0})
-         .style("fill", function(d) {
-             return color2(d.data[month]);})
-         // .style("opacity", function(d) {
-         //     return opacity(d.data[month])
-         // });
- 
-         
-     // and to add the text labelsd
-     svg
-     .selectAll("text")
-     .data(treemap.leaves())
-     .enter()
-     .append("text")
-     .attr("x", function(d){ return d.x0+10})    // +10 to adjust position (more right)
-     .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
-     .attr("dy", "1.1em")
-     .text(function(d){ 
-         // Temporal: kurze Syntax und bessere Images
-         if(d.data.transportation_type === "driving"){
-              return "🚘 " + d.data.region + ' ' +d.data.transportation_type +" "+ d.data[month]+"%"; }
-         else if(d.data.transportation_type === "walking"){
-             return "🚶‍♀️ " + d.data.region + ' ' + d.data.transportation_type +" "+ d.data[month]+"%";
-         } else if(d.data.transportation_type === "transit") {
-             return "🚌 "+ d.data.region + ' ' + d.data.transportation_type + " "+ d.data[month]+"%";
-         }})
-     .attr("font-size", "14px")
-     .attr("fill", "white")
-     .attr("font-weight","bold")
+     if(hgroup.height == 0){
+          d3.select("#treemap2").select("svg").remove();
+     } else {
+    // Old treemap gets removed
+        d3.select("#treemap2").select("svg").remove();
+    
+        var margin = {top: 10, right: 10, bottom: 10, left: 10};
+        var width = 900;
+        var height = 300;
+    
+        var svg = d3.select("#treemap2")
+        .append("svg")
+        .attr("width", width + 20)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    
+        // Then d3.treemap computes the position of each element of the hierarchy
+        // The coordinates are added to the root object above
+        const treemap= d3.treemap()
+            .size([width, height])
+            .padding(2)
+            .paddingInner(2)
+            .round(true)
+            (hgroup)
+    
+        // color options
+        var color= d3.scale.linear().domain([60, 200]).range(["orange", "indianred"]);
+        var color1 = d3.scale.category10();
+        var color2 = d3.scale.category20();         
+        var color3 = d3.scale.category20b();  
+        var color4 = d3.scale.category20c();  
+    //  var color5 = d3.scaleOrdinal().domain(["1","2","3"]).range([ "#402D54", "#D18975", "#8FD175"])
+    
+    
+        // Add a opacity scale
+        var opacity =d3.scaleLinear()
+                    .domain([90, 200])
+                    .range([.6,1])
+    
+        // use this information to add rectangles:
+        svg
+            .selectAll("rect")
+            .data(treemap.leaves())
+            .enter()
+            .append("rect")
+            .attr("id", (d) =>{return d.id;})
+            .attr('x', function (d) { return d.x0; })
+            .attr('y', function (d) { return d.y0})
+            .attr('width', function (d) { return d.x1 - d.x0; })
+            .attr('height', function (d) { return d.y1 - d.y0})
+            .style("fill", function(d) {
+                return color2(d.data[month]);})
+            // .style("opacity", function(d) {
+            //     return opacity(d.data[month])
+            // });
+    
+            
+        // and to add the text labelsd
+        svg
+        .selectAll("text")
+        .data(treemap.leaves())
+        .enter()
+        .append("text")
+        .attr("x", function(d){ return d.x0+10})    // +10 to adjust position (more right)
+        .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
+        .attr("dy", "1.1em")
+        .text(function(d){ 
+            // Temporal: kurze Syntax und bessere Images
+            if(d.data.transportation_type === "driving"){
+                return "🚘 " + d.data.region + ' ' +d.data.transportation_type +" "+ d.data[month]+"%"; }
+            else if(d.data.transportation_type === "walking"){
+                return "🚶‍♀️ " + d.data.region + ' ' + d.data.transportation_type +" "+ d.data[month]+"%";
+            } else if(d.data.transportation_type === "transit") {
+                return "🚌 "+ d.data.region + ' ' + d.data.transportation_type + " "+ d.data[month]+"%";
+            }})
+        .attr("font-size", "14px")
+        .attr("fill", "white")
+        .attr("font-weight","bold")
+        }
  }
  
  
