@@ -1,4 +1,4 @@
-{
+export const gatheredMonthlyData = {
   "3": {
     "Schleswig-Holstein": [
       {

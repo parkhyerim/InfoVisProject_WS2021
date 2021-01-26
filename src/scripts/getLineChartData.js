@@ -4,7 +4,7 @@ const allBundesländer = ["Schleswig-Holstein", "Hamburg", "Nordrhein-Westfalen"
 "Hessen", "Niedersachsen", "Mecklenburg-Vorpommern", "Rheinland-Pfalz", "Saarland", "Sachsen", "Thüringen", 
 "Sachsen-Anhalt", "Brandenburg", "Bremen", "Berlin"];
 const allDataTempArray = [];
-let allData = {};
+let allDataDE = {};
 let dataBundesland = {};
 const dataBundeslandTempArray = [];
 
@@ -49,23 +49,6 @@ export async function GetCasesDE(selectedMonth){
   sortAllCases.sort((a, b) => new Date(a.Meldedatum) - new Date(b.Meldedatum))
 
   return sortAllCases;
-}
-
-
-export async function AllBundes(month){
-  let promis = [];
-  let rar = {};
-
-  for(let i=0; i<allBundesländer.length; i++){
-
-    await FetchData(allBundesländer[i], month)
-            .then((dataArray) => {
-              if(rar[allBundesländer[i]] === undefined){
-                rar[allBundesländer[i]] = dataArray
-              }
-            })
-  }
-  return rar;
 }
 
 
@@ -173,7 +156,6 @@ function groupDataByDate(casesData){
 
 
 async function gatherData(){
-    document.getElementById("spinner").classList.add("active");
 
     //const startDate = new Date()
     const promises = [];
@@ -191,9 +173,53 @@ async function gatherData(){
 }
 
 
+
+/** Helper functions to download the aggregated data for slow internet connections
+
+// Gather data for all the Bundesländer for every month
+let monthArray = [];
+let finalObject = {};
+
+allMonths.forEach(month => {
+  allBundes(month)
+  .then((allBlForAMonth) =>{
+      let monthparam = Number(month[0].substr((month[0].indexOf("-")+1), 2));
+      monthparam.toString();
+           
+      monthArray.push({[monthparam]: allBlForAMonth})
+  }).then(()=> {
+
+      let monthKey = Object.keys(monthArray[monthArray.length-1])[0];
+      if(finalObject[monthKey] === undefined){
+          finalObject[monthKey] = monthArray[monthArray.length-1];
+      }
+  
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(finalObject));
+      const dlAnchorElem = document.getElementById('downloadAnchorElem');
+      dlAnchorElem.setAttribute("href",     dataStr     );
+      dlAnchorElem.setAttribute("download", "gatheredMonthlyData.json");
+      dlAnchorElem.click(); 
+     
+  })
+})
+
+async function allBundes(month){
+  let allBlForAMonth = {};
+
+  for(let i=0; i<allBundesländer.length; i++){
+    await FetchData(allBundesländer[i], month)
+            .then((dataArray) => {
+              if(allBlForAMonth[allBundesländer[i]] === undefined){
+                allBlForAMonth[allBundesländer[i]] = dataArray
+              }
+            })
+  }
+  return allBlForAMonth;
+}
+
 // Gather data for all months for DE and add line chart for all DE cases   
-/*gatherData().then(() => {
-    allData = allDataTempArray.reduce((accumulator, currentValue) => {
+gatherData().then(() => {
+    allDataDE = allDataTempArray.reduce((accumulator, currentValue) => {
 
         let month = new Date(currentValue[0].Meldedatum).getMonth();
         
@@ -202,11 +228,10 @@ async function gatherData(){
         }
         return accumulator
     }, {})
-    document.getElementById("spinner").classList.remove("active");
-    //ShowDEData(GetDateForFetch(), allData)
-
-    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData));
-    var dlAnchorElem = document.getElementById('downloadAnchorElem');
-    dlAnchorElem.setAttribute("href",     dataStr     );
-    dlAnchorElem.setAttribute("download", "scene.json");
-})*/
+  
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allDataDE));
+    const dlAnchorElem = document.getElementById('downloadAnchorElem');
+    dlAnchorElem.setAttribute("href", dataStr);
+    dlAnchorElem.setAttribute("download", "allDataDE.json");
+})
+*/

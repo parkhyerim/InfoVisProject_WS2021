@@ -1,6 +1,5 @@
 import { InitializeSVG, UpdateLineChartPathMonth, ShowDEData, AddBundeslandToLineChart, RemoveBundeslandFromLineChart } from './scripts/lineChartView.js';
 import { GetDateForFetch, allMonths } from './scripts/datePicker.js';
-import { AllBundes } from './scripts/getLineChartData.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
 import { UpdateSelectedRegionsList } from './scripts/treemapMobilityView.js';
@@ -10,9 +9,6 @@ const dateButtons = document.getElementsByClassName('date');
 const transportButton = document.getElementsByClassName('transport')
 
 let selectedBL = [];
-let ow = [];
-let finalObject = {};
-
 
 function initialiseEvents(){
 
@@ -25,33 +21,8 @@ function initialiseEvents(){
         $('.tabs').tabs();
         $('.tooltipped').tooltip();
         $('.modal').modal();
-       // getBlDichte();    
-    })
-
-    allMonths.forEach(month => {
-        AllBundes(month)
-        .then((rar) =>{
-            let monthparam = Number(month[0].substr((month[0].indexOf("-")+1), 2));
-            monthparam.toString();
-                 
-            ow.push({[monthparam]: rar})
-        }).then(()=> {
-
-            let monthKey = Object.keys(ow[ow.length-1])[0];
-            if(finalObject[monthKey] === undefined){
-                finalObject[monthKey] = ow[ow.length-1];
-            }
-            console.log(finalObject)
-        
-            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(finalObject));
-            var dlAnchorElem = document.getElementById('downloadAnchorElem');
-            dlAnchorElem.setAttribute("href",     dataStr     );
-            dlAnchorElem.setAttribute("download", "dataforEveryMonth.json");
-            dlAnchorElem.click(); 
-           
-        })
-    })
-    
+        getBlDichte();    
+    })    
 
     Displaymobilitydata(GetDateForFetch());
     
@@ -118,7 +89,6 @@ function updateTreeMap(bl, newBLWasSelected){
 
 function mutationObserverMap(){
     const mapSelectedBl = document.getElementsByTagName('path');
-    //console.log(mapSelectedBl)
     /** MutationObserver looks at all the html text elements and has a look if their
         attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
         has been selected in the map

@@ -1,4 +1,5 @@
 import { FetchData } from './getLineChartData.js';
+import { gatheredMonthlyData } from '../data/gatheredMonthlyData.js';
 let svg, xAxis, yAxis, currentDomain, clickedBar;
 const blDomainStorage = [];
 
@@ -139,8 +140,17 @@ export function UpdateLineChartPathMonth(selectedMonth, selectedBL){
 
 
 export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, selectedColor){
-  // Fetching the data of the newly selected Bundesland
-  FetchData(bundesland, selectedMonth)
+  let month = Number(selectedMonth[0].substr((selectedMonth[0].indexOf("-")+1), 2));
+  month.toString();
+  const dataOfSelectedMonthBl = gatheredMonthlyData[month][bundesland];
+  visualiseCurve(svg, dataOfSelectedMonthBl, bundesland, selectedColor);
+
+  adjustLegend(selectedBL, bundesland);
+  // Needed for intersection detection in lineChartView.js
+  d3.select(".curve."+bundesland)._groups[0][0].classList.add('selected-curve');
+  updateCaseNumbers(); 
+   // If the internet connection is fast enough the data could be fetched live
+  /*FetchData(bundesland, selectedMonth)
     .then((data) => {
       visualiseCurve(svg, data, bundesland, selectedColor); //"#D58E00"
     })
@@ -149,7 +159,7 @@ export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, 
       // Needed for intersection detection in lineChartView.js
       d3.select(".curve."+bundesland)._groups[0][0].classList.add('selected-curve');
       updateCaseNumbers();   
-    })  
+    })  */  
 }
 
 export function RemoveBundeslandFromLineChart(bundesland, selectedBL){
@@ -309,8 +319,8 @@ function addAxes(data){
   /** Hides the last label, because that would display the next month which might be misleading.
     Makes sure that still all the data of the month is fetched.
   */    
-  const labelNodelist = svg.selectAll("text")._groups[0];
-  labelNodelist[labelNodelist.length-1].style.visibility = "hidden"
+  //const labelNodelist = svg.selectAll("text")._groups[0];
+  //labelNodelist[labelNodelist.length-1].style.visibility = "hidden"
 
   // Initializes and formats the yAxis
   yAxis = d3.scaleLinear()
