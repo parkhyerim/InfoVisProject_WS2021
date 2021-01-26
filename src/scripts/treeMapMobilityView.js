@@ -79,6 +79,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
  
  function HierarchyTreemapData(data, month){
      let groupArray = [];
+     let selectedNumber = data.length;
  
      data.forEach(region => {
          let regionArray = [];
@@ -94,21 +95,32 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      let hgroup = d3.hierarchy(groupedData, d =>  d.children )
          .sum((d) => {return d[month]});
          
-         createTreeChart(hgroup, month); 
+         createTreeChart(hgroup, month, selectedNumber); 
  };
  
  
  
- function createTreeChart(hgroup, month){
-     if(hgroup.height == 0){
+ function createTreeChart(hgroup, month, selectedNumber){
+    // console.log(hgroup.height)
+     if(selectedNumber == 0){
           d3.select("#treemap2").select("svg").remove();
      } else {
     // Old treemap gets removed
         d3.select("#treemap2").select("svg").remove();
     
         var margin = {top: 10, right: 10, bottom: 10, left: 10};
-        var width = 900;
-        var height = 300;
+        var width;
+        var height;
+        if(selectedNumber == 1) {
+            width = 300;
+            height = 300;
+        } else if (selectedNumber == 2) {
+            width = 540;
+            height = 270;
+        } else {
+            width = 810;
+            height = 270;
+        }
     
         var svg = d3.select("#treemap2")
         .append("svg")
