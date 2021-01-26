@@ -137,7 +137,6 @@ function mutationObserverMap(){
 
 
 function getBlDichte(selectedColor) {
-    console.log(selectedColor)
     let container = document.getElementById("BevölkerungsdichteContainer").children;
     
     selectedBL.forEach((bundesland,i) =>{
