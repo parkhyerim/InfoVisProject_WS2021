@@ -8,7 +8,7 @@ h1 {
 }
 
 
-.h3{
+.h3{ 
   font-size: 2.9rem;
   margin:0px;
 }
@@ -137,7 +137,7 @@ display: table !important;
 }
 #treemapContainer{
   min-height: 100vh;
-  padding:70px;
+  padding:7vh;
 }
 #treemapwrapper{
   display: flex;
@@ -159,7 +159,7 @@ display: table !important;
   justify-content: center;
 }
 .icons{
-  height:8vh; 
+  height:5vh; 
   margin-left:auto;
   margin-right:auto;
 
@@ -173,13 +173,13 @@ display: table !important;
 }
 
 #car{
-  width: 8vh;
+  width: 7vh;
   padding:0;
   margin: 2vh;
 
 }
 #transit, #walk{
-  width: 7vh;
+  width: 6vh;
   padding:0;
   margin: 2vh;
 
