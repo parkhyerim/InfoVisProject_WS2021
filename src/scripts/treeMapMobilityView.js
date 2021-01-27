@@ -15,7 +15,8 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
     selectedBundesland = selectedBL;
     selectedCol = selectedColor;
     let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2); // get only month string(ex. "03")
-     let regionEng = ReplaceRegionNameWithEng(regionParam); // replace the German region name with the English one
+     let regionEng = regionParam;
+     //ReplaceRegionNameWithEng(regionParam); // replace the German region name with the English one
      newRegionAdded = regionSelected;
      let newMonthSelected = monthChanged;
  
@@ -42,7 +43,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      let mobilityData = [];
      console.log(selectedColor);
     // Filter data only for Germany and the selected region and month only
-     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
+     d3.csv('../src/data/Apple_mobility_shortened_german.csv').then(function(data){
          data.filter(function(element){
              if (element.country == "Germany" 
                  && element["sub-region"] == "" 
@@ -165,40 +166,18 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
          .attr('width', function (d) { return d.x1 - d.x0; })
          .attr('height', function (d) { return d.y1 - d.y0})
          .style("fill", function(d){ 
-
-
             let chosenColor;
 
-             clickedBlArray.forEach((blName,i) => {
-                 if(blName === d.data.region){ 
-                    getAvailableColors();
+            clickedBlArray.forEach(bundesland => {
+                if(d.data.region == bundesland){
+                    console.log(bundesland);
+                    const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
+                   console.log(usedColor);
+                   chosenColor = usedColor;
+                }
 
-                     let col = isRegionInArray(d.data.region);
-                    console.log(col + d.data.region);
-                    if(col == false) {
-                        getAvailableColors();
-                        chosenColor = usedColors[0];
+              })
 
-                        let regionColor = {};
-                        
-                        regionColor.color = usedColors[0];
-                        regionColor.region =d.data.region;
-                        regionColorArray.push(regionColor);
-                        
-                        // var newUsedColors = usedColors.slice(1, usedColors.length + 1);
-                        // usedColors = newUsedColors;
-
-                        console.log(chosenColor);
-                    } else {
-                        var result = regionColorArray.find(obj => {
-                            return obj.region === d.data.region
-                          })
-                        
-                        chosenColor = result.color;
-                    }
-
-                 }
-             })
 
               return d3.color(chosenColor)
             })
@@ -268,24 +247,21 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
     return regionExists;
  }
 
+ function refreshRegionColArr(){
+
+    regionColorArray = regionColorArray.filter( i => clickedBlArray.includes( i.region ) );
+    console.log(regionColorArray);
+    d3.select()
+    return regionColorArray;
+ }
+
  function getAvailableColors(){
+    refreshRegionColArr();
      let usedCols = [];
-     let ChosenColsArr = []
-     clickedBlArray.forEach((bl) => {
-         var colResult = regionColorArray.find(obj => {
-            return bl.region == obj.region;
-         }
-        )
-     })
-      var res = regionColorArray.forEach((c) => {
-        var result = clickedBlArray.find(obj => {
-            return obj.region === c.region;
-          })
-          
+
+      refreshRegionColArr().forEach((c) => {
         usedCols.push(c.color);
-        return result;
      })
-     console.log(res);
      console.log(usedCols);
      console.log(availableColors);
     let difference = availableColors
@@ -423,28 +399,5 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      }
  
  
-     function ReplaceRegionNameWithEng(regionParam){
-         switch (regionParam) {
-             case "Bayern":
-               return "Bavaria"
-             case "Hessen":
-               return "Hesse"
-             case "Niedersachsen":
-               return "Lower Saxony"
-             case "Nordrhein-Westfalen":
-                 return "North Rhine-Westphalia"
-             case "Bremen":
-                 return "Bremen (state)"
-             case "Rheinland-Pfalz":
-                 return "Rhineland-Palatinate"
-             case "Sachsen":
-                 return "Saxony"
-             case "Sachsen-Anhalt":
-                 return "Saxony-Anhalt"
-             case "Thüringen":
-              return "Thuringia"
-             default:   
-              return regionParam
-         }
-     }
+
      
