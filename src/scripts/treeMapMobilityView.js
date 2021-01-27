@@ -177,11 +177,11 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
     .attr('xlink:href', function(d){ 
         // Temporal: kurze Syntax und bessere Images
         if(d.data.transportation_type === "driving"){
-               return './img/Auto_icon.png' }
+               return './img/icon_driving.png' }
         else if(d.data.transportation_type === "walking"){
-               return './img/Walking_icon.png';
+               return './img/icon_walking.png';
         } else if(d.data.transportation_type === "transit") {
-               return  './img/Transit_icon.png';
+               return  './img/icon_transit.png';
         }})
     .attr('class', 'icon')
     .attr("x", function(d){ return d.x0+10})    // +10 to adjust position (more right)
@@ -196,16 +196,16 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      .enter()
      .append("text")
      .attr("x", function(d){ return d.x0+15})    // +10 to adjust position (more right)
-     .attr("y", function(d){ return d.y0+75})    // +20 to adjust position (lower)
+     .attr("y", function(d){ return d.y0+70})    // +20 to adjust position (lower)
      .attr("dy", "1.1em")
      .text(function(d){ 
          // Temporal: kurze Syntax und bessere Images
          if(d.data.transportation_type === "driving"){
-                return " "+ d.data[month]+"%" + " " +d.data.region; }
+                return " "+ d.data[month]+"%"; }
          else if(d.data.transportation_type === "walking"){
-                return " "+ d.data[month]+"%" + " " + d.data.region;
+                return " "+ d.data[month]+"%";
          } else if(d.data.transportation_type === "transit") {
-                return   " "+ d.data[month]+"%" + " " + d.data.region;
+                return   " "+ d.data[month]+"%";
          }})
      .attr("font-size", "14px")
      .attr("fill", "white")
