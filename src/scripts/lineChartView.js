@@ -72,30 +72,7 @@ function clickBar(){
 
   const cases = clickedBar._groups[0][0].__data__.Infos.AnzahlFall;
 
-  svg.select(".gemeldete-infektionen").remove();
   svg.select(".cases-germany").remove(); 
-
-  svg.append("text")
-    .attr("text-anchor", "start")
-    .attr("class", "gemeldete-infektionen")
-    .attr("fill", "#008080")
-    .attr("transform", `translate(${width+70}, 0)`)
-    .attr("x", 15)
-    .attr("dy", ".35em")
-    .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-    .style("font-weight", "bold")
-    .text("Gemeldete Infektionen");
-
-  svg.append("text")
-    .attr("text-anchor", "start")
-    .attr("class", "gemeldete-infektionen")
-    .attr("fill", "#008080")
-    .attr("transform", `translate(${width+70}, 15)`)
-    .attr("x", 15)
-    .attr("dy", ".35em")
-    .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-    .style("font-weight", "bold")
-    .text("pro Tag (total)");
 
   // Appends the case number from the bar currently hoovered over
   svg.append("text")
@@ -234,6 +211,30 @@ function adjustMonthlyAverageDE(selectedMonth){
         }) 
         .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
         .text(numberWithSpaces(monthlyAverageDE));
+
+
+  // Cases per day on the right next to the line chart
+  svg.append("text")
+    .attr("text-anchor", "start")
+    .attr("class", "gemeldete-infektionen")
+    .attr("fill", "#008080")
+    .attr("transform", `translate(${width+70}, 0)`)
+    .attr("x", 15)
+    .attr("dy", ".35em")
+    .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+    .style("font-weight", "bold")
+    .text("Gemeldete Infektionen");
+
+  svg.append("text")
+    .attr("text-anchor", "start")
+    .attr("class", "gemeldete-infektionen")
+    .attr("fill", "#008080")
+    .attr("transform", `translate(${width+70}, 15)`)
+    .attr("x", 15)
+    .attr("dy", ".35em")
+    .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+    .style("font-weight", "bold")
+    .text("pro Tag (total)");
 }
 
 function adjustMonthlyAverageBL(selectedBL, selectedMonth){
