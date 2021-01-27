@@ -1,5 +1,6 @@
 import { FetchData } from './getLineChartData.js';
 import { gatheredMonthlyData } from '../data/gatheredMonthlyData.js';
+import { AllData } from '../data/summedData.js';
 let svg, xAxis, yAxis, currentDomain, clickedBar;
 const blDomainStorage = [];
 
@@ -142,7 +143,7 @@ export function UpdateLineChartPathMonth(selectedMonth, selectedBL){
 
   selectedBL.forEach(bundesland => {
     const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
-    RemoveBundeslandFromLineChart(bundesland, selectedBL) 
+    RemoveBundeslandFromLineChart(bundesland, selectedBL, selectedMonth) 
     AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, usedColor)
   })
 }
@@ -151,10 +152,11 @@ export function UpdateLineChartPathMonth(selectedMonth, selectedBL){
 export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, selectedColor){
   let month = Number(selectedMonth[0].substr((selectedMonth[0].indexOf("-")+1), 2));
   month.toString();
+
   const dataOfSelectedMonthBl = gatheredMonthlyData[month][bundesland];
   visualiseCurve(svg, dataOfSelectedMonthBl, bundesland, selectedColor);
 
-  //adjustLegend(selectedBL, bundesland);
+  adjustLegend(selectedBL, selectedMonth);
   // Needed for intersection detection in lineChartView.js
   d3.select(".curve."+bundesland)._groups[0][0].classList.add('selected-curve');
   updateCaseNumbers(); 
@@ -171,20 +173,62 @@ export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, 
     })  */  
 }
 
-export function RemoveBundeslandFromLineChart(bundesland, selectedBL){
+export function RemoveBundeslandFromLineChart(bundesland, selectedBL, selectedMonth){
   svg.select(".curve."+bundesland).remove();
   svg.selectAll(".circles."+bundesland).remove();
-  //adjustLegend(selectedBL, bundesland);
+  adjustLegend(selectedBL, selectedMonth);
   updateCaseNumbers();
 }
 
-function adjustLegend(selectedBL, bl){
+
+function adjustLegend(selectedBL, selectedMonth){
+
+  let monthparam = Number(selectedMonth[0].substr((selectedMonth[0].indexOf("-")+1), 2));
+  monthparam.toString();
+
+  let monthlyTotalDE = 0;
+  AllData[monthparam-1].forEach(day => {
+    monthlyTotalDE += day.Infos.AnzahlFall;
+  })
+  let monthlyAverageDE = monthlyTotalDE/AllData[monthparam-1].length;
+  //console.log(monthlyAverageDE)
+  
 
   svg.selectAll(".legend").remove();
+
+  svg.append("text")
+        .attr("class", "legend")
+        .attr("text-anchor", "middle")
+        .attr("fill", "#008080")
+        .style("font-weight", "bold")
+        .attr("transform", () => {
+           return `translate(${margin.left}, ${height+margin.bottom-10})`
+        }) 
+        .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+        .text("Monatl. ø ");
+
+/*
+  svg.append("text")
+        .attr("class", "legend")
+        .attr("text-anchor", "middle")
+        .attr("fill", "#008080")
+        .style("font-weight", "bold")
+        .attr("transform", () => {
+           return `translate(${margin.left}, ${height+margin.bottom+5})`
+        }) 
+        .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+        .text(monthlyAverageDE);*/
   
   selectedBL.forEach((bundesland, i) => {
-    const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
+    
+    let monthlyBundesland = 0;
+    gatheredMonthlyData[monthparam][bundesland].forEach(day => {
+      monthlyBundesland += day.Infos.AnzahlFall;
+    })
 
+    let monthlyAverageBundesland = Math.floor(monthlyBundesland/gatheredMonthlyData[monthparam][bundesland].length);
+    
+    const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
     const position1 = (width+margin.left)/4
   
     if(i === 0) {
@@ -197,7 +241,7 @@ function adjustLegend(selectedBL, bl){
            return `translate(${position1}, ${height+margin.bottom-10})`
         }) 
         .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-        .text(bundesland);
+        .text(numberWithSpaces(monthlyAverageBundesland));
     }
 
     if(i === 1) {
@@ -210,7 +254,7 @@ function adjustLegend(selectedBL, bl){
            return `translate(${2*position1}, ${height+margin.bottom-10})`
         }) 
         .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-        .text(bundesland);
+        .text(numberWithSpaces(monthlyAverageBundesland));
     }
 
     if(i === 2) {
@@ -223,11 +267,16 @@ function adjustLegend(selectedBL, bl){
            return `translate(${3*position1}, ${height+margin.bottom-10})`
         }) 
         .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-        .text(bundesland);
+        .text(numberWithSpaces(monthlyAverageBundesland));
     }  
   })
 }
 
+function numberWithSpaces(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    return parts.join(".");
+}
 
 function visualiseCurve(svg, formattedData, classN, color){
   svg.append("path")
@@ -313,7 +362,7 @@ function addAxes(data){
       "months": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
       "shortMonths": ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
   })
-  const parseDate = d3.timeFormat("%d %B") // "%B %d, %Y" https://d3-wiki.readthedocs.io/zh_CN/master/Time-Scales/
+  const parseDate = d3.timeFormat("%d %b") // "%B %d, %Y" https://d3-wiki.readthedocs.io/zh_CN/master/Time-Scales/
   xA.tickFormat(d => parseDate(d));
 
   // Appends the xAxis
