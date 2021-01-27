@@ -4,23 +4,36 @@ let selectedCol;
 let selectedBundesland;
 //let selectedRegionNames = [];
 let clickedBlArray =[];
+
+let newRegionAdded;
+let regionColorArray = [];
+let usedColors = [ "#e29578", "#c16a70", "#A4AA88"];
+let availableColors = [ "#e29578", "#c16a70", "#A4AA88"];
+
 // Get Information of selected regions and month from main.js(From Landkarte and DatePicker)
 export function UpdateSelectedRegionsList(regionParam, regionSelected, monthParam, monthChanged, selectedColor, selectedBL){
-    
     selectedBundesland = selectedBL;
     selectedCol = selectedColor;
     let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2); // get only month string(ex. "03")
      let regionEng = ReplaceRegionNameWithEng(regionParam); // replace the German region name with the English one
-     let newRegionAdded = regionSelected;
+     newRegionAdded = regionSelected;
      let newMonthSelected = monthChanged;
  
      // Update array when new region is selected or deselected
-     if(newRegionAdded){ 
+     if(newRegionAdded){   
          CreateMobilityData(regionEng, month, newRegionAdded, newMonthSelected, selectedColor) 
+        //  firstColor = usedColors[0];
+        //  usedColors.shift();
+        //  usedColors.splice(usedColors.length, 0, firstColor);
+        //  console.log(usedColors);
      } else {
          // if the region is deselected´
          CreateArrayForTreemap([], regionEng, month, newRegionAdded, newMonthSelected)
-     }
+         lastColor = usedColors.length;
+         usedColors.pop();
+         usedColors.splice(0, 0, lastColor);
+         console.log(usedColors);
+        }
  }
  
  
@@ -146,27 +159,51 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
          .enter()
          .append("rect")
          .attr("id", (d) =>{return d.id;})
+         .attr("class", (d) =>{return d.data.region;})
          .attr('x', function (d) { return d.x0; })
          .attr('y', function (d) { return d.y0})
          .attr('width', function (d) { return d.x1 - d.x0; })
          .attr('height', function (d) { return d.y1 - d.y0})
          .style("fill", function(d){ 
-             let chosenColor;
+
+
+            let chosenColor;
+
              clickedBlArray.forEach((blName,i) => {
-                 if(blName == d.data.region){
-                     if(i== 0){
-                         chosenColor= "#e29578";
-                     } else if(i== 1){
-                        chosenColor= "#c16a70";
-                     } else if(i == 2){
-                        chosenColor= "#A4AA88";
-                     }
+                 if(blName === d.data.region){ 
+                    getAvailableColors();
+
+                     let col = isRegionInArray(d.data.region);
+                    console.log(col + d.data.region);
+                    if(col == false) {
+                        getAvailableColors();
+                        chosenColor = usedColors[0];
+
+                        let regionColor = {};
+                        
+                        regionColor.color = usedColors[0];
+                        regionColor.region =d.data.region;
+                        regionColorArray.push(regionColor);
+                        
+                        // var newUsedColors = usedColors.slice(1, usedColors.length + 1);
+                        // usedColors = newUsedColors;
+
+                        console.log(chosenColor);
+                    } else {
+                        var result = regionColorArray.find(obj => {
+                            return obj.region === d.data.region
+                          })
+                        
+                        chosenColor = result.color;
+                    }
+
                  }
              })
 
               return d3.color(chosenColor)
             })
          .style("opacity", function(d) {
+            
              return opacity(d.data[month])
          });
  
@@ -203,15 +240,61 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      .text(function(d){ 
          // Temporal: kurze Syntax und bessere Images
          if(d.data.transportation_type === "driving"){
-                return " "+ d.data[month]+"%"; }
+                return " "+ d.data[month]+"%" + " " +d.data.region; }
          else if(d.data.transportation_type === "walking"){
-                return " "+ d.data[month]+"%";
+                return " "+ d.data[month]+"%" + " " + d.data.region;
          } else if(d.data.transportation_type === "transit") {
-                return   " "+ d.data[month]+"%";
+                return   " "+ d.data[month]+"%" + " " + d.data.region;
          }})
      .attr("font-size", "14px")
      .attr("fill", "white")
      .attr("font-weight","bold")
+ }
+
+ function isRegionInArray(region){
+     console.log("in Array function");
+     let regionExists = false;
+
+     var result = regionColorArray.find(obj => {
+        return obj.region === region
+      })
+      if(result != undefined){
+        regionExists = true
+      } else {
+        regionExists = false
+      }
+      console.log("region " + regionExists);
+
+    return regionExists;
+ }
+
+ function getAvailableColors(){
+     let usedCols = [];
+     let ChosenColsArr = []
+     clickedBlArray.forEach((bl) => {
+         var colResult = regionColorArray.find(obj => {
+            return bl.region == obj.region;
+         }
+        )
+     })
+      var res = regionColorArray.forEach((c) => {
+        var result = clickedBlArray.find(obj => {
+            return obj.region === c.region;
+          })
+          
+        usedCols.push(c.color);
+        return result;
+     })
+     console.log(res);
+     console.log(usedCols);
+     console.log(availableColors);
+    let difference = availableColors
+                 .filter(x => !usedCols.includes(x))
+                 .concat(usedCols.filter(x => !availableColors.includes(x)));
+
+    console.log(difference);
+    usedColors = difference;
+    // return difference;
  }
 //get the color range for the selected state
  function getColorRange(){
