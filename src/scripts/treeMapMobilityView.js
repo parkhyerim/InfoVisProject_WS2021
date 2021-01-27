@@ -105,21 +105,21 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
  };
  function createTreeChart(hgroup, month){
      // Old treemap gets removed
-     d3.select("#treemap2").select("svg").remove();
+     d3.select("#treemapwrapper2").select("svg").remove();
  
      var margin = {top: 0, right: 30, bottom: 30, left: 30},
      width = 700 - margin.left - margin.right,
      height = 450 - margin.top - margin.bottom;
  
      var svg = d3.select("#treemapwrapper2")
-     .append("svg")
-     .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-     .attr("preserveAspectRatio", "xMinYMin meet")
-     .attr("viewBox", "0 0 700 450")
-     .classed("svg-content-responsive", true)
-     .append("g")
-     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 700 450")
+        .classed("svg-content-responsive", true)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
  
      // Then d3.treemap computes the position of each element of the hierarchy
      // The coordinates are added to the root object above

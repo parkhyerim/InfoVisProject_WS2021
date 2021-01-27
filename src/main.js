@@ -121,9 +121,14 @@ function mutationObserverMap(){
                     //add selected BL to selectedBL array
                     const index = selectedBL.indexOf(mutation.target.id)
                     selectedBL.splice(index, 1);
+                    
                     RemoveBundeslandFromLineChart(mutation.target.id, selectedBL, GetDateForFetch());
                 } 
+
                 updateTreeMap(mutation.target.id, newBLWasSelected)
+                if(selectedBL.length == 0){
+                    d3.select("#treemapwrapper2").select("svg").remove();
+                }
                 getBlDichte();
             }
         })  
