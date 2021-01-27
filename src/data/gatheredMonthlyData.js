@@ -1,5 +1,5 @@
 export const gatheredMonthlyData = {
-  "3": {
+  "2": {
     "Schleswig-Holstein": [
       {
         "Meldedatum": "Mon Mar 02 2020 01:00:00 GMT+0100 (Central European Standard Time)",
@@ -3593,7 +3593,7 @@ export const gatheredMonthlyData = {
       }
     ]   
   },
-  "4": {
+  "3": {
     
       "Schleswig-Holstein": [
         {
@@ -7445,7 +7445,7 @@ export const gatheredMonthlyData = {
       ]
     
   }, 
-  "5": {
+  "4": {
     "Schleswig-Holstein": [
       {
         "Meldedatum": "Fri May 01 2020 02:00:00 GMT+0200 (Central European Summer Time)",
@@ -11232,7 +11232,7 @@ export const gatheredMonthlyData = {
     ]
   
   },
-  "6": {
+  "5": {
       "Schleswig-Holstein": [
         {
           "Meldedatum": "Mon Jun 01 2020 02:00:00 GMT+0200 (Central European Summer Time)",
@@ -14795,7 +14795,7 @@ export const gatheredMonthlyData = {
       ]
     
   },
-  "7": {
+  "6": {
       "Schleswig-Holstein": [
         {
           "Meldedatum": "Wed Jul 01 2020 02:00:00 GMT+0200 (Central European Summer Time)",
@@ -18478,7 +18478,7 @@ export const gatheredMonthlyData = {
       ]
     
   },
-  "8": {
+  "7": {
       "Schleswig-Holstein": [
         {
           "Meldedatum": "Sat Aug 01 2020 02:00:00 GMT+0200 (Central European Summer Time)",
@@ -22425,7 +22425,7 @@ export const gatheredMonthlyData = {
       ]
     
   },
-  "9": {
+  "8": {
       "Schleswig-Holstein": [
         {
           "Meldedatum": "Tue Sep 01 2020 02:00:00 GMT+0200 (Central European Summer Time)",
@@ -26276,7 +26276,7 @@ export const gatheredMonthlyData = {
       ]
     
   },
-  "10": {
+  "9": {
       "Schleswig-Holstein": [
         {
           "Meldedatum": "Thu Oct 01 2020 02:00:00 GMT+0200 (Central European Summer Time)",
@@ -30279,7 +30279,7 @@ export const gatheredMonthlyData = {
       ]
     
   },
-  "11": {
+  "10": {
       "Schleswig-Holstein": [
         {
           "Meldedatum": "Sun Nov 01 2020 01:00:00 GMT+0100 (Central European Standard Time)",
@@ -34154,7 +34154,7 @@ export const gatheredMonthlyData = {
       ]
     
   },
-  "12": {
+  "11": {
       "Schleswig-Holstein": [
         {
           "Meldedatum": "Tue Dec 01 2020 01:00:00 GMT+0100 (Central European Standard Time)",
