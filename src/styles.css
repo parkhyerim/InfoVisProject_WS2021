@@ -90,11 +90,12 @@ display: table !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: auto;
-  margin-right: auto;
+
   width: 5;
 }
-
+.btn-group{
+  margin-right: auto;
+}
 .btn-group>.btn-inactive {
   background-color: #e5f2f2;
   width: 110px;
@@ -136,7 +137,7 @@ display: table !important;
 }
 #treemapContainer{
   min-height: 100vh;
-  padding:50px;
+  padding:70px;
 }
 #treemapwrapper{
   display: flex;
@@ -149,6 +150,8 @@ display: table !important;
   justify-content: center;
 }
 #iconContainer{
+  padding-top: 6vh; 
+  padding-bottom: 4vh; 
   height:8vh; 
   margin-bottom:0px;
   display: flex;
@@ -254,19 +257,23 @@ display: table !important;
 .tabs .tab a{
   color:teal!important;
   background-color: white;
+
 }
 .tabs .tab a:hover {
   background-color:#cfd9dd!important;
   color:white!important;
+
 }
 .tabs .tab a.active {
   background-color:teal!important;
   color:white!important;
+
 } /*Background and text color when a tab is active*/
 
 .tabs .indicator {
   background-color:white!important;
   height: 20px;
+
 } /*Color of underline*/
 
 
