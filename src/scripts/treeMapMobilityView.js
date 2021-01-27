@@ -1,19 +1,17 @@
-import { getClickedBlArray } from './mapGermany.js';
 
-let selectedCol; 
+
+
 let selectedBundesland;
 //let selectedRegionNames = [];
 let clickedBlArray =[];
 
 let newRegionAdded;
-let regionColorArray = [];
 let usedColors = [ "#e29578", "#c16a70", "#A4AA88"];
-let availableColors = [ "#e29578", "#c16a70", "#A4AA88"];
 
 // Get Information of selected regions and month from main.js(From Landkarte and DatePicker)
-export function UpdateSelectedRegionsList(regionParam, regionSelected, monthParam, monthChanged, selectedColor, selectedBL){
+export function UpdateSelectedRegionsList(regionParam, regionSelected, monthParam, monthChanged, selectedBL){
     selectedBundesland = selectedBL;
-    selectedCol = selectedColor;
+
     let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2); // get only month string(ex. "03")
      let regionEng = regionParam;
      //ReplaceRegionNameWithEng(regionParam); // replace the German region name with the English one
@@ -22,26 +20,18 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
  
      // Update array when new region is selected or deselected
      if(newRegionAdded){   
-         CreateMobilityData(regionEng, month, newRegionAdded, newMonthSelected, selectedColor) 
-        //  firstColor = usedColors[0];
-        //  usedColors.shift();
-        //  usedColors.splice(usedColors.length, 0, firstColor);
-        //  console.log(usedColors);
+         CreateMobilityData(regionEng, month, newRegionAdded, newMonthSelected) 
+
      } else {
          // if the region is deselected´
          CreateArrayForTreemap([], regionEng, month, newRegionAdded, newMonthSelected)
-         lastColor = usedColors.length;
-         usedColors.pop();
-         usedColors.splice(0, 0, lastColor);
-         console.log(usedColors);
         }
  }
  
  
  // Create filtered data according to the region and the month selected
- function CreateMobilityData(regionParam, monthParam, regionSelected, monthChanged, selectedColor){
+ function CreateMobilityData(regionParam, monthParam, regionSelected, monthChanged){
      let mobilityData = [];
-     console.log(selectedColor);
     // Filter data only for Germany and the selected region and month only
      d3.csv('../src/data/Apple_mobility_shortened_german.csv').then(function(data){
          data.filter(function(element){
@@ -96,7 +86,6 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      data.forEach((d) =>{
         clickedBlArray.push(d[0].region);
      })
-     console.log(clickedBlArray);
     
      let groupArray = [];
  
@@ -141,10 +130,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
         (hgroup)
 
    
-         // color options
-         var color = d3.scale.linear()
-         .domain([1, 3])
-         .range(getColorRange())
+
          
  
      // Add a opacity scale
@@ -170,9 +156,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
 
             clickedBlArray.forEach(bundesland => {
                 if(d.data.region == bundesland){
-                    console.log(bundesland);
                     const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
-                   console.log(usedColor);
                    chosenColor = usedColor;
                 }
 
@@ -230,59 +214,8 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      .attr("font-weight","bold")
  }
 
- function isRegionInArray(region){
-     console.log("in Array function");
-     let regionExists = false;
 
-     var result = regionColorArray.find(obj => {
-        return obj.region === region
-      })
-      if(result != undefined){
-        regionExists = true
-      } else {
-        regionExists = false
-      }
-      console.log("region " + regionExists);
 
-    return regionExists;
- }
-
- function refreshRegionColArr(){
-
-    regionColorArray = regionColorArray.filter( i => clickedBlArray.includes( i.region ) );
-    console.log(regionColorArray);
-    d3.select()
-    return regionColorArray;
- }
-
- function getAvailableColors(){
-    refreshRegionColArr();
-     let usedCols = [];
-
-      refreshRegionColArr().forEach((c) => {
-        usedCols.push(c.color);
-     })
-     console.log(usedCols);
-     console.log(availableColors);
-    let difference = availableColors
-                 .filter(x => !usedCols.includes(x))
-                 .concat(usedCols.filter(x => !availableColors.includes(x)));
-
-    console.log(difference);
-    usedColors = difference;
-    // return difference;
- }
-//get the color range for the selected state
- function getColorRange(){
-     switch (selectedCol){
-        case "#e29578":
-            return [" #E29578", "#763219"];
-        case "#c16a70":
-            return["#c16a70", "#733035"];
-        case "#A4AA88":
-            return ["#A4AA88", "#5A5F44" ];
-     }
- }
  // Calculate the monthly average separately for the means of transportation 
  function CalculateMonthlyAverage(data){
      let monthName = "";  // to use for calculating of monthly average value
