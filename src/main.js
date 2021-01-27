@@ -10,7 +10,6 @@ const transportButton = document.getElementsByClassName('transport')
 
 let selectedBL = [];
 let blData ={};
-let colors = ["#e29578", "#c16a70", "#A4AA88"]
 
 function initialiseEvents(){
 
@@ -122,8 +121,7 @@ function mutationObserverMap(){
                     //add selected BL to selectedBL array
                     const index = selectedBL.indexOf(mutation.target.id)
                     selectedBL.splice(index, 1);
-
-                    RemoveBundeslandFromLineChart(mutation.target.id, selectedBL);
+                    RemoveBundeslandFromLineChart(mutation.target.id, selectedBL, GetDateForFetch());
                 } 
                 updateTreeMap(mutation.target.id, newBLWasSelected)
                 getBlDichte();
@@ -154,7 +152,7 @@ function getBlDichte(selectedColor) {
         const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
 
         container[i].children[0].children[0].innerHTML = blData[bundesland].Bundesland;
-        container[i].children[0].children[1].innerHTML = blData[bundesland].jeKM2 +" je km²";
+        container[i].children[0].children[1].innerHTML = blData[bundesland].jeKM2 +" Einwohner/km²";
         
         container[i].style["border-top"] = "solid 4px " + usedColor;
         container[i].style["border-bottom"] = "solid 4px " + usedColor;
