@@ -169,6 +169,8 @@ export function RemoveBundeslandFromLineChart(bundesland, selectedBL, selectedMo
 
 function adjustMonthlyAverageDE(selectedMonth){
   svg.selectAll(".legend-de").remove();
+  svg.selectAll(".gemeldete-infektionen").remove();
+  
 
   const month = new Date(selectedMonth[0]).getMonth();
 
