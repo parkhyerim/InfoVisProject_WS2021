@@ -95,13 +95,23 @@ function createCircularBarplot(data, testdata){
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + width / 2 + "," + ( height/2+100 )+ ")"); // Add 100 on Y translation, cause upper bars are longer
+
+    var arc = d3.arc()     // imagine your doing a part of a donut plot
+        .innerRadius(innerRadius)
+        .outerRadius(function(d) {
+            console.log(d)
+            return y(d.Value['03'].retail); })
+        .startAngle(function(d) { return x(d.state); })
+        .endAngle(function(d) { return x(d.state) + x.bandwidth(); })
+        .padAngle(0.01)
+        .padRadius(innerRadius)
+
     // X scale
     var x = d3.scaleBand()
         .range([0, 2 * Math.PI])    // X axis goes from 0 to 2pi = all around the circle. If I stop at 1Pi, it will be around a half circle
         .align(0)                  // This does nothing ?
         .domain(data.map(function(d) {return d.state; }) );
 
-    console.log(x);
 
     ; // The domain of the X axis is the list of states.
 
@@ -127,12 +137,6 @@ function createCircularBarplot(data, testdata){
         .data(d => d)
         .join("path")
         .attr("d", arc);
-
-
-
-
-
-
 
     /*
     var yAxis = g => g
