@@ -1,28 +1,35 @@
+let selectedBundesland;
+
+let clickedBlArray =[];
+
+let newRegionAdded;
 
 // Get Information of selected regions and month from main.js(From Landkarte and DatePicker)
-export function UpdateSelectedRegionsList(regionParam, regionSelected, monthParam, monthChanged){
-    // console.log(regionParam +  regionSelected + monthParam + monthChanged)
-     let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2); // get only month string(ex. "03")
-     let regionEng = ReplaceRegionNameWithEng(regionParam); // replace the German region name with the English one
-     let newRegionAdded = regionSelected;
+export function UpdateSelectedRegionsList(regionParam, regionSelected, monthParam, monthChanged, selectedBL){
+    selectedBundesland = selectedBL;
+
+    let month =  monthParam[0].substr((monthParam[0].indexOf("-")+1), 2); // get only month string(ex. "03")
+     let regionEng = regionParam;
+     //ReplaceRegionNameWithEng(regionParam); // replace the German region name with the English one
+     newRegionAdded = regionSelected;
      let newMonthSelected = monthChanged;
  
      // Update array when new region is selected or deselected
-     if(newRegionAdded){ 
-         CreateMobilityData(regionEng, month, newRegionAdded, newMonthSelected)
+     if(newRegionAdded){   
+         CreateMobilityData(regionEng, month, newRegionAdded, newMonthSelected) 
+
      } else {
          // if the region is deselected´
          CreateArrayForTreemap([], regionEng, month, newRegionAdded, newMonthSelected)
-     }
+        }
  }
  
  
  // Create filtered data according to the region and the month selected
  function CreateMobilityData(regionParam, monthParam, regionSelected, monthChanged){
      let mobilityData = [];
-  
     // Filter data only for Germany and the selected region and month only
-     d3.csv('../src/data/applemobilitytrends.csv').then(function(data){
+     d3.csv('../src/data/Apple_mobility_shortened_german.csv').then(function(data){
          data.filter(function(element){
              if (element.country == "Germany" 
                  && element["sub-region"] == "" 
@@ -31,9 +38,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
              }
          })
  
-         /**
-          * To calculate the monthly average
-          */
+         //To calculate the monthly average:
          // 1. Create a nested array 
          let nestedData = d3.group(mobilityData,  d => d.region, d => d.transportation_type)
          // 2. nested array over and over to get data by type of transport
@@ -68,16 +73,17 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
             regNameList.splice(index, 1)
             selectedRegionsData.splice(index, 1)
          }
-     } 
-     // console.log(regNameList)
-    // console.log(selectedRegionsData)
-    
-    // if(selectedRegionsData.length != 0)
+     }
+ 
      HierarchyTreemapData(selectedRegionsData, monthPram)
  }
  
- 
  function HierarchyTreemapData(data, month){
+    clickedBlArray=[];
+     data.forEach((d) =>{
+        clickedBlArray.push(d[0].region);
+     })
+    
      let groupArray = [];
      let selectedNumber = data.length;
  
@@ -97,104 +103,117 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
          
          createTreeChart(hgroup, month, selectedNumber); 
  };
+ function createTreeChart(hgroup, month){
+     // Old treemap gets removed
+     d3.select("#treemap2").select("svg").remove();
  
+     var margin = {top: 10, right: 10, bottom: 10, left: 10};
+     var width = 700; 
+     var height = 450; 
  
+     var svg = d3.select("#treemap2")
+     .append("svg")
+     .attr("width", width + 20)
+     .attr("height", height)
+     .append("g")
+     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
  
- function createTreeChart(hgroup, month, selectedNumber){
-    // console.log(hgroup.height)
-     if(selectedNumber == 0){
-          d3.select("#treemap2").select("svg").remove();
-     } else {
-    // Old treemap gets removed
-        d3.select("#treemap2").select("svg").remove();
-    
-        var margin = {top: 10, right: 10, bottom: 10, left: 10};
-        var width;
-        var height;
-        if(selectedNumber == 1) {
-            width = 300;
-            height = 300;
-        } else if (selectedNumber == 2) {
-            width = 540;
-            height = 270;
-        } else {
-            width = 810;
-            height = 270;
-        }
-    
-        var svg = d3.select("#treemap2")
-        .append("svg")
-        .attr("width", width + 20)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    
-        // Then d3.treemap computes the position of each element of the hierarchy
-        // The coordinates are added to the root object above
-        const treemap= d3.treemap()
-            .size([width, height])
-            .padding(2)
-            .paddingInner(2)
-            .round(true)
-            (hgroup)
-    
-        // color options
-        var color= d3.scale.linear().domain([60, 200]).range(["orange", "indianred"]);
-        var color1 = d3.scale.category10();
-        var color2 = d3.scale.category20();         
-        var color3 = d3.scale.category20b();  
-        var color4 = d3.scale.category20c();  
-    //  var color5 = d3.scaleOrdinal().domain(["1","2","3"]).range([ "#402D54", "#D18975", "#8FD175"])
-    
-    
-        // Add a opacity scale
-        var opacity =d3.scaleLinear()
-                    .domain([90, 200])
-                    .range([.6,1])
-    
-        // use this information to add rectangles:
-        svg
-            .selectAll("rect")
-            .data(treemap.leaves())
-            .enter()
-            .append("rect")
-            .attr("id", (d) =>{return d.id;})
-            .attr('x', function (d) { return d.x0; })
-            .attr('y', function (d) { return d.y0})
-            .attr('width', function (d) { return d.x1 - d.x0; })
-            .attr('height', function (d) { return d.y1 - d.y0})
-            .style("fill", function(d) {
-                return color2(d.data[month]);})
-            // .style("opacity", function(d) {
-            //     return opacity(d.data[month])
-            // });
-    
+     // Then d3.treemap computes the position of each element of the hierarchy
+     // The coordinates are added to the root object above
+    const treemap= d3.treemap()
+        .size([width, height])
+        .padding(2)
+        .paddingInner(2)
+        .round(true)
+        (hgroup)
+
+   
+
+         
+ 
+     // Add a opacity scale
+     var opacity =d3.scaleLinear()
+                 .domain([90, 200])
+                 .range([1,3])
+
+ 
+     // use this information to add rectangles:
+     svg
+         .selectAll("rect")
+         .data(treemap.leaves())
+         .enter()
+         .append("rect")
+         .attr("id", (d) =>{return d.id;})
+         .attr("class", (d) =>{return d.data.region;})
+         .attr('x', function (d) { return d.x0; })
+         .attr('y', function (d) { return d.y0})
+         .attr('width', function (d) { return d.x1 - d.x0; })
+         .attr('height', function (d) { return d.y1 - d.y0})
+         .style("fill", function(d){ 
+            let chosenColor;
+
+            clickedBlArray.forEach(bundesland => {
+                if(d.data.region == bundesland){
+                    const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
+                   chosenColor = usedColor;
+                }
+
+              })
+
+
+              return d3.color(chosenColor)
+            })
+         .style("opacity", function(d) {
             
-        // and to add the text labelsd
-        svg
-        .selectAll("text")
-        .data(treemap.leaves())
-        .enter()
-        .append("text")
-        .attr("x", function(d){ return d.x0+10})    // +10 to adjust position (more right)
-        .attr("y", function(d){ return d.y0+30})    // +20 to adjust position (lower)
-        .attr("dy", "1.1em")
-        .text(function(d){ 
-            // Temporal: kurze Syntax und bessere Images
-            if(d.data.transportation_type === "driving"){
-                return "🚘 " + d.data.region + ' ' +d.data.transportation_type +" "+ d.data[month]+"%"; }
-            else if(d.data.transportation_type === "walking"){
-                return "🚶‍♀️ " + d.data.region + ' ' + d.data.transportation_type +" "+ d.data[month]+"%";
-            } else if(d.data.transportation_type === "transit") {
-                return "🚌 "+ d.data.region + ' ' + d.data.transportation_type + " "+ d.data[month]+"%";
-            }})
-        .attr("font-size", "14px")
-        .attr("fill", "white")
-        .attr("font-weight","bold")
-        }
+             return opacity(d.data[month])
+         });
+ 
+    //add the icons 
+    svg
+    .selectAll("image")
+    .data(treemap.leaves())
+    .enter()
+    .append('image')
+    .attr('xlink:href', function(d){ 
+        // Temporal: kurze Syntax und bessere Images
+        if(d.data.transportation_type === "driving"){
+               return './img/Auto_icon.png' }
+        else if(d.data.transportation_type === "walking"){
+               return './img/Walking_icon.png';
+        } else if(d.data.transportation_type === "transit") {
+               return  './img/Transit_icon.png';
+        }})
+    .attr('class', 'icon')
+    .attr("x", function(d){ return d.x0+10})    // +10 to adjust position (more right)
+    .attr("y", function(d){ return d.y0+30}) 
+    .attr('width', 40)
+    .attr('height', 40)
+
+     //add the text labels
+     svg
+     .selectAll("text")
+     .data(treemap.leaves())
+     .enter()
+     .append("text")
+     .attr("x", function(d){ return d.x0+15})    // +10 to adjust position (more right)
+     .attr("y", function(d){ return d.y0+75})    // +20 to adjust position (lower)
+     .attr("dy", "1.1em")
+     .text(function(d){ 
+         // Temporal: kurze Syntax und bessere Images
+         if(d.data.transportation_type === "driving"){
+                return " "+ d.data[month]+"%" + " " +d.data.region; }
+         else if(d.data.transportation_type === "walking"){
+                return " "+ d.data[month]+"%" + " " + d.data.region;
+         } else if(d.data.transportation_type === "transit") {
+                return   " "+ d.data[month]+"%" + " " + d.data.region;
+         }})
+     .attr("font-size", "14px")
+     .attr("fill", "white")
+     .attr("font-weight","bold")
  }
- 
- 
+
+
+
  // Calculate the monthly average separately for the means of transportation 
  function CalculateMonthlyAverage(data){
      let monthName = "";  // to use for calculating of monthly average value
@@ -311,28 +330,5 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      }
  
  
-     function ReplaceRegionNameWithEng(regionParam){
-         switch (regionParam) {
-             case "Bayern":
-               return "Bavaria"
-             case "Hessen":
-               return "Hesse"
-             case "Niedersachsen":
-               return "Lower Saxony"
-             case "Nordrhein-Westfalen":
-                 return "North Rhine-Westphalia"
-             case "Bremen":
-                 return "Bremen (state)"
-             case "Rheinland-Pfalz":
-                 return "Rhineland-Palatinate"
-             case "Sachsen":
-                 return "Saxony"
-             case "Sachsen-Anhalt":
-                 return "Saxony-Anhalt"
-             case "Thüringen":
-              return "Thuringia"
-             default:   
-              return regionParam
-         }
-     }
+
      

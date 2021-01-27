@@ -184,6 +184,7 @@ function adjustLegend(selectedBL, bl){
   
   selectedBL.forEach((bundesland, i) => {
     const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
+   // console.log(d3.select("."+bundesland+".map"));
 
     const position1 = (width+margin.left)/4
   
@@ -199,6 +200,7 @@ function adjustLegend(selectedBL, bl){
         .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
         .text(bundesland);
     }
+   
 
     if(i === 1) {
       svg.append("text")

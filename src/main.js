@@ -93,7 +93,8 @@ function updateTreeMap(bl, newBLWasSelected){
         newBLWasSelected = true;
         monthChanged = true;
     } 
-    UpdateSelectedRegionsList(bl, newBLWasSelected, GetDateForFetch(), monthChanged);
+    
+    UpdateSelectedRegionsList(bl, newBLWasSelected, GetDateForFetch(), monthChanged, selectedBL);
 }
 
 
