@@ -175,14 +175,14 @@ display: table !important;
 #car{
   width: 6vh;
   padding:0vh;
-  margin: 1.5vh
+
 }
 #transit, #walk{
   width: 5vh;
   padding:0vh;
   /* margin-top: 1.5vh;
   margin-bottom: 1.5; */
-  margin: 1.5vh
+
 
 }
 
