@@ -8,6 +8,9 @@ const margin = {top:40, right: 160, bottom: 80, left: 60},
   width = 1000 - margin.left - margin.right,
   height = 350 - margin.top - margin.bottom;
 
+
+  let colors = ["#012333", "#345b6e", "#b3c1c8"]
+
 export async function ShowDEData(selectedMonth, allData){
     const month = new Date(selectedMonth[0]).getMonth();
     const casesDE = allData[month];
@@ -25,7 +28,7 @@ export async function ShowDEData(selectedMonth, allData){
       .data(casesDE)
       .enter().append("rect")
       .attr("class", "bar")
-      .attr("fill", "#b2dfdb")
+      .attr("fill", colors[2])
       .attr("x", d => xAxis(new Date(d.Meldedatum))-8)
       .attr("y", d => yAxis(new Date(d.Infos.AnzahlFall)))
       .attr("width", 16)
@@ -60,14 +63,14 @@ function clickBar(){
   // Reset previously clicked bar
   if(clickedBar != undefined){
     clickedBar
-      .attr("fill", "#b2dfdb")
+      .attr("fill", colors[1])
       .classed("clicked-bar", false)
   }
   clickedBar = d3.select(this);
   clickedBar.classed("clicked-bar", true);
 
   d3.select(this)
-    .attr("fill", "#008080"); 
+    .attr("fill", colors[0]); 
 
 
   const cases = clickedBar._groups[0][0].__data__.Infos.AnzahlFall;
@@ -79,7 +82,7 @@ function clickBar(){
     .attr("text-anchor", "start")
     .attr("class", "cases-germany")
     .attr("transform", `translate(${width+70}, ${40})`)
-    .attr("fill", "#008080")
+    .attr("fill", "#2b331f")
     .attr("x", 15)
     .attr("dy", ".35em")
     .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
@@ -183,7 +186,7 @@ function adjustMonthlyAverageDE(selectedMonth){
   svg.append("text")
         .attr("class", "legend-de")
         .attr("text-anchor", "left")
-        .attr("fill", "#008080")
+        .attr("fill", "#2b331f")
         .style("font-weight", "bold")
         .attr("transform", () => {
            return `translate(${margin.left}, ${height+margin.bottom-30})`
@@ -194,7 +197,7 @@ function adjustMonthlyAverageDE(selectedMonth){
   svg.append("text")
         .attr("class", "legend-de")
         .attr("text-anchor", "left")
-        .attr("fill", "#008080")
+        .attr("fill", "#2b331f")
         .style("font-weight", "bold")
         .attr("transform", () => {
            return `translate(${margin.left}, ${height+margin.bottom-15})`
@@ -206,7 +209,7 @@ function adjustMonthlyAverageDE(selectedMonth){
   svg.append("text")
         .attr("class", "legend-de")
         .attr("text-anchor", "left")
-        .attr("fill", "#008080")
+        .attr("fill", "#2b331f")
         .style("font-weight", "bold")
         .attr("transform", () => {
            return `translate(${margin.left}, ${height+margin.bottom+5})`
@@ -219,7 +222,7 @@ function adjustMonthlyAverageDE(selectedMonth){
   svg.append("text")
     .attr("text-anchor", "start")
     .attr("class", "gemeldete-infektionen")
-    .attr("fill", "#008080")
+    .attr("fill", "#2b331f")
     .attr("transform", `translate(${width+70}, 0)`)
     .attr("x", 15)
     .attr("dy", ".35em")
@@ -230,7 +233,7 @@ function adjustMonthlyAverageDE(selectedMonth){
   svg.append("text")
     .attr("text-anchor", "start")
     .attr("class", "gemeldete-infektionen")
-    .attr("fill", "#008080")
+    .attr("fill", "#2b331f")
     .attr("transform", `translate(${width+70}, 15)`)
     .attr("x", 15)
     .attr("dy", ".35em")

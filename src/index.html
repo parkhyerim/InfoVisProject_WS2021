@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://sinaschnebelt.github.io/src/">
+      
+      <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+     <meta http-equiv="X-WebKit-CSP" content="default-src 'self'; script-src 'self'">  -->
+
     <link rel="icon" href="data:,"> <!-- so that dev tools are quiet -->
     <title>InfoVis Project</title>
     <link rel="stylesheet" href="styles.css">
-
+      <script type="text/javascript">
+        document.head.innerHTML = document.head.innerHTML + "<base href='" + document.location.href + "' />";
+    </script> 
     <!-- jQuery needs to be imported before materialize.js-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -27,7 +35,8 @@
     <script type="module" src="./scripts/datePicker.js" ></script>
     <script type="module" src="./scripts/getLineChartData.js" ></script>
     <script type="module" src="./scripts/treeMapView.js"></script>
-    <script type="module" src="./scripts/treeMapMobilityView.js"></script>
+    <script type="module" language="text/javascript" src="./scripts/treeMapMobilityView.js"></script>
+   
 </head>
 
 <body>
@@ -41,7 +50,7 @@
             </div>
 
             <div class="row" id="btnContainer" >
-                <div class=" col s9 btn-group flex-wrap" role="group" >
+                <div class=" col s12 btn-group flex-wrap" role="group" >
                 <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date" id="selectedDate">März</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">April</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">Mai</button>
@@ -60,16 +69,23 @@
             </div>
            <div class="row " id="BevölkerungsdichteContainer">
                 <div class="col s3"> 
-                    <p style="font-size: 16px; margin-top: 10px;"></p>
-                    <p style="margin-bottom: 10px;"></p>
+                    <div class="row">                     
+                        <p class="col s12 blPar" style="font-size: 0.9vw; "></p>
+                        <p  class="col s12 blPar" style="font-size: 0.8vw; "></p>
+                    </div>
+
                 </div> 
                 <div class="col s3">
-                    <p style="font-size: 16px; margin-top: 10px;"></p>
-                    <p style="margin-bottom: 10px;"></p>
+                    <div class="row">                     
+                        <p class="col s12 blPar" style="font-size: 0.9vw; "></p>
+                        <p  class="col s12 blPar" style="font-size: 0.8vw; "></p>
+                    </div>
                 </div> 
                 <div class="col s3"> 
-                    <p style="font-size: 16px; margin-top: 10px;"></p>
-                    <p style="margin-bottom: 10px;"></p>
+                    <div class="row">                     
+                        <p class="col s12 blPar" style="font-size: 0.9vw; "></p>
+                        <p  class="col s12 blPar" style="font-size: 0.8vw; "></p>
+                    </div>
                 </div>
             </div>
             
@@ -98,8 +114,8 @@
 
                 <div class="col s12" id="treemapContainer">
                     <div class="row">
-                        <div class="col s12">
-                          <ul class="tabs">
+                        <div class="col s12 tabContainer" >
+                          <ul class="tabs" >
                             <li class="tab col s6"><a class="active" href="#treemap1">Deutschland gesamt</a></li>
                             <li class="tab col s6"><a href="#treemap2">Ausgewählte Bundesländer</a></li>
                           </ul>

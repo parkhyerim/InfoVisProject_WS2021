@@ -1,3 +1,50 @@
+
+:root {
+  /* --main: #546747;
+  --first: #a8b4a7;
+  --second: #fab73d;
+  --third: #fddca5;
+  --forth: #2b331f;
+  --fifth: #555b4b */
+
+  /* --main: #183440;
+  --first: #a9845c;
+  --second: #f2f5f7;
+  --third: #89bdd6;
+  --forth: #6d6e41; */
+/* 
+  --main: #3d6a66;
+  --first: #69849b;
+  --second: #dcdcdd;
+  --third: #d0c3bd;
+  --forth: #1d2424; */
+    /* let colors = ["#a5b5c3", "#495c6c", "#d0c3bd"] */
+
+    /* --main: #06604e;
+    --first: #cf7d08;
+    --second: #d5b18e;
+    --third: #d9dada;
+    --forth: #11201d; */
+    /* let colors = ["#cf7d08", "#d5b18e", "#c1b4b9"]
+    let colors = ["#02261f", "#06604e", "#9bbfb8"] */
+
+    /* --main: #3C6955;
+    --first: #abba82;
+    --second: #a7b5b7;
+    --third: #037c87;
+    --forth: #102020;
+    let colors = ["#abba82", "#037c87", "#a7b5b7"]
+    let colors = ["#102020", "#3C6955", "#9db4aa"] */
+
+    --main: #345b6e;
+
+    --first: #a9bcc6;
+    --second: #513e5c;
+    --third: #c7aabc;
+    --forth: #b8e3ea;
+}
+
+
 h1 {
   font-family: Montserrat, Arial, Helvetica, sans-serif;
   font-weight: 200;
@@ -73,7 +120,7 @@ display: table !important;
 }
 
 #titleContainer{
-  background-color: teal;
+  background-color: var(--main);
   text-align: center;
   font-size: 1.7rem;
   font-weight: bold;
@@ -100,7 +147,7 @@ display: table !important;
   background-color: #e5f2f2;
   width: 110px;
   margin-top: 3px;
-  color:teal
+  color: var(--main);
 }
 
 .btn-group>.btn {
@@ -119,16 +166,16 @@ display: table !important;
 }
 
 #selectedDate{
-  background-color:teal;
+  background-color:var(--main);;
   color: white
 }
 #selectedTransport{
   background-color: #cfd9dd;
-  border: solid teal;
+  border: solid var(--main);;
   cursor: pointer;
 }
 #treemapOption{
-  background-color:teal;
+  background-color:var(--main);;
 }
 
 #visualisationContainer{
@@ -251,12 +298,12 @@ display: table !important;
 }
 
 .material-icons{
-  color: teal;
+  color: var(--main);;
 }
 
 
 .tabs .tab a{
-  color:teal!important;
+  color:var(--main)!important;
   background-color: white;
 
 }
@@ -266,7 +313,7 @@ display: table !important;
 
 }
 .tabs .tab a.active {
-  background-color:teal!important;
+  background-color:var(--main)!important;
   color:white!important;
 
 } /*Background and text color when a tab is active*/

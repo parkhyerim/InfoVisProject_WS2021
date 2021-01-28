@@ -6,7 +6,7 @@ let labelBlArray = [];
 // `clickedBlArray` stores the names of all the Bundesländer which have been selected via click
 let clickedBlArray = [];
 
-let colors = ["#e29578", "#c16a70", "#A4AA88"]
+let colors = ["#513e5c", "#c7aabc", "#a9bcc6"]
 //let colors = ["#806680", "#668cb3", "#b2b366"]
 
 export async function LoadMap(){
