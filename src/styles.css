@@ -173,12 +173,12 @@ display: table !important;
 }
 
 #car{
-  width: 6vh;
+  width: 5.3vh;
   padding:0vh;
 
 }
 #transit, #walk{
-  width: 5vh;
+  width: 4.1vh;
   padding:0vh;
   /* margin-top: 1.5vh;
   margin-bottom: 1.5; */
