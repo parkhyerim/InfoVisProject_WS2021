@@ -2,7 +2,7 @@ import { InitializeSVG, UpdateLineChartPathMonth, ShowDEData, AddBundeslandToLin
 import { GetDateForFetch, allMonths } from './scripts/datePicker.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
-import { UpdateSelectedRegionsList } from './scripts/treemapMobilityView.js';
+import { UpdateSelectedRegionsList } from './scripts/treeMapMobilityView.js';
 import { AllData } from './data/summedData.js';
 
 const dateButtons = document.getElementsByClassName('date');
