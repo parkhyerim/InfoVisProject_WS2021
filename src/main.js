@@ -1,19 +1,15 @@
 import { InitializeSVG, UpdateLineChartPathMonth, ShowDEData, AddBundeslandToLineChart, RemoveBundeslandFromLineChart } from './scripts/lineChartView.js';
 import { GetDateForFetch, allMonths } from './scripts/datePicker.js';
-import { GetCasesDE } from './scripts/getLineChartData.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
-import { UpdateSelectedRegionsList } from './scripts/treemapMobilityView.js';
+import { UpdateSelectedRegionsList } from './scripts/treeMapMobilityView.js';
+import { AllData } from './data/summedData.js';
 
 const dateButtons = document.getElementsByClassName('date');
 const transportButton = document.getElementsByClassName('transport')
 
 let selectedBL = [];
-const allDataTempArray = [];
-let allData = {};
-let blData =[];
-let colors = ["#e29578", "#c16a70", "#A4AA88"]
-
+let blData ={};
 
 function initialiseEvents(){
 
@@ -21,7 +17,7 @@ function initialiseEvents(){
     // LoadMap().then(() => mutationObserverMap());
     LoadMap().then(function(){
         mutationObserverMap();
-        mutationObserverTreeMap();
+        //mutationObserverTreeMap();
     } );
 
     eventListenerDatePicker();
@@ -32,25 +28,12 @@ function initialiseEvents(){
         $('.tabs').tabs();
         $('.tooltipped').tooltip();
         $('.modal').modal();
-       // getBlDichte();    
-    })
+        getBlDichte();    
+    })    
 
     Displaymobilitydata(GetDateForFetch());
     
-    // Gather data for all months for DE and add line chart for all DE cases   
-    gatherData().then(() => {
-        allData = allDataTempArray.reduce((accumulator, currentValue) => {
-
-            let month = new Date(currentValue[0].Meldedatum).getMonth();
-            
-            if(accumulator[month] === undefined){
-                accumulator[month] = currentValue
-            }
-            return accumulator
-        }, {})
-        document.getElementById("spinner").classList.remove("active");
-        ShowDEData(GetDateForFetch(), allData)
-    })
+    ShowDEData(GetDateForFetch(), AllData)
 
     eventListenerTreemap();
     transportButton[0].setAttribute("id", "selectedTransport");
@@ -61,7 +44,7 @@ function eventListenerDatePicker() {
      //adds an event listener for every Date in the Dropdown
     for(let date of dateButtons){
         date.addEventListener('click', ()=> {
-            mutationObserverMap();
+            //mutationObserverMap();
 
             //datePickerButton.textContent = date.textContent;
             if(document.getElementById('selectedDate') !== null){
@@ -70,7 +53,7 @@ function eventListenerDatePicker() {
 
             date.setAttribute("id", "selectedDate");
            
-            ShowDEData(GetDateForFetch(), allData);
+            ShowDEData(GetDateForFetch(), AllData);
             //when date is selected: update lineChart for every checked BL in the map    
             UpdateLineChartPathMonth(GetDateForFetch(), selectedBL)
 
@@ -84,23 +67,6 @@ function eventListenerDatePicker() {
     } 
 }
 
-async function gatherData(){
-    document.getElementById("spinner").classList.add("active");
-
-    //const startDate = new Date()
-    const promises = [];
-
-    for(let i=0; i<allMonths.length; i++){
-        promises.push(
-            GetCasesDE(allMonths[i]).then(casesDE => {
-                //const endDate = new Date()
-                //console.log((endDate-startDate)/1000)
-                allDataTempArray.push(casesDE)
-            })
-        )
-    }
-    return Promise.all(promises)
-}
 
 function eventListenerTreemap(){
 
@@ -126,12 +92,13 @@ function updateTreeMap(bl, newBLWasSelected){
         newBLWasSelected = true;
         monthChanged = true;
     } 
-    UpdateSelectedRegionsList(bl, newBLWasSelected, GetDateForFetch(), monthChanged);
+    
+    UpdateSelectedRegionsList(bl, newBLWasSelected, GetDateForFetch(), monthChanged, selectedBL);
 }
+
 
 function mutationObserverMap(){
     const mapSelectedBl = document.getElementsByTagName('path');
-    //console.log(mapSelectedBl)
     /** MutationObserver looks at all the html text elements and has a look if their
         attributes changed. If the class attribute changed to `selected-bl` a new Bundesland
         has been selected in the map
@@ -142,21 +109,26 @@ function mutationObserverMap(){
                 let newBLWasSelected;
 
                 if(mutation.target.classList[2] === 'selected-bl'){
+                    const selectedColor = mutation.target.getAttribute('fill');
                     newBLWasSelected = true;
                     //add selected BL to selectedBL array
                     selectedBL.push(mutation.target.id);
 
-                    const selectedColor = mutation.target.getAttribute('fill');
                     AddBundeslandToLineChart(mutation.target.id, GetDateForFetch(), selectedBL, selectedColor);
+                    getBlDichte(selectedColor)
                 } else {
                     newBLWasSelected = false;
                     //add selected BL to selectedBL array
                     const index = selectedBL.indexOf(mutation.target.id)
                     selectedBL.splice(index, 1);
-
-                    RemoveBundeslandFromLineChart(mutation.target.id, selectedBL);
+                    
+                    RemoveBundeslandFromLineChart(mutation.target.id, selectedBL, GetDateForFetch());
                 } 
 
+                updateTreeMap(mutation.target.id, newBLWasSelected)
+                if(selectedBL.length == 0){
+                    d3.select("#treemapwrapper2").select("svg").remove();
+                }
                 getBlDichte();
             }
         })  
@@ -169,66 +141,39 @@ function mutationObserverMap(){
 }
 
 
-function mutationObserverTreeMap(){
-    const mapSelectedBl = document.getElementsByTagName('path');
-
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if(mutation.attributeName === 'class'){
-                let newBLWasSelected;
-
-                if(mutation.target.classList[2] === 'selected-bl'){
-                    newBLWasSelected = true;
-                    //add selected BL to selectedBL array
-                    selectedBL.push(mutation.target.id);            
-                  
-                } else {
-                    newBLWasSelected = false;
-                    //add selected BL to selectedBL array
-                    const index = selectedBL.indexOf(mutation.target.id)
-                    selectedBL.splice(index, 1)
-                } 
-                  updateTreeMap(mutation.target.id, newBLWasSelected)
-            }
-        })  
-    }) 
-    const config = { attributes: true };
-
-    for (let blMap of mapSelectedBl){
-        observer.observe(blMap, config);
-    }
-}
-
-function getBlDichte() {
+function getBlDichte(selectedColor) {
     let container = document.getElementById("BevölkerungsdichteContainer").children;
+    for(let i=0; i<3; i++){
+       // console.log(container[i].children[0].innerHTML)
+        if(container[i].children[0].children[0] !== undefined & container[i].children[0].children[1] !== undefined){
+            container[i].children[0].children[0].innerHTML = "";
+            container[i].children[0].children[1].innerHTML = "";  
+            container[i].style.visibility = "hidden";  
+        }
+    }
     
-    console.log(selectedBL)
     selectedBL.forEach((bundesland,i) =>{
+        container[i].style.visibility = "visible";
+        const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
 
-        blData.forEach((bl, j) =>{
-            if(bl.Bundesland == bundesland){
-                container[i].children[0].children[0].innerHTML = bl.Bundesland;
-                container[i].children[0].children[1].innerHTML = bl.jeKM2 +" je km²";
-                container[i].style["border-top"] = "solid 4px " + colors[i];
-                container[i].style["border-bottom"] = "solid 4px " + colors[i];
-                container[i].style["color"] = colors[i];
-
-
-            }
-        });
-
+        container[i].children[0].children[0].innerHTML = blData[bundesland].Bundesland;
+        container[i].children[0].children[1].innerHTML = blData[bundesland].jeKM2 +" Einwohner/km²";
         
+        container[i].style["border-top"] = "solid 4px " + usedColor;
+        container[i].style["border-bottom"] = "solid 4px " + usedColor;
+        container[i].style["color"] = usedColor;       
     });
 }
 
 function readBLDichte() {
-   
-
     d3.csv("../src/data/Bundesland-Dichte.csv").then(function(data) {
-        data.forEach(obj => {
-            
-            blData.push(obj);
-        })
+        blData = data.reduce((accumulator, currentvalue) => {
+            let bundesland = currentvalue.Bundesland
+            if(accumulator[bundesland] === undefined){
+                accumulator[bundesland] = currentvalue
+            }
+            return accumulator;
+        }, {});
     });
 }
 

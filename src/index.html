@@ -21,14 +21,13 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 
-    <script type="module" language="javascript" src="scripts/lineChartView.js" ></script>
-    <script type="module" language="javascript" src="main.js"></script>
-    <script type="module" src="scripts/mapGermany.js"></script>
-    <script type="module" src="scripts/datePicker.js" ></script>
-    <script type="module" src="scripts/getLineChartData.js" ></script>
-    <script type="module" src="scripts/treeMapView.js"></script>
-    <script type="module" src="scripts/treemapMobilityView.js"></script>
-
+    <script type="module" language="javascript" src="./scripts/lineChartView.js" ></script>
+    <script type="module" language="javascript" src="./main.js"></script>
+    <script type="module" src="./scripts/mapGermany.js"></script>
+    <script type="module" src="./scripts/datePicker.js" ></script>
+    <script type="module" src="./scripts/getLineChartData.js" ></script>
+    <script type="module" src="./scripts/treeMapView.js"></script>
+    <script type="module" src="./scripts/treeMapMobilityView.js"></script>
 </head>
 
 <body>
@@ -38,17 +37,16 @@
     <div class="row">
         <div class="col s4">
             <div class="row" id="titleContainer">
-                Auswirkungen der Covid-19 Pandemie auf die Mobilität
+                <p style = "font-size:1.3vw;">Auswirkungen der Covid-19 Pandemie auf die Mobilität 2020</p>
             </div>
 
             <div class="row" id="btnContainer" >
-                <div class=" col 12 btn-group flex-wrap" role="group" >
+                <div class=" col s9 btn-group flex-wrap" role="group" >
                 <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date" id="selectedDate">März</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">April</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">Mai</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">Juni</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">Juli</button>
-                    <br/>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">August</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">September</button>
                     <button type="button" style="white-space: normal;" class="btn btn-small btn-inactive date">Oktober</button>
@@ -98,60 +96,63 @@
             </div>
             <div class="row" >
 
-                <div class="col s7" id="treemapContainer">
+                <div class="col s12" id="treemapContainer">
                     <div class="row">
                         <div class="col s12">
                           <ul class="tabs">
                             <li class="tab col s6"><a class="active" href="#treemap1">Deutschland gesamt</a></li>
-                            <li class="tab col s6"><a href="#treemap2">Ausgewähle Bundesländer</a></li>
+                            <li class="tab col s6"><a href="#treemap2">Ausgewählte Bundesländer</a></li>
                           </ul>
                         </div>
 
                         <div id="treemap1" class="col s12">
                             <div class="row " id="iconContainer">
-                                <div class="col s11">
-                                    <div>
-                                        <img src="../src/img/Auto_icon.png" alt="Auto icon" width="110px" class="transport" name="driving">
-
-                                        <img src="../src/img/Walking_icon.png" alt="Walking icon" width="80px" class="transport" name="walking">
-
-                                        <img src="../src/img/Transit_icon.png" alt="Transit icon" width="90px" class="transport" name="transit">
-                                        Icons</div>
+                                <div class="col s6"  id="icons" style="margin-left: auto;">
+                                    <div class="col s3" id="car" > <img src="../src/img/Auto_icon.png" alt="Auto icon" class="transport responsive-img" name="driving"></div>
+                                    <div class="col s3" id="walk"> <img src="../src/img/Walking_icon.png" alt="Walking icon"  class="transport  responsive-img" name="walking"></div>
+                                    <div class="col s3" id="transit"> <img src="../src/img/Transit_icon.png" alt="Transit icon"   class="transport responsive-img" name="transit"> </div>
+                                    
                                 </div>
-                                <div class="col s1">
+                                <div class="col s1" style="margin-left: 0;">
                                     <!-- Modal Trigger -->
-                                    <a class="modal-trigger" href="#modal-TM1" > <i class="small material-icons">info</i></a>
+                                    <a class="modal-trigger" href="#modalTM1" > <i class="small material-icons">info</i></a>
                                 </div>
 
                             </div>
                             <div class="row">
                                 <!-- Container for Treemap with Mobility -->
-                                <div id="treemapwrapper"></div>
+                                <div class="col s12" id="treemapwrapper"></div>
 
                             </div>
                         </div>
                         <div id="treemap2" class="col s12">
                             <div class="row " id="iconContainer">
-                                <div class="col s1">
+                                
+                                <div class="col s1" >
                                     <!-- Modal Trigger -->
-                                    <a class="modal-trigger" href="#modal-TM2" > <i class="small material-icons">info</i></a>
+                                    <a class="modal-trigger" href="#modalTM2" > <i class="small material-icons">info</i></a>
                                 </div>
+
+                            </div>
+                            <div class="row">
+                                <!-- Container for Treemap with Mobility -->
+                                <div id="treemapwrapper2"></div>
 
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col s5" id="wordCloudContainer">WordCircle</div>
+                <!-- <div class="col s5" id="wordCloudContainer">WordCircle</div> -->
             </div>
 
 
         </div>
 
         <!-- Modal Structure -->
-        <div id="modal-TM1" class="modal">
+        <div id="modalTM1" class="modal">
             <div class="modal-content">
             <h4>Verkehrmittel-Nutzung in Deutschland</h4>
-            <p>Diese Treemap zeigt die monatliche Nutzung verschiedener Vekehrsmittel im Jahr 2020 im Vergleich zum ersten Monat des Jahres. Klicke auf die Transport Symbole um die Informationen des jeweiligen Transportmittels zu sehen.
+            <p>Diese Treemap zeigt die monatliche Nutzung verschiedener Vekehrsmittel (Auto, Gehen, Nahverkehr) in %. Die Werte sind relativ im Verhältnis zum 13.Januar 2020, welcher die 100% Baseline darstellt. Wähle ein Transportmittel, um die jeweiligen Informationen zu erhalten.
             </p>
 
             </div>
@@ -161,10 +162,10 @@
         </div>
 
         <!-- Modal Structure -->
-        <div id="modal-TM2" class="modal">
+        <div id="modalTM2" class="modal">
             <div class="modal-content">
             <h4>Verkehrmittel-Nutzung in Deutschland</h4>
-            <p>Diese Treemap zeigt die monatliche Nutzung verschiedener Vekehrsmittel im Jahr 2020 im Vergleich zum ersten Monat des Jahres. Klicke auf die Transport Symbole um die Informationen des jeweiligen Transportmittels zu sehen.
+            <p>Diese Treemap zeigt die monatliche Nutzung verschiedener Vekehrsmittel (Auto, Gehen, Nahverkehr) in %. Die Werte sind relativ im Verhältnis zum 13.Januar 2020, welcher die 100% Baseline darstellt. Wähle bis zu 3 Bundesländer aus.
             </p>
 
             </div>
