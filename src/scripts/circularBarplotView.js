@@ -12,7 +12,9 @@ export function Displaydestinationdata(selectedMonth="03"){
                 destinationData.push(element);
             }
         });
-        console.log(destinationData)
+
+        console.log(destinationData);
+
 
        const dataByRegion = destinationData.reduce((newdata, value) => {
             // Group initialization
@@ -33,44 +35,47 @@ export function Displaydestinationdata(selectedMonth="03"){
            let retail = 'retail_and_recreation_percent_change_from_baseline'
            let grocpharma = 'grocery_and_pharmacy_percent_change_from_baseline'
                currentmonth = currentmonth.substring(5, 7);
-                   if (newarray[destinationData[i].sub_region_1] == undefined) {
-                       newarray[destinationData[i].sub_region_1] = {}
-                       counterarray[destinationData[i].sub_region_1] = {}
-                   }
-                   if (newarray[destinationData[i].sub_region_1][currentmonth]!== undefined){
-                       newarray[destinationData[i].sub_region_1][currentmonth]["retail"] += parseFloat(destinationData[i][retail])
-                       newarray[destinationData[i].sub_region_1][currentmonth]["grocpharma"] += parseFloat(destinationData[i][grocpharma])
-                       counterarray[destinationData[i].sub_region_1][currentmonth] +=1
-                   }
-                   else {
-                      newarray[destinationData[i].sub_region_1][currentmonth] = {
-                           'retail' : parseFloat(destinationData[i][retail]),
-                           'grocpharma' : parseFloat(destinationData[i][grocpharma])
-                       }
+           if (newarray[currentmonth] == undefined) {
+               newarray[currentmonth] = []
+               counterarray[currentmonth] = []
+           }
 
-                       counterarray[destinationData[i].sub_region_1][currentmonth] =1
+           if (typeof (newarray[currentmonth][destinationData[i].sub_region_1]) == "undefined"){
 
-                   }
+               newarray[currentmonth][destinationData[i].sub_region_1]= {
+                   'state' : destinationData[i].sub_region_1,
+                   'retail' : parseFloat(destinationData[i][retail]),
+                   'grocpharma' : parseFloat(destinationData[i][grocpharma])
+
+               }
+               counterarray[currentmonth][destinationData[i].sub_region_1] =1
+
+           } else {
+               newarray[currentmonth][destinationData[i].sub_region_1]["state"] = destinationData[i].sub_region_1
+               newarray[currentmonth][destinationData[i].sub_region_1]["retail"] += parseFloat(destinationData[i][retail])
+               newarray[currentmonth][destinationData[i].sub_region_1]["grocpharma"] += parseFloat(destinationData[i][grocpharma])
+               counterarray[currentmonth][destinationData[i].sub_region_1] +=1
+           }
 
        }
 
-       for (var prop in newarray){
-           for (month in newarray[prop]){
-               newarray[prop][month]['retail'] = (parseFloat(newarray[prop][month]['retail']) / parseFloat(counterarray[prop][month])).toFixed(2)
-               newarray[prop][month]['grocpharma'] = (parseFloat(newarray[prop][month]['grocpharma']) / parseFloat(counterarray[prop][month])).toFixed(2)
-               newarray[prop][month]['total'] = (parseFloat(newarray[prop][month]['retail']) + parseFloat(newarray[prop][month]['grocpharma'])).toFixed(2)
+       for (var month in newarray){
+           for (var prop in newarray[month]){
+
+               newarray[month][prop]['retail'] = (parseFloat(newarray[month][prop]['retail']) / parseFloat(counterarray[month][prop])).toFixed(2)
+               newarray[month][prop]['grocpharma'] = (parseFloat(newarray[month][prop]['grocpharma']) / parseFloat(counterarray[month][prop])).toFixed(2)
+               newarray[month][prop]['total'] = (parseFloat(newarray[month][prop]['retail']) + parseFloat(newarray[month][prop]['grocpharma'])).toFixed(2)
            }
        }
 
         const arraydata = Object.entries(newarray).map(element => {
-            return {
-                state: element[0],
-                Value: element[1]
-            }
-        });
-        console.log(arraydata)
 
-        createCircularBarplot(arraydata, destinationData);
+            return Object.values(element[1])
+        });
+
+       console.log(arraydata[3])
+
+        createCircularBarplot(arraydata[3], destinationData);
     });
 
 };
@@ -78,8 +83,14 @@ export function Displaydestinationdata(selectedMonth="03"){
 Displaydestinationdata();
 
 function createCircularBarplot(data, testdata){
-    console.log(data[0].state);
-    console.log(data[0].Value["03"]);
+
+     //var keys = (Object.keys(data[0].Value["03"])).slice(-1);
+    var categories = ["retail","grocpharma"]
+
+ //   console.log(data[0]['01'].state)
+
+
+
 
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -99,8 +110,10 @@ function createCircularBarplot(data, testdata){
     var arc = d3.arc()     // imagine your doing a part of a donut plot
         .innerRadius(innerRadius)
         .outerRadius(function(d) {
-            console.log(d)
-            return y(d.Value['03'].retail); })
+
+
+            return y(d.total);
+                })
         .startAngle(function(d) { return x(d.state); })
         .endAngle(function(d) { return x(d.state) + x.bandwidth(); })
         .padAngle(0.01)
@@ -122,7 +135,7 @@ function createCircularBarplot(data, testdata){
 
     // set Z scale
     var z = d3.scaleRadial()
-        .domain(data.map(function(d) {return d.Value["03"]; }))
+        .domain(categories)
         .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"])
 
    // svg.append("g")
@@ -130,15 +143,19 @@ function createCircularBarplot(data, testdata){
 
     svg.append("g")
         .selectAll("g")
-        .data(d3.stack().keys(data[0])(data))
+        .data(d3.stack().keys(categories)(data))
         .join("g")
-        .attr("fill", d => z(d.key))
+        .attr("fill", d => {
+                console.log(d)
+                z(d.key)
+        }
+          )
         .selectAll("path")
         .data(d => d)
         .join("path")
         .attr("d", arc);
 
-    /*
+
     var yAxis = g => g
         .attr("text-anchor", "middle")
         .call(g => g.append("text")
@@ -163,7 +180,7 @@ function createCircularBarplot(data, testdata){
                 .attr("fill", "#000")
                 .attr("stroke", "none")))
 
-                */
+
 
 
     // Add bars
@@ -190,19 +207,20 @@ function createCircularBarplot(data, testdata){
 
      */
 
+    /*
 
-    // Add the labels
     svg.append("g")
         .selectAll("g")
         .data(data)
         .enter()
         .append("g")
         .attr("text-anchor", function(d) { return (x(d.state) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) < Math.PI ? "end" : "start"; })
-        .attr("transform", function(d) { return "rotate(" + ((x(d.state) + x.bandwidth() / 2) * 180 / Math.PI - 90) + ")"+"translate(" + (y(d.Value['03'].retail)+10) + ",0)"; })
+        .attr("transform", function(d) { return "rotate(" + ((x(d.state) + x.bandwidth() / 2) * 180 / Math.PI - 90) + ")"+"translate(" + (y(d.retail)+10) + ",0)"; })
         .append("text")
         .text(function(d){return(d.state)})
         .attr("transform", function(d) { return (x(d.state) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) < Math.PI ? "rotate(180)" : "rotate(0)"; })
         .style("font-size", "11px")
         .attr("alignment-baseline", "middle")
+*/
 
 }
