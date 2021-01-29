@@ -130,13 +130,13 @@ function createTreeChart(data, monthparam){
             d3.select(this).append('svg:tspan').attr('x', function(d){ return d.x0+5}).attr('dy', 20).text(d.data.region.substring(d.data.region.indexOf("-")+1, d.data.region.length))
         }
         })
-        .attr("font-size", "14px")
+        .attr("font-size", "13px")
         .attr("fill", "white")
         .append('svg:tspan')
         .attr('x', function(d){ return d.x0+5})
         .attr('dy', 20)
         .text(function(d){ return d.data[monthparam]+"%"})
-        .attr("font-size", "16px")
+        .attr("font-size", "14px")
         .attr("font-weight", "bold")
         .attr("fill", "white")
 }
