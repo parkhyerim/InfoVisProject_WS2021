@@ -9,7 +9,7 @@ const margin = {top:40, right: 160, bottom: 80, left: 60},
   height = 350 - margin.top - margin.bottom;
 
 
-  let colors = ["#012333", "#345b6e", "#b3c1c8"]
+  let colors = ["#0f5858", "#c4d2cc"]
 
 export async function ShowDEData(selectedMonth, allData){
     const month = new Date(selectedMonth[0]).getMonth();
@@ -28,7 +28,7 @@ export async function ShowDEData(selectedMonth, allData){
       .data(casesDE)
       .enter().append("rect")
       .attr("class", "bar")
-      .attr("fill", colors[2])
+      .attr("fill", colors[1])
       .attr("x", d => xAxis(new Date(d.Meldedatum))-8)
       .attr("y", d => yAxis(new Date(d.Infos.AnzahlFall)))
       .attr("width", 16)

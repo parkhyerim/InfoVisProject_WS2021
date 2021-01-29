@@ -28,20 +28,27 @@
     /* let colors = ["#cf7d08", "#d5b18e", "#c1b4b9"]
     let colors = ["#02261f", "#06604e", "#9bbfb8"] */
 
-    /* --main: #3C6955;
+    --main: #0f5858;
+    /* #024e55; */
+
+     /* #3c6769; */
+     /* #3C6955; */
     --first: #abba82;
     --second: #a7b5b7;
     --third: #037c87;
     --forth: #102020;
-    let colors = ["#abba82", "#037c87", "#a7b5b7"]
-    let colors = ["#102020", "#3C6955", "#9db4aa"] */
 
-    --main: #345b6e;
+ 
 
+    /* --main: #345b6e;
     --first: #a9bcc6;
     --second: #513e5c;
     --third: #c7aabc;
     --forth: #b8e3ea;
+    let colors = ["#513e5c", "#c7aabc", "#a9bcc6"]
+    let colors = ["#012333", "#345b6e", "#b3c1c8"] */
+
+
 }
 
 
@@ -220,18 +227,37 @@ display: table !important;
 }
 
 #car{
-  width: 5.3vh;
-  padding:0vh;
+
+
+  height: 45px;
+  background-image: url('../src/img/Auto_icon.png');
+  background-repeat: no-repeat;
+  background-size: contain;
 
 }
-#transit, #walk{
-  width: 4.1vh;
-  padding:0vh;
-  /* margin-top: 1.5vh;
-  margin-bottom: 1.5; */
+#transit{
 
+  height: 50px;
+  background-image: url('../src/img/Transit_icon.png');
+  background-repeat: no-repeat;
+  background-size: contain;
 
 }
+#walk{
+
+
+  height: 50px;
+  background-image: url("../src/img/Walking_icon.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+
+}
+/* #transit, #walk{
+  max-width: 50%;
+    height: 50%;
+    width: auto\9;
+  padding:0vh;
+} */
 
 #lineChartContainer{
   padding-top: 50px;
