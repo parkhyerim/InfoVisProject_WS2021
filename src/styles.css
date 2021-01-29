@@ -100,7 +100,7 @@ display: table !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 10px;
+
 
 }
 
@@ -145,22 +145,29 @@ display: table !important;
   align-items: center;
   justify-content: center;
 
-  width: 5;
+
 }
 .btn-group{
   margin-right: auto;
+  margin-left: auto;
+  text-align: center;
 }
 .btn-group>.btn-inactive {
   background-color: #e5f2f2;
-  width: 110px;
+
+  height: 3.8vh;
   margin-top: 3px;
   color: var(--main);
+  text-align: center;
 }
 
 .btn-group>.btn {
   -webkit-box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 0px 0px rgba(0, 0, 0, 0), 0 0px 0px 0 rgba(0, 0, 0, 0);
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 0px 0px rgba(0, 0, 0, 0), 0 0px 0px 0 rgba(0, 0, 0, 0);
   white-space: normal;
+  line-height: 3vh;
+  width: 12.9vh;
+  padding: 0
 
 }
 
@@ -176,11 +183,7 @@ display: table !important;
   background-color:var(--main);;
   color: white
 }
-.selectedTransport{
-  background-color: #cfd9dd;
-  border: solid var(--main);;
-  cursor: pointer;
-}
+
 #treemapOption{
   background-color:var(--main);;
 }
@@ -204,8 +207,8 @@ display: table !important;
   justify-content: center;
 }
 #iconContainer{
-  padding-top: 6vh; 
-  padding-bottom: 4vh; 
+  padding-top: 4vh; 
+
   height:8vh; 
   margin-bottom:0px;
   display: flex;
@@ -226,41 +229,47 @@ display: table !important;
   padding:50px;
 }
 
-#car{
+.selectedTransport{
+  cursor: pointer;
+  filter: grayscale(0%); 
+  filter: brightness(1.15); 
+}
+.unselectedTransport{
+  filter: grayscale(70%); 
 
-  height: 45px;
+}
+
+#driving{
+  height: 27px;
   background-image: url('../src/img/Auto_icon.png');
   background-repeat: no-repeat;
   background-size: contain;
+  margin-right: 3.5vh;;
 
 }
 #transit{
 
-  height: 50px;
+  height: 30px;
   background-image: url('../src/img/Transit_icon.png');
   background-repeat: no-repeat;
   background-size: contain;
 
 }
-#walk{
-
-
-  height: 50px;
+#walking{
+  height: 30px;
   background-image: url("../src/img/Walking_icon.png");
   background-repeat: no-repeat;
   background-size: contain;
 
 }
-/* #transit, #walk{
-  max-width: 50%;
-    height: 50%;
-    width: auto\9;
-  padding:0vh;
-} */
+
+.transport{
+  margin: 2vh;
+}
 
 #lineChartContainer{
-  padding-top: 50px;
-  height: 35vh;
+  padding-top: 40px;
+  height: 30vh;
   display: flex;
   align-items:center;
   justify-content: center;
@@ -280,7 +289,7 @@ display: table !important;
   margin-right: auto;  */
   font-weight: bold;
   text-align: center;
-  height: 11vh;
+  height: 12vh;
   display: flex;
   align-items:center;
   justify-content: center;
@@ -326,26 +335,45 @@ display: table !important;
   color: var(--main);;
 }
 
+.tabContainer .tabs{
+  height:5vh;
+  width: 80%;
+  font-size: small!important;
+
+
+}
+.tabContainer .tabs .tab{
+  height:5vh!important;
+  line-height: 5vh;
+
+}
 
 .tabs .tab a{
   color:var(--main)!important;
   background-color: white;
+  font-size: 1.5vh!important;
+  
+  padding: 0!important;
+  margin:0!important;
+  height:5vh!important;
 
 }
 .tabs .tab a:hover {
   background-color:#cfd9dd!important;
   color:white!important;
+  height:5vh!important;
 
 }
 .tabs .tab a.active {
   background-color:var(--main)!important;
   color:white!important;
+  height:5vh!important;
 
 } /*Background and text color when a tab is active*/
 
 .tabs .indicator {
   background-color:white!important;
-  height: 20px;
+  height: 1vh;
 
 } /*Color of underline*/
 

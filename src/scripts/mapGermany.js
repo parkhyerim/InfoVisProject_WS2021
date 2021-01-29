@@ -7,7 +7,7 @@ let labelBlArray = [];
 let clickedBlArray = [];
 
 
-let colors = ["#8fba82", "#8fba82", "#3C6955"]
+let colors = ["#8fba82", "#037c87", "#3C6955"]
 // let colors = ["#8fba82", "#037c87", "#96a49f"]
 
 

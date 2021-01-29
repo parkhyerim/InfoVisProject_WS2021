@@ -108,15 +108,15 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      d3.select("#treemapwrapper2").select("svg").remove();
  
      var margin = {top: 0, right: 30, bottom: 30, left: 30},
-     width = 700 - margin.left - margin.right,
-     height = 450 - margin.top - margin.bottom;
+     width = 580 - margin.left - margin.right,
+     height = 330 - margin.top - margin.bottom;
  
      var svg = d3.select("#treemapwrapper2")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 700 450")
+        .attr("viewBox", "0 0 580 330")
         .classed("svg-content-responsive", true)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -188,7 +188,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
         }})
     .attr('class', 'icon')
     .attr("x", function(d){ return d.x0+10})    // +10 to adjust position (more right)
-    .attr("y", function(d){ return d.y0+30}) 
+    .attr("y", function(d){ return d.y0+10}) 
     .attr('width', 40)
     .attr('height', 40)
 
@@ -199,7 +199,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      .enter()
      .append("text")
      .attr("x", function(d){ return d.x0+15})    // +10 to adjust position (more right)
-     .attr("y", function(d){ return d.y0+70})    // +20 to adjust position (lower)
+     .attr("y", function(d){ return d.y0+50})    // +20 to adjust position (lower)
      .attr("dy", "1.1em")
      .text(function(d){ 
          // Temporal: kurze Syntax und bessere Images

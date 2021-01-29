@@ -59,15 +59,15 @@ function createTreeChart(data, monthparam){
     d3.select("#treemapwrapper").select("svg").remove();
 
     var margin = {top: 0, right: 30, bottom: 30, left: 30},
-        width = 700 - margin.left - margin.right,
-        height = 450 - margin.top - margin.bottom;
+        width = 580 - margin.left - margin.right,
+        height = 330 - margin.top - margin.bottom;
 
     var svg = d3.select("#treemapwrapper")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 700 450")
+        .attr("viewBox", "0 0 580 330")
         .classed("svg-content-responsive", true)
         .append("g")
         .attr("transform", "translate(" +margin.left + "," + margin.top + ")");
@@ -134,7 +134,7 @@ function createTreeChart(data, monthparam){
         .attr("fill", "white")
         .append('svg:tspan')
         .attr('x', function(d){ return d.x0+5})
-        .attr('dy', 30)
+        .attr('dy', 20)
         .text(function(d){ return d.data[monthparam]+"%"})
         .attr("font-size", "16px")
         .attr("font-weight", "bold")

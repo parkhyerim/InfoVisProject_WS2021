@@ -6,7 +6,7 @@ const blDomainStorage = [];
 
 const margin = {top:40, right: 160, bottom: 80, left: 60},
   width = 1000 - margin.left - margin.right,
-  height = 350 - margin.top - margin.bottom;
+  height = 330 - margin.top - margin.bottom;
 
 
   let colors = ["#0f5858", "#c4d2cc"]
