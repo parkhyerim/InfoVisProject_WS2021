@@ -36,6 +36,7 @@ function initialiseEvents(){
     ShowDEData(GetDateForFetch(), AllData)
 
     eventListenerTreemap();
+    console.log(transportButton);
     transportButton[0].setAttribute("id", "selectedTransport");
 }
 

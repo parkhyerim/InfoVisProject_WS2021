@@ -93,7 +93,7 @@ function createTreeChart(data, monthparam){
     // Explanation from https://stackoverflow.com/questions/42546344/how-to-apply-specific-colors-to-d3-js-map-based-on-data-values?rq=1
     const color= d3.scale.linear()
                 .domain([30, 280])
-                .range(["#D29C1A", "#3C8863"]);
+                .range(["#8fba82", "#8fba82", "#3C6955"]);
               
 
     var blName= data[0].region;
