@@ -176,7 +176,7 @@ display: table !important;
   background-color:var(--main);;
   color: white
 }
-#selectedTransport{
+.selectedTransport{
   background-color: #cfd9dd;
   border: solid var(--main);;
   cursor: pointer;
@@ -227,7 +227,6 @@ display: table !important;
 }
 
 #car{
-
 
   height: 45px;
   background-image: url('../src/img/Auto_icon.png');

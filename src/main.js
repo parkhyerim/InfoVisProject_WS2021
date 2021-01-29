@@ -7,6 +7,7 @@ import { AllData } from './data/summedData.js';
 
 const dateButtons = document.getElementsByClassName('date');
 const transportButton = document.getElementsByClassName('transport')
+let car = document. getElementById("car");
 
 let selectedBL = [];
 let blData ={};
@@ -36,7 +37,7 @@ function initialiseEvents(){
     ShowDEData(GetDateForFetch(), AllData)
 
     eventListenerTreemap();
-    console.log(transportButton);
+
     transportButton[0].setAttribute("id", "selectedTransport");
 }
 
