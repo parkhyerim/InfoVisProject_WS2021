@@ -363,11 +363,7 @@ export function InitializeSVG(){
 
 
 function addAxes(data){
-  /** The next 7 lines initialize and format the labels of the xAxis nicely.    
-    If there are too less dates will be repeated on the x-axis. To avoid that we have to create a function 
-    for that edge case and work with xa.tickValues to set the labels manually.
-    xA.tickValues([new Date(data[0].Meldedatum), new Date(data[1].Meldedatum), new Date(data[2].Meldedatum)])
-  */
+  // The next lines initialize and format the labels of the xAxis nicely.    
   xAxis = d3.scaleTime()
               .domain(d3.extent(data, item => new Date(item.Meldedatum)))
               .range([0, width]);
@@ -400,11 +396,6 @@ function addAxes(data){
       .style("text-anchor", "end") //makes sure that the end of the text string is anchored to the ticks
       .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
 
-  /** Hides the last label, because that would display the next month which might be misleading.
-    Makes sure that still all the data of the month is fetched.
-  */     
-  //const labelNodelist = svg.selectAll("text")._groups[0];
-  //labelNodelist[labelNodelist.length-1].style.visibility = "hidden"
 
   // Initializes and formats the yAxis
   yAxis = d3.scaleLinear()
