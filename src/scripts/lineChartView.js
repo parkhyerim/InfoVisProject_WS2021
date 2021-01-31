@@ -1,15 +1,14 @@
 import { FetchData } from './getLineChartData.js';
 import { gatheredMonthlyData } from '../data/gatheredMonthlyData.js';
 import { AllData } from '../data/summedData.js';
-let svg, xAxis, yAxis, currentDomain, clickedBar;
-const blDomainStorage = [];
+let svg, xAxis, yAxis, clickedBar;
+let colors = ["#0f5858", "#c4d2cc"]
+
 
 const margin = {top:40, right: 160, bottom: 80, left: 60},
   width = 1000 - margin.left - margin.right,
   height = 330 - margin.top - margin.bottom;
 
-
-  let colors = ["#0f5858", "#c4d2cc"]
 
 export async function ShowDEData(selectedMonth, allData){
     const month = new Date(selectedMonth[0]).getMonth();
@@ -432,7 +431,4 @@ function addAxes(data){
               .tickSize(-width)
               .tickFormat("")
       );
-
-  const domain = d3.scaleLinear().domain([0, d3.max(data, item => item.Infos.AnzahlFall)])
-  currentDomain = domain.domain()[1]
 }
