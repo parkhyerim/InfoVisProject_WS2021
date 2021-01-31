@@ -100,7 +100,6 @@ function updateCaseNumbers(){
     const shownCurves = svg.selectAll(".curve.selected-curve")._groups[0]
 
     svg.selectAll(".case-numbers").remove(); 
-    svg.select(".case-numbers-label").remove(); 
     
     if(shownCurves !== undefined){
 
@@ -145,13 +144,16 @@ export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, 
   visualiseCurve(svg, dataOfSelectedMonthBl, bundesland, selectedColor);
 
   adjustMonthlyAverageBL(selectedBL, selectedMonth);
-  // Needed for intersection detection in lineChartView.js
+  
+  // Needed for updating the shown case numbers when a different month gets selected
   d3.select(".curve."+bundesland)._groups[0][0].classList.add('selected-curve');
+  
   updateCaseNumbers(); 
-   // If the internet connection is fast enough the data could be fetched live
+  
+  // If the internet connection is fast enough the data can also be fetched live
   /*FetchData(bundesland, selectedMonth)
     .then((data) => {
-      visualiseCurve(svg, data, bundesland, selectedColor); //"#D58E00"
+      visualiseCurve(svg, data, bundesland, selectedColor); 
     })
     .then(() => {
       adjustLegend(selectedBL, bundesland);
@@ -337,13 +339,10 @@ function removeDEData(){
   */
   svg.select(".y-axis").remove(); 
   svg.select(".x-axis").remove();
-  svg.select(".area").remove();
-  svg.select(".DE").remove();
   svg.selectAll(".bar").remove();
   svg.selectAll(".y-label").remove();  
   svg.selectAll(".grid").remove();
   svg.selectAll(".case-numbers").remove(); 
-  svg.select(".case-numbers-label").remove(); 
   svg.select(".gemeldete-infektionen").remove();
   svg.select(".cases-germany").remove(); 
 }
