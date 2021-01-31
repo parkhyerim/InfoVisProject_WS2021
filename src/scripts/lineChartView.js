@@ -1,6 +1,5 @@
 import { FetchData } from './getLineChartData.js';
-import { gatheredMonthlyData } from '../data/gatheredMonthlyData.js';
-import { AllData } from '../data/summedData.js';
+import { Covid19casesBundeslaenderMonthly, Covid19casesGermanyMonthly } from '../data/covid19Cases.js';
 let svg, xAxis, yAxis, clickedBar;
 let colors = ["#0f5858", "#c4d2cc"]
 
@@ -10,9 +9,9 @@ const margin = {top:40, right: 160, bottom: 80, left: 60},
   height = 330 - margin.top - margin.bottom;
 
 
-export async function ShowDEData(selectedMonth, allData){
+export async function ShowDEData(selectedMonth, covid19casesGermanyMonthly){
     const month = new Date(selectedMonth[0]).getMonth();
-    const casesDE = allData[month];
+    const casesDE = covid19casesGermanyMonthly[month];
 
     removeDEData();
     /** Function should load the axis and the graph for DE when loading the page (default month)
@@ -142,7 +141,7 @@ export function UpdateLineChartPathMonth(selectedMonth, selectedBL){
 export function AddBundeslandToLineChart(bundesland, selectedMonth, selectedBL, selectedColor){
   const month = new Date(selectedMonth[0]).getMonth();
 
-  const dataOfSelectedMonthBl = gatheredMonthlyData[month][bundesland];
+  const dataOfSelectedMonthBl = Covid19casesBundeslaenderMonthly[month][bundesland];
   visualiseCurve(svg, dataOfSelectedMonthBl, bundesland, selectedColor);
 
   adjustMonthlyAverageBL(selectedBL, selectedMonth);
@@ -177,10 +176,10 @@ function adjustMonthlyAverageDE(selectedMonth){
   const month = new Date(selectedMonth[0]).getMonth();
 
   let monthlyTotalDE = 0;
-  AllData[month].forEach(day => {
+  Covid19casesGermanyMonthly[month].forEach(day => {
     monthlyTotalDE += day.Infos.AnzahlFall;
   })
-  let monthlyAverageDE = Math.floor(monthlyTotalDE/AllData[month].length);
+  let monthlyAverageDE = Math.floor(monthlyTotalDE/Covid19casesGermanyMonthly[month].length);
   
   svg.append("text")
         .attr("class", "legend-de")
@@ -248,11 +247,11 @@ function adjustMonthlyAverageBL(selectedBL, selectedMonth){
 
   selectedBL.forEach((bundesland, i) => {
     let monthlyBundesland = 0;
-    gatheredMonthlyData[month][bundesland].forEach(day => {
+    Covid19casesBundeslaenderMonthly[month][bundesland].forEach(day => {
       monthlyBundesland += day.Infos.AnzahlFall;
     })
 
-    let monthlyAverageBundesland = Math.floor(monthlyBundesland/gatheredMonthlyData[month][bundesland].length);
+    let monthlyAverageBundesland = Math.floor(monthlyBundesland/Covid19casesBundeslaenderMonthly[month][bundesland].length);
     
     const usedColor = d3.select("."+bundesland+".map")._groups[0][0].getAttribute('fill');
     const position1 = ((width+margin.left)/4)+40

@@ -1,10 +1,8 @@
-import { allMonths } from './datePicker.js';
+import { AllDays } from './datePicker.js';
 
 const allBundesländer = ["Schleswig-Holstein", "Hamburg", "Nordrhein-Westfalen", "Bayern", "Baden-Württemberg", 
 "Hessen", "Niedersachsen", "Mecklenburg-Vorpommern", "Rheinland-Pfalz", "Saarland", "Sachsen", "Thüringen", 
 "Sachsen-Anhalt", "Brandenburg", "Bremen", "Berlin"];
-const allDataTempArray = [];
-let allDataDE = {};
 let dataBundesland = {};
 const dataBundeslandTempArray = [];
 
@@ -153,87 +151,3 @@ function groupDataByDate(casesData){
   
   return reportArr;
 }
-
-
-async function gatherData(){
-
-    //const startDate = new Date()
-    const promises = [];
-
-    for(let i=0; i<allMonths.length; i++){
-        promises.push(
-            GetCasesDE(allMonths[i]).then(casesDE => {
-                //const endDate = new Date()
-                //console.log((endDate-startDate)/1000)
-                allDataTempArray.push(casesDE)
-            })
-        )
-    }
-    return Promise.all(promises)
-}
-
-
-
-/** Helper functions to download the aggregated data for slow internet connections
-
-// Gather data for all the Bundesländer for every month
-let monthArray = [];
-let finalObject = {};
-
-allMonths.forEach(month => {
-  allBundes(month)
-  .then((allBlForAMonth) =>{
-      let monthparam = Number(month[0].substr((month[0].indexOf("-")+1), 2));
-      monthparam.toString();
-           
-      monthArray.push({[monthparam]: allBlForAMonth})
-  }).then(()=> {
-
-      let monthKey = Object.keys(monthArray[monthArray.length-1])[0];
-      if(finalObject[monthKey] === undefined){
-          finalObject[monthKey] = monthArray[monthArray.length-1];
-      }
-  
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(finalObject));
-      const dlAnchorElem = document.getElementById('downloadAnchorElem');
-      dlAnchorElem.setAttribute("href",     dataStr     );
-      dlAnchorElem.setAttribute("download", "gatheredMonthlyData.json");
-      dlAnchorElem.click(); 
-     
-  })
-})
-
-async function allBundes(month){
-  let allBlForAMonth = {};
-
-  for(let i=0; i<allBundesländer.length; i++){
-    await FetchData(allBundesländer[i], month)
-            .then((dataArray) => {
-              if(allBlForAMonth[allBundesländer[i]] === undefined){
-                allBlForAMonth[allBundesländer[i]] = dataArray
-              }
-            })
-  }
-  return allBlForAMonth;
-}
-
-// Gather data for all months for DE and add line chart for all DE cases   
-gatherData().then(() => {
-    allDataDE = allDataTempArray.reduce((accumulator, currentValue) => {
-
-        let month = new Date(currentValue[0].Meldedatum).getMonth();
-        
-        if(accumulator[month] === undefined){
-            accumulator[month] = currentValue
-        }
-        return accumulator
-    }, {})
-  
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allDataDE));
-    const dlAnchorElem = document.getElementById('downloadAnchorElem');
-    dlAnchorElem.setAttribute("href", dataStr);
-    dlAnchorElem.setAttribute("download", "allDataDE.json");
-})
-
- <a id="downloadAnchorElem">Download</a>
-*/

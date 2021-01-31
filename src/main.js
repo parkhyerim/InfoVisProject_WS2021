@@ -1,9 +1,10 @@
 import { InitializeSVG, UpdateLineChartPathMonth, ShowDEData, AddBundeslandToLineChart, RemoveBundeslandFromLineChart } from './scripts/lineChartView.js';
-import { GetDateForFetch, allMonths } from './scripts/datePicker.js';
+import { GetDateForFetch } from './scripts/datePicker.js';
 import { LoadMap } from './scripts/mapGermany.js';
 import { Displaymobilitydata } from './scripts/treeMapView.js';
 import { UpdateSelectedRegionsList } from './scripts/treeMapMobilityView.js';
-import { AllData } from './data/summedData.js';
+import { Covid19casesGermanyMonthly } from './data/covid19Cases.js';
+import { GetOfflineData } from './scripts/dataHelperFunctions.js';
 
 const dateButtons = document.getElementsByClassName('date');
 const transportButton = document.getElementsByClassName('transport')
@@ -27,12 +28,14 @@ function initialiseEvents(){
         $('.tabs').tabs();
         $('.tooltipped').tooltip();
         $('.modal').modal();
-        getBlDichte();    
+        getBlDichte(); 
+        // If the following line isn't commented out the fetched Covid19 cases data is automatically downloaded  
+        //GetOfflineData(); 
     })    
 
     Displaymobilitydata(GetDateForFetch());
     
-    ShowDEData(GetDateForFetch(), AllData)
+    ShowDEData(GetDateForFetch(), Covid19casesGermanyMonthly)
 
     eventListenerTreemap();
 
@@ -51,7 +54,7 @@ function eventListenerDatePicker() {
 
             date.setAttribute("id", "selectedDate");
            
-            ShowDEData(GetDateForFetch(), AllData);
+            ShowDEData(GetDateForFetch(), Covid19casesGermanyMonthly);
             //when date is selected: update lineChart for every checked BL in the map    
             UpdateLineChartPathMonth(GetDateForFetch(), selectedBL)
 
