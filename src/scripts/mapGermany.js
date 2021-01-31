@@ -14,6 +14,7 @@ let colors = ["#8fba82", "#037c87", "#3C6955"]
 export async function LoadMap(){
 
 	// Source http://opendatalab.de/projects/geojson-utilities/
+	// Manually removed water https://geojson.io/#map=7/48.575/9.701
 	await d3.json('../src/data/bundeslaender.geojson').then((geojson)=>{
 				
 		const width = 600;
@@ -77,16 +78,12 @@ function clickEvent(){
 		d3.select("."+clickedBl)
 			.attr("fill", firstColor)
 
-		//d3.select(".label." + clickedBl)._groups[0][0].style.visibility = "visible";
 
 		clickedBlArray.push(clickedBl);
 		
 		// Necessary to get the selected Bundesland in main.js
-		//d3.select(".label."+clickedBl)._groups[0][0].classList.add('selected-bl');
 		d3.select(".map."+clickedBl)._groups[0][0].classList.add('selected-bl');
 
-		//d3.select(".label."+clickedBl)._groups[0][0].classList.add(firstColor);
-		//d3.select(".path."+clickedBl)._groups[0][0].classList.add(firstColor);
 		// Removes the just used color from the first place of the array to the last
 		colors.shift();
 		colors.splice(colors.length, 0, firstColor);
@@ -108,20 +105,14 @@ function clickEvent(){
 			.attr("stroke", "#008080")  
 			.attr("stroke-width", 0.75)
 
-		//d3.select(".label." + clickedBl)._groups[0][0].style.visibility = "hidden"; // hides the Bundesland label
 		const indexBundesland = clickedBlArray.indexOf(clickedBl);
 		clickedBlArray.splice(indexBundesland, 1);
 		
 		// Necessary to get the selected Bundesland in main.js
-		//d3.select(".label."+clickedBl)._groups[0][0].classList.remove('selected-bl'); 	
 		d3.select(".map."+clickedBl)._groups[0][0].classList.remove('selected-bl'); 
-
-		//d3.select(".label."+clickedBl)._groups[0][0].classList.remove(revokedColor); 	
-		//d3.select(".label."+clickedBl)._groups[0][0].classList.remove(revokedColor); 	
 	} 
 	// Alert when more when the user wants to select more than 4 Bundesländer. This would get too messy for the line chart.
 	else if(clickedBlArray.length == 3){
-		M.toast({html: 'Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.'}, 3000);
-		// alert("Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.")
+		M.toast({html: 'Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.'}, 2000);
 	} 
 }

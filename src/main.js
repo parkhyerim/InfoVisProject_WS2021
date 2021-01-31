@@ -15,10 +15,8 @@ let blData ={};
 function initialiseEvents(){
 
     // Load map and add the mutation observer to its text fields
-    // LoadMap().then(() => mutationObserverMap());
     LoadMap().then(function(){
         mutationObserverMap();
-        //mutationObserverTreeMap();
     } );
 
     eventListenerDatePicker();
@@ -46,9 +44,7 @@ function eventListenerDatePicker() {
      //adds an event listener for every Date in the Dropdown
     for(let date of dateButtons){
         date.addEventListener('click', ()=> {
-            //mutationObserverMap();
 
-            //datePickerButton.textContent = date.textContent;
             if(document.getElementById('selectedDate') !== null){
                 document.getElementById('selectedDate').removeAttribute("id");
             }
@@ -91,13 +87,12 @@ function eventListenerTreemap(){
 
 
 function updateTreeMap(bl, newBLWasSelected){
-      // console.log(bl+ " " + newBLWasSelected)
+
     let monthChanged = false;
     if(newBLWasSelected === undefined) {
         newBLWasSelected = true;
         monthChanged = true;
-    } 
-    
+    }     
     UpdateSelectedRegionsList(bl, newBLWasSelected, GetDateForFetch(), monthChanged, selectedBL);
 }
 
