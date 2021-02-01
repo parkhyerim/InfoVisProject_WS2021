@@ -21,9 +21,9 @@ export function Displaydestinationdata(selectedMonth="03"){
            let currentmonth = destinationData[i].date;
            let retail = 'retail_and_recreation_percent_change_from_baseline'
            let grocpharma = 'grocery_and_pharmacy_percent_change_from_baseline'
-           //currentmonth = String(new Date(currentmonth).getMonth());
+           currentmonth = String(new Date(currentmonth).getMonth());
 
-            currentmonth = parseInt(currentmonth.substring(5, 7));
+            //currentmonth = parseInt(currentmonth.substring(5, 7));
            if (newarray[currentmonth] == undefined) {
                newarray[currentmonth] = []
                counterarray[currentmonth] = []
@@ -60,6 +60,7 @@ export function Displaydestinationdata(selectedMonth="03"){
        }
 
         const arraydata = Object.entries(newarray).map(element => {
+          console.log(element)
             return Object.values(element[1])
         });
 
@@ -77,9 +78,9 @@ function createCircularBarplot(data, testdata){
 
 
     // set the dimensions and margins of the graph
-    var margin = {top: 10, right: 10, bottom: 10, left: 10},
-        width = 460 - margin.left - margin.right,
-        height = 460 - margin.top - margin.bottom,
+    var margin = {top: 120, right: 10, bottom: 100, left: 10},
+        width = 1000 - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom,
         innerRadius = 50,
         outerRadius = Math.min(width, height) / 2;   // the outerRadius goes from the middle of the SVG area to the border
 
@@ -88,6 +89,9 @@ function createCircularBarplot(data, testdata){
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 1100 650")
+        .classed("svg-content-responsive", true)
         .append("g")
         .attr("transform", "translate(" + width / 2 + "," + ( height/2+100 )+ ")"); // Add 100 on Y translation, cause upper bars are longer
   
@@ -105,7 +109,7 @@ function createCircularBarplot(data, testdata){
     // set Z scale
     var z = d3.scaleOrdinal()
         .domain(categories)
-        .range(["#98abc5", "#8a89a6"])
+        .range(["#8fba82", "#037c87", "#3C6955"])
 
     const yAxis = g => g
       .attr("text-anchor", "middle")
@@ -114,7 +118,7 @@ function createCircularBarplot(data, testdata){
           .attr("dy", "-1em")
           .text("%"))
       .call(g => g.selectAll("g")
-          .data(y.ticks())
+          .data(y.ticks(5))
           .join("g")
           .attr("fill", "none")
           .call(g => g.append("circle")
@@ -126,8 +130,8 @@ function createCircularBarplot(data, testdata){
               .attr("dy", "0.35em")
               .attr("stroke-width", 5)
               .text(y.tickFormat(5, "s"))
-              .clone(true)
-              .attr("fill", "#008080")))
+              //.clone(true)
+              .attr("fill", "black")))
 
 
      const xAxis = g => g
@@ -143,6 +147,7 @@ function createCircularBarplot(data, testdata){
           //   .attr("x2", -5)
           //    .attr("stroke", "#000"))
           .call(g => g.append("text")
+              .attr("fill", "black")
               .attr("transform", d => (x(d.state) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI
                   ? "rotate(0)translate(20,0)"
                   : "rotate(0)translate(20,0)")
