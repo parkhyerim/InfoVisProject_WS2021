@@ -203,7 +203,7 @@ function adjustMonthlyAverageDE(selectedMonth){
            return `translate(${margin.left}, ${height+margin.bottom-15})`
         }) 
         .style("font-family", "BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
-        .text("pro Tag ø");
+        .text("pro Tag (Monatsdurchschnitt)");
 
 
   svg.append("text")
