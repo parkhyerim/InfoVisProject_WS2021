@@ -8,26 +8,15 @@ export function Displaydestinationdata(selectedMonth){
     let month, day;
     var temp = [];
 
-    var retail = 'retail_and_recreation_percent_change_from_baseline'
-    var grocpharma = 'grocery_and_pharmacy_percent_change_from_baseline'
-    var parks = 'parks_percent_change_from_baseline'
-    var transit = 'transit_stations_percent_change_from_baseline'
-    var work = 'workplaces_percent_change_from_baseline'
-    var residential = 'residential_percent_change_from_baseline'
+    let grocpharma = 'grocery_and_pharmacy_percent_change_from_baseline'
+    let transit = 'transit_stations_percent_change_from_baseline'
 
     d3.csv('../src/data/googlemobilityreport.csv').then(function(data){
-        var retail = 'retail_and_recreation_percent_change_from_baseline'
-        var grocpharma = 'grocery_and_pharmacy_percent_change_from_baseline'
-        var parks = 'parks_percent_change_from_baseline'
-        var transit = 'transit_stations_percent_change_from_baseline'
-        var work = 'workplaces_percent_change_from_baseline'
-        var residential = 'residential_percent_change_from_baseline'
-
         data.forEach(function(element) {
 
             if (element["country_region"] == "Germany" &&
-                element["sub_region_1"]!== "" && element["sub_region_1"]!== undefined && element[retail]!== "" && element[grocpharma]!== "" && element[parks]!== "" &&
-                element[transit]!== "" && element[work]!== "" && element[residential]!== "") {
+                element["sub_region_1"]!== "" && element["sub_region_1"]!== undefined && element[grocpharma]!== "" &&
+                element[transit]!== "") {
                 destinationData.push(element);
             }
         });
@@ -50,23 +39,15 @@ export function Displaydestinationdata(selectedMonth){
 
                newarray[currentmonth][destinationData[i].sub_region_1]= {
                    "state" : destinationData[i].sub_region_1,
-                   "retail" : parseInt(destinationData[i][retail]),
                    "grocpharma" : parseInt(destinationData[i][grocpharma]),
-                   "parks" : parseInt(destinationData[i][parks]),
                    "transit" : parseInt(destinationData[i][transit]),
-                   "work" : parseInt(destinationData[i][work]),
-                   "residential" : parseInt(destinationData[i][residential])
                }
                counterarray[currentmonth][destinationData[i].sub_region_1] =1
 
            } else {
                newarray[currentmonth][destinationData[i].sub_region_1]["state"] = destinationData[i].sub_region_1
-               newarray[currentmonth][destinationData[i].sub_region_1]["retail"] += parseInt(destinationData[i][retail])
                newarray[currentmonth][destinationData[i].sub_region_1]["grocpharma"] += parseInt(destinationData[i][grocpharma])
-               newarray[currentmonth][destinationData[i].sub_region_1]["parks"] += parseInt(destinationData[i][parks])
                newarray[currentmonth][destinationData[i].sub_region_1]["transit"] += parseInt(destinationData[i][transit])
-               newarray[currentmonth][destinationData[i].sub_region_1]["work"] += parseInt(destinationData[i][work])
-               newarray[currentmonth][destinationData[i].sub_region_1]["residential"] += parseInt(destinationData[i][residential])
                counterarray[currentmonth][destinationData[i].sub_region_1] +=1
 
            }
@@ -76,21 +57,16 @@ export function Displaydestinationdata(selectedMonth){
        for (var month in newarray){
            for (var prop in newarray[month]){
 
-               newarray[month][prop]['retail'] = parseInt(parseInt(newarray[month][prop]['retail']) / parseInt(counterarray[month][prop]))
                newarray[month][prop]['grocpharma'] = parseInt(parseInt(newarray[month][prop]['grocpharma']) / parseInt(counterarray[month][prop]))
-               newarray[month][prop]['parks'] = parseInt(parseInt(newarray[month][prop]['parks']) / parseInt(counterarray[month][prop]))
                newarray[month][prop]['transit'] = parseInt(parseInt(newarray[month][prop]['transit']) / parseInt(counterarray[month][prop]))
-               newarray[month][prop]['work'] = parseInt(parseInt(newarray[month][prop]['work']) / parseInt(counterarray[month][prop]))
-               newarray[month][prop]['residential'] = parseInt(parseInt(newarray[month][prop]['residential']) / parseInt(counterarray[month][prop]))
-               newarray[month][prop]['total'] = parseInt(parseInt(newarray[month][prop]['retail']) + parseInt(newarray[month][prop]['grocpharma']))
-                   + parseInt(newarray[month][prop]['parks'])+ parseInt(newarray[month][prop]['transit']) + parseInt(newarray[month][prop]['work']) + parseInt(newarray[month][prop]['residential'])
+               newarray[month][prop]['total'] = parseInt(newarray[month][prop]['grocpharma']) + parseInt(newarray[month][prop]['transit']) 
            }
        }
 
         const arraydata = Object.entries(newarray).map(element => {
             return Object.values(element[1])
         });
-
+        console.log(arraydata[chosenMonth])
         createCircularBarplot(arraydata[chosenMonth]);
     });
 
@@ -100,12 +76,12 @@ export function Displaydestinationdata(selectedMonth){
 
 function createCircularBarplot(data){
     
-    var categories = ["retail","grocpharma", "parks", "transit", "work", "residential"]
+    var categories = ["grocpharma", "transit"]
 
     // set the dimensions and margins of the graph
-    var margin = {top: 120, right: 0, bottom: 100, left: 200},
-        width = 900 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom,
+    var margin = {top: 0, right: 0, bottom: 100, left: 0},
+        width = 330 - margin.left - margin.right,
+        height = 330 - margin.top - margin.bottom,
         innerRadius = 30,
         outerRadius = Math.min(width, height) / 2;   // the outerRadius goes from the middle of the SVG area to the border
 
@@ -116,48 +92,35 @@ function createCircularBarplot(data){
         // .attr("width", width + margin.left + margin.right)
         // .attr("height", height + margin.top + margin.bottom)
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 1100 450")
+        .attr("viewBox", "0 0 700 600")
         .classed("svg-content-responsive", true)
         .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + ( height/2+100 )+ ")"); // Add 100 on Y translation, cause upper bars are longer
+        .attr("transform", "translate(" + 370 + "," + 180 + ")"); // Add 100 on Y translation, cause upper bars are longer
   
     // X scale
     var x = d3.scaleBand()
         .domain(data.map(d => d.state))
         .range([0, 2 * Math.PI])    // X axis goes from 0 to 2pi = all around the circle. If I stop at 1Pi, it will be around a half circle
         .align(0)                  // This does nothing ?
-      
-    let maxDomain;
-    if(d3.max(data, d => d.total) < 0){
-      maxDomain = d3.max(data, d => d.total)-d3.max(data, d => d.total);
-    } else {
-      maxDomain = d3.max(data, d => d.total)+d3.max(data, d => d.total);
-    }
-        
+              
     // Y scale
     var y = d3.scaleRadial()
-        .domain([d3.min(data, d => d.total)-10, maxDomain]) // Domain of Y is from 0 to the max seen in the data, CAN BE ADAPTED later!!!!
+        .domain([d3.min(data, d => d.total)-10, d3.max(data, d => d.total)+20]) // Domain of Y is from 0 to the max seen in the data, CAN BE ADAPTED later!!!!
         .range([innerRadius, outerRadius])   
-
-
-    /*const maxDomain = (d3.max(data, d => d.total) - d3.max(data, d => d. total))+20;
-    // Y scale
-    var y = d3.scaleRadial()
-        .domain([d3.min(data, d=> d.total)-10, maxDomain]) // Domain of Y is from 0 to the max seen in the data, CAN BE ADAPTED later!!!!
-        .range([innerRadius, outerRadius])   // Domain will be define later.*/
-
 
     // set Z scale
     var z = d3.scaleOrdinal()
         .domain(categories)
-        .range(d3.schemeSet3)
-        //.range(["#8fba82", "#037c87", "#3c6955", "#0f5858", "#c4d2cc", "#3498DB"])
+        //.range(d3.schemeSet3)
+        .range(["#abba82", "#037c87"])
 
     const yAxis = g => g
       .attr("text-anchor", "middle")
       .call(g => g.append("text")
           .attr("y", d => -y(y.ticks().pop()))
           .attr("dy", "-1em")
+           .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+          .attr("fill", "black")
           .text("%"))
       .call(g => g.selectAll("g")
           .data(y.ticks(5))
@@ -170,7 +133,7 @@ function createCircularBarplot(data){
           .call(g => g.append("text")
               .attr("y", d => -y(d))
               .attr("dy", "0.35em")
-              .style("font-style", "italic")
+              .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
               .attr("stroke-width", 5)
               .text(y.tickFormat(5, "s"))
               //.clone(true)
@@ -190,7 +153,7 @@ function createCircularBarplot(data){
           //   .attr("x2", -5)
           //    .attr("stroke", "#000"))
           .call(g => g.append("text")
-              .attr("fill", "#0f5858")
+              .attr("fill", "black")
               .attr("transform", d => (x(d.state) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI
                   ? `rotate(0)translate(${0},${0})`
                   : `rotate(0)translate(${0},${0})`)
@@ -200,7 +163,7 @@ function createCircularBarplot(data){
         .selectAll("g")
         .data(categories.reverse())
         .join("g")
-        .attr("transform", (d, i) => `translate(200,${(i - (categories.length - 1) / 2) * 20})`)
+        .attr("transform", (d, i) => `translate(150,${(i - (categories.length - 1) / 2) * 20})`)
         .call(g => g.append("rect")
             .attr("width", 18)
             .attr("height", 18)
@@ -209,18 +172,14 @@ function createCircularBarplot(data){
             .attr("x", 24)
             .attr("y", 9)
             .attr("dy", "0.35em")
+            .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
             .text(d => {
-                if(d === "retail") return "Einzelhandel";
                 if(d === "grocpharma") return "Apotheke";
-                if(d === "parks") return "Parks";
-                if(d === "transit") return "transit";
-                if(d === "work") return "work";
-                if(d === "residential") return "residential";
+                if(d === "transit") return "Haltestellen";
             }))
 
     var arc = d3.arc()     
       .innerRadius(d => {
-          //console.log(d);
           return y(d[0]);
       })
       .outerRadius(d => y(d[1]))
@@ -235,7 +194,7 @@ function createCircularBarplot(data){
         .join("g")
           .attr("fill", d => {return z(d.key)})
         .selectAll("path")
-        .data(d => {return d})
+        .data(d => {console.log(d);return d})
         .join("path")
           .attr("d", arc);
 

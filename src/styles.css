@@ -208,11 +208,11 @@ display: table !important;
 }
 
 #circularbarplot{
-  display: flex;
+  display: flex!important;
   align-items: center;
   justify-content: center;
-
 }
+
 #iconContainer{
   padding-top: 4vh; 
 
