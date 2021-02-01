@@ -214,13 +214,13 @@ Getestet in Firefox und Chrome
 - Korrektes Labelling der Werte zu den einzelnen Bundesländern (Laura)
 - Responsiveness implementiert (Christina)
 - Erstellung der Icons (Laura)
-###Herausforderungen:
+### Herausforderungen:
 - Jeder Datensatz zeigte ursprünglich die Prozentwerte der Nutzung eines Transportmittels je Bundesland zu verschiedenen Tagen an. Einige Datensätzen hatten fehlende Werte bei einzelnen Tagen und für den öffentlichen Nahverkehr als Transportmittel waren nur Datensätze zu insgesamt 11 Bundesländern vorhanden. Zu beachten war außerdem, dass verschiedene Monate eine unterschiedliche Anzahl an Tagen haben. Somit war es eine Herausforderung eine geeignete Verschachtelung mehrerer Schleifen zu finden, um die Daten je Bundesland und Transportmittel zu aggregieren und für jedes Bundesland und jeden Monat einen Divisor zu speichern, welcher anschließend den korrekten Durchschnittswert errechnet. 
 - Richtiger Durchschnittswert bekommen (fehlende Daten, unterschiedliche Anzahl von Tagen für jeden Monat etc.)
 - d3.js bietet keine automatisierte Funktion, welche Zeilenumbrüche bei zu langen Textfeldern einfügt oder sicherstellt, dass Text nicht über ein “rect”-Feld hinausragt. Lediglich mit “textlength” kann der Text entsprechend gestaucht oder durch Leerzeichen entsprechend gestreckt werden, dass er genau an die Größe des umhüllenden tspan-Elements passt, dies war jedoch visuell eine Verschlechterung. Es musste somit eine Funktion implementiert werden, welche die Bundesländer mit Bindestrichen in mehrere Substrings unterteilt und diese dann einzeln anfügt. 
 - Geeignete Hierarchie für die Treemap erstellen
 
-##circularBarplotView.js
+## circularBarplotView.js
 - Auswahl der Datenquelle, welche Daten zu verschiedenen Mobilitätszielen für jedes Bundesland anzeigt. (Laura)
 - Einlesen der Daten und Implementieren einer arithmetischen Funktion, sodass statt ursprünglich tagesbezogenen Prozentwerten ein monatlicher Durchschnittswert berechnet wird. Aufbereiten der Daten in einem Array, sodass diese von der d3.js stack()-Funktion verarbeitet werden können. (Laura)
 - Erstellung des d3.js Code-Grundgerüsts für das radiale Balkendiagramm. (Laura, Pia)
@@ -228,7 +228,7 @@ Getestet in Firefox und Chrome
 - Labelling der Bundesländer, Implementierung der Legende zu den Mobilitätszielen und Styling. (Pia)
 - Finale Formatierung und Ausrichtung der einzelnen Elemente zueinander, Parametrisierung der x-, y- und z-Achse sowie Auswahl der Farbgestaltung, sodass der Barplot sich harmonisch zu den vorhanden Visualiserungen einfügt. (Pia)
 - Responsiveness des radialen Balkendiagramms (Christina)
-###Herausforderungen
+### Herausforderungen
 - Eine dreistufige Schachtelung der Daten nach einzelnen Bundesländern, Monaten und Kategorie-Werten, musste verworfen werden, da die d3.js Function diese nicht verarbeiten kann. Dies machte die Anpassung des Arrays in eine übergeordnete Schachtelung nach Monat und im zweiten Schritt nach Bundesland notwendig. In einer Funktion, die die Bundesländer zu der Ebene mit den konkreten Kategorie-Werten verschachtelt, mussten die vorherigen JavaScript-Objects in einzelne Arrays umgewandelt werden. Die anschließende Funktion zur Geniererung des Barplots kann jeweils nur mit einem Array, welches die Werte für alle Bundesländer zu einem Monat enthält, als Parameter aufgerufen werden.
 - Die von d3.js bereitgestellte Stack()-Function zur Generierung des circular barplots führt zu Fehlern bei mehreren positiven und negativen Werten, da sequentiell die Differenzen zwischen einzelnen Array-Werten subtrahiert werden. Daher war eine Beschränkung auf 2 Kategorien notwendig. Die vorherige Implementierung mit sechs gleichzeitig abgebildeten Kategorien, welche bis auf die verfälschte Berechnung durch die stack()-Funktion, funktionsfähig war, musste verworfen werden.
 - Die asynchrone Funktion "arc", dass die Werte einfärbt und die Positionierung dieser.
