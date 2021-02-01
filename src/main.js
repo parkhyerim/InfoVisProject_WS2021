@@ -61,6 +61,7 @@ function eventListenerDatePicker() {
             UpdateLineChartPathMonth(GetDateForFetch(), selectedBL)
 
             Displaymobilitydata(GetDateForFetch(), document.getElementsByClassName('selectedTransport').name);
+            Displaydestinationdata(GetDateForFetch());
 
             selectedBL.forEach(bl =>{
                 updateTreeMap(bl, undefined)
