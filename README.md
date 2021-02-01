@@ -245,3 +245,5 @@ Getestet in Firefox und Chrome
 - Erstellen der Präsentation (Hyerim, Christina, Pia, Laura, Sina) 
 - Erstellen der finalen Präsentation & Screencast (Sina) 
 - Gantt Chart (Sina) 
+https://drive.google.com/file/d/16Up6VpgT4Ww9rbC3cfrU1eRgv_Lm7FBh/view
+
