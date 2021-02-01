@@ -6,7 +6,7 @@ let colors = ["#0f5858", "#c4d2cc"]
 
 const margin = {top:40, right: 160, bottom: 80, left: 60},
   width = 1000 - margin.left - margin.right,
-  height = 330 - margin.top - margin.bottom;
+  height = 320 - margin.top - margin.bottom;
 
 
 export async function ShowDEData(selectedMonth, covid19casesGermanyMonthly){

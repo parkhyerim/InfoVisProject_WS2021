@@ -108,15 +108,15 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      d3.select("#treemapwrapper2").select("svg").remove();
  
      var margin = {top: 0, right: 30, bottom: 30, left: 30},
-     width = 580 - margin.left - margin.right,
-     height = 330 - margin.top - margin.bottom;
+     width = 700 - margin.left - margin.right,
+     height = 340 - margin.top - margin.bottom;
  
      var svg = d3.select("#treemapwrapper2")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 580 330")
+        .attr("viewBox", "0 0 700 340")
         .classed("svg-content-responsive", true)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -125,7 +125,7 @@ export function UpdateSelectedRegionsList(regionParam, regionSelected, monthPara
      // The coordinates are added to the root object above
     const treemap= d3.treemap()
         .size([width, height])
-        .padding(4)
+        .padding(2)
         .paddingInner(2)
         .round(true)
         (hgroup)

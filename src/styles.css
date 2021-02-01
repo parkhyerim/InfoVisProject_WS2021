@@ -1,32 +1,6 @@
 
 :root {
-  /* --main: #546747;
-  --first: #a8b4a7;
-  --second: #fab73d;
-  --third: #fddca5;
-  --forth: #2b331f;
-  --fifth: #555b4b */
 
-  /* --main: #183440;
-  --first: #a9845c;
-  --second: #f2f5f7;
-  --third: #89bdd6;
-  --forth: #6d6e41; */
-/* 
-  --main: #3d6a66;
-  --first: #69849b;
-  --second: #dcdcdd;
-  --third: #d0c3bd;
-  --forth: #1d2424; */
-    /* let colors = ["#a5b5c3", "#495c6c", "#d0c3bd"] */
-
-    /* --main: #06604e;
-    --first: #cf7d08;
-    --second: #d5b18e;
-    --third: #d9dada;
-    --forth: #11201d; */
-    /* let colors = ["#cf7d08", "#d5b18e", "#c1b4b9"]
-    let colors = ["#02261f", "#06604e", "#9bbfb8"] */
 
     --main: #0f5858;
     /* #024e55; */
@@ -37,16 +11,6 @@
     --second: #a7b5b7;
     --third: #037c87;
     --forth: #102020;
-
- 
-
-    /* --main: #345b6e;
-    --first: #a9bcc6;
-    --second: #513e5c;
-    --third: #c7aabc;
-    --forth: #b8e3ea;
-    let colors = ["#513e5c", "#c7aabc", "#a9bcc6"]
-    let colors = ["#012333", "#345b6e", "#b3c1c8"] */
 
 
 }
@@ -192,24 +156,32 @@ display: table !important;
   min-height: 100vh;
   background-color: #e5f2f2;
 }
+#circleContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 #treemapContainer{
   min-height: 100vh;
   padding:7vh;
+
 }
 #treemapwrapper{
-  display: flex;
+  margin-left: 15vh;
+
+  /* display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
 }
 #treemapwrapper2{
-  display: flex;
+  margin-left: 15vh;
+  /* display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
 }
 #iconContainer{
-  padding-top: 4vh; 
-
-  height:8vh; 
+  padding-top: 3.7vh; 
+  height:7vh; 
   margin-bottom:0px;
   display: flex;
   align-items: center;
@@ -269,6 +241,7 @@ display: table !important;
 
 #lineChartContainer{
   padding-top: 40px;
+
   height: 30vh;
   display: flex;
   align-items:center;
@@ -322,6 +295,15 @@ display: table !important;
   max-height: 40%;
   width: 35%;
   will-change: top, opacity;
+}
+
+.modal-trigger{
+  position: absolute;
+  top: 93%
+}
+
+.modal-action .modal-close .btn  {
+ background-color: var(--main);
 }
 
 #toast-container {
