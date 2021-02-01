@@ -16,9 +16,18 @@ export function Displaydestinationdata(selectedMonth){
     var residential = 'residential_percent_change_from_baseline'
 
     d3.csv('../src/data/googlemobilityreport.csv').then(function(data){
+        var retail = 'retail_and_recreation_percent_change_from_baseline'
+        var grocpharma = 'grocery_and_pharmacy_percent_change_from_baseline'
+        var parks = 'parks_percent_change_from_baseline'
+        var transit = 'transit_stations_percent_change_from_baseline'
+        var work = 'workplaces_percent_change_from_baseline'
+        var residential = 'residential_percent_change_from_baseline'
+
         data.forEach(function(element) {
-           if (element["country_region"] == "Germany" &&
-                element["sub_region_1"]!== "" && element["sub_region_1"]!== undefined && element[retail]!== "" && element[grocpharma]!== "") {
+
+            if (element["country_region"] == "Germany" &&
+                element["sub_region_1"]!== "" && element["sub_region_1"]!== undefined && element[retail]!== "" && element[grocpharma]!== "" && element[parks]!== "" &&
+                element[transit]!== "" && element[work]!== "" && element[residential]!== "") {
                 destinationData.push(element);
             }
         });
@@ -42,8 +51,11 @@ export function Displaydestinationdata(selectedMonth){
                newarray[currentmonth][destinationData[i].sub_region_1]= {
                    "state" : destinationData[i].sub_region_1,
                    "retail" : parseInt(destinationData[i][retail]),
-                   "grocpharma" : parseInt(destinationData[i][grocpharma])
-
+                   "grocpharma" : parseInt(destinationData[i][grocpharma]),
+                   "parks" : parseInt(destinationData[i][parks]),
+                   "transit" : parseInt(destinationData[i][transit]),
+                   "work" : parseInt(destinationData[i][work]),
+                   "residential" : parseInt(destinationData[i][residential])
                }
                counterarray[currentmonth][destinationData[i].sub_region_1] =1
 
@@ -51,6 +63,10 @@ export function Displaydestinationdata(selectedMonth){
                newarray[currentmonth][destinationData[i].sub_region_1]["state"] = destinationData[i].sub_region_1
                newarray[currentmonth][destinationData[i].sub_region_1]["retail"] += parseInt(destinationData[i][retail])
                newarray[currentmonth][destinationData[i].sub_region_1]["grocpharma"] += parseInt(destinationData[i][grocpharma])
+               newarray[currentmonth][destinationData[i].sub_region_1]["parks"] += parseInt(destinationData[i][parks])
+               newarray[currentmonth][destinationData[i].sub_region_1]["transit"] += parseInt(destinationData[i][transit])
+               newarray[currentmonth][destinationData[i].sub_region_1]["work"] += parseInt(destinationData[i][work])
+               newarray[currentmonth][destinationData[i].sub_region_1]["residential"] += parseInt(destinationData[i][residential])
                counterarray[currentmonth][destinationData[i].sub_region_1] +=1
 
            }
@@ -60,9 +76,14 @@ export function Displaydestinationdata(selectedMonth){
        for (var month in newarray){
            for (var prop in newarray[month]){
 
-               newarray[month][prop]['retail'] = Math.floor(parseInt(newarray[month][prop]['retail']) / parseInt(counterarray[month][prop]))
-               newarray[month][prop]['grocpharma'] = Math.floor(parseInt(newarray[month][prop]['grocpharma']) / parseInt(counterarray[month][prop]))
-               newarray[month][prop]['total'] = Math.floor(parseInt(newarray[month][prop]['retail']) + parseInt(newarray[month][prop]['grocpharma']))
+               newarray[month][prop]['retail'] = parseInt(parseInt(newarray[month][prop]['retail']) / parseInt(counterarray[month][prop]))
+               newarray[month][prop]['grocpharma'] = parseInt(parseInt(newarray[month][prop]['grocpharma']) / parseInt(counterarray[month][prop]))
+               newarray[month][prop]['parks'] = parseInt(parseInt(newarray[month][prop]['parks']) / parseInt(counterarray[month][prop]))
+               newarray[month][prop]['transit'] = parseInt(parseInt(newarray[month][prop]['transit']) / parseInt(counterarray[month][prop]))
+               newarray[month][prop]['work'] = parseInt(parseInt(newarray[month][prop]['work']) / parseInt(counterarray[month][prop]))
+               newarray[month][prop]['residential'] = parseInt(parseInt(newarray[month][prop]['residential']) / parseInt(counterarray[month][prop]))
+               newarray[month][prop]['total'] = parseInt(parseInt(newarray[month][prop]['retail']) + parseInt(newarray[month][prop]['grocpharma']))
+                   + parseInt(newarray[month][prop]['parks'])+ parseInt(newarray[month][prop]['transit']) + parseInt(newarray[month][prop]['work']) + parseInt(newarray[month][prop]['residential'])
            }
        }
 
@@ -70,23 +91,22 @@ export function Displaydestinationdata(selectedMonth){
             return Object.values(element[1])
         });
 
-        //console.log(arraydata[chosenMonth])
         createCircularBarplot(arraydata[chosenMonth]);
     });
 
 };
 
 
-function createCircularBarplot(data){
-     
-    var categories = ["retail","grocpharma"]
 
+function createCircularBarplot(data){
+    
+    var categories = ["retail","grocpharma", "parks", "transit", "work", "residential"]
 
     // set the dimensions and margins of the graph
     var margin = {top: 120, right: 0, bottom: 100, left: 200},
         width = 900 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom,
-        innerRadius = 50,
+        innerRadius = 30,
         outerRadius = Math.min(width, height) / 2;   // the outerRadius goes from the middle of the SVG area to the border
 
     // append the svg object to the body of the page
@@ -113,17 +133,25 @@ function createCircularBarplot(data){
     } else {
       maxDomain = d3.max(data, d => d.total)+d3.max(data, d => d.total);
     }
-    console.log(d3.min(data, d => d.total)-5)
         
     // Y scale
     var y = d3.scaleRadial()
         .domain([d3.min(data, d => d.total)-10, maxDomain]) // Domain of Y is from 0 to the max seen in the data, CAN BE ADAPTED later!!!!
         .range([innerRadius, outerRadius])   
 
+
+    /*const maxDomain = (d3.max(data, d => d.total) - d3.max(data, d => d. total))+20;
+    // Y scale
+    var y = d3.scaleRadial()
+        .domain([d3.min(data, d=> d.total)-10, maxDomain]) // Domain of Y is from 0 to the max seen in the data, CAN BE ADAPTED later!!!!
+        .range([innerRadius, outerRadius])   // Domain will be define later.*/
+
+
     // set Z scale
     var z = d3.scaleOrdinal()
         .domain(categories)
-        .range(["#8fba82", "#037c87", "#3C6955"])
+        .range(d3.schemeSet3)
+        //.range(["#8fba82", "#037c87", "#3c6955", "#0f5858", "#c4d2cc", "#3498DB"])
 
     const yAxis = g => g
       .attr("text-anchor", "middle")
@@ -132,7 +160,7 @@ function createCircularBarplot(data){
           .attr("dy", "-1em")
           .text("%"))
       .call(g => g.selectAll("g")
-          .data(y.ticks(4))
+          .data(y.ticks(5))
           .join("g")
           .attr("fill", "none")
           .call(g => g.append("circle")
@@ -172,19 +200,23 @@ function createCircularBarplot(data){
         .selectAll("g")
         .data(categories.reverse())
         .join("g")
-          .attr("transform", (d, i) => `translate(200,${(i - (categories.length - 1) / 2) * 20})`)
-          .call(g => g.append("rect")
-              .attr("width", 18)
-              .attr("height", 18)
-              .attr("fill", z))
-          .call(g => g.append("text")
-              .attr("x", 24)
-              .attr("y", 9)
-              .attr("dy", "0.35em")
-              .text(d => {
+        .attr("transform", (d, i) => `translate(200,${(i - (categories.length - 1) / 2) * 20})`)
+        .call(g => g.append("rect")
+            .attr("width", 18)
+            .attr("height", 18)
+            .attr("fill", z))
+        .call(g => g.append("text")
+            .attr("x", 24)
+            .attr("y", 9)
+            .attr("dy", "0.35em")
+            .text(d => {
                 if(d === "retail") return "Einzelhandel";
                 if(d === "grocpharma") return "Apotheke";
-              }))
+                if(d === "parks") return "Parks";
+                if(d === "transit") return "transit";
+                if(d === "work") return "work";
+                if(d === "residential") return "residential";
+            }))
 
     var arc = d3.arc()     
       .innerRadius(d => {
@@ -214,7 +246,6 @@ function createCircularBarplot(data){
       .call(yAxis);
 
     svg.append("g")
-      .call(legend);
-
+        .call(legend);
 
 }
