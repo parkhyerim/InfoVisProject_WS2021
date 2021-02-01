@@ -60,11 +60,10 @@ export function Displaydestinationdata(selectedMonth="03"){
        }
 
         const arraydata = Object.entries(newarray).map(element => {
-          console.log(element)
             return Object.values(element[1])
         });
 
-        console.log(arraydata[3])
+        console.log(arraydata[10])
         createCircularBarplot(arraydata[3], destinationData);
     });
 
@@ -72,7 +71,6 @@ export function Displaydestinationdata(selectedMonth="03"){
 
 
 function createCircularBarplot(data, testdata){
-
      //var keys = (Object.keys(data[0].Value["03"])).slice(-1);
     var categories = ["retail","grocpharma"]
 
@@ -100,11 +98,12 @@ function createCircularBarplot(data, testdata){
         .domain(data.map(d => d.state))
         .range([0, 2 * Math.PI])    // X axis goes from 0 to 2pi = all around the circle. If I stop at 1Pi, it will be around a half circle
         .align(0)                  // This does nothing ?
-        
+      
+    const maxDomain = d3.max(data, d => d.total)-d3.max(data, d => d.total);
     // Y scale
     var y = d3.scaleRadial()
-        .domain([d3.min(data, d => d.total), d3.max(data, d => d.total)]) // Domain of Y is from 0 to the max seen in the data, CAN BE ADAPTED later!!!!
-        .range([innerRadius, outerRadius])   // Domain will be define later.
+        .domain([d3.min(data, d => d.total)-5, maxDomain]) // Domain of Y is from 0 to the max seen in the data, CAN BE ADAPTED later!!!!
+        .range([innerRadius, outerRadius])   
 
     // set Z scale
     var z = d3.scaleOrdinal()
@@ -118,7 +117,7 @@ function createCircularBarplot(data, testdata){
           .attr("dy", "-1em")
           .text("%"))
       .call(g => g.selectAll("g")
-          .data(y.ticks(5))
+          .data(y.ticks(4))
           .join("g")
           .attr("fill", "none")
           .call(g => g.append("circle")
@@ -128,6 +127,7 @@ function createCircularBarplot(data, testdata){
           .call(g => g.append("text")
               .attr("y", d => -y(d))
               .attr("dy", "0.35em")
+              .style("font-style", "italic")
               .attr("stroke-width", 5)
               .text(y.tickFormat(5, "s"))
               //.clone(true)
@@ -141,24 +141,43 @@ function createCircularBarplot(data, testdata){
         .join("g")
           .attr("transform", d => `
             rotate(${((x(d.state) + x.bandwidth() / 2) * 180 / Math.PI - 90)})
-            translate(${innerRadius},0)
+            translate(${-y(y.ticks()[y.ticks().length-1])},0)
           `)
           //.call(g => g.append("line")
           //   .attr("x2", -5)
           //    .attr("stroke", "#000"))
           .call(g => g.append("text")
-              .attr("fill", "black")
+              .attr("fill", "white")
               .attr("transform", d => (x(d.state) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI
-                  ? "rotate(0)translate(20,0)"
-                  : "rotate(0)translate(20,0)")
+                  ? `rotate(0)translate(${0},${0})`
+                  : `rotate(0)translate(${0},${0})`)
               .text(d => d.state)))
 
+    const legend = g => g.append("g")
+        .selectAll("g")
+        .data(categories.reverse())
+        .join("g")
+          .attr("transform", (d, i) => `translate(-40,${(i - (categories.length - 1) / 2) * 20})`)
+          .call(g => g.append("rect")
+              .attr("width", 18)
+              .attr("height", 18)
+              .attr("fill", z))
+          .call(g => g.append("text")
+              .attr("x", 24)
+              .attr("y", 9)
+              .attr("dy", "0.35em")
+              .text(d => {
+                if(d === "retail") return "Einzelhandel";
+                if(d === "grocpharma") return "Apotheke";
+              }))
+
+console.log(y.ticks()[y.ticks().length-2])
     var arc = d3.arc()     
       .innerRadius(d => y(d[0]))
       .outerRadius(d => y(d[1]))
       .startAngle(d => x(d.data.state))
       .endAngle(d => x(d.data.state) + x.bandwidth())
-      .padAngle(0.01)
+      .padAngle(0.05)
       .padRadius(innerRadius)
 
     svg.append("g")
@@ -177,7 +196,8 @@ function createCircularBarplot(data, testdata){
     svg.append("g")
       .call(yAxis);
 
-     
+    svg.append("g")
+      .call(legend);
 
 
 }
