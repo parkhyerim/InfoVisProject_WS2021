@@ -231,7 +231,7 @@ Getestet in Firefox und Chrome
 ### Herausforderungen
 - Eine dreistufige Schachtelung der Daten nach einzelnen Bundesländern, Monaten und Kategorie-Werten, musste verworfen werden, da die d3.js Function diese nicht verarbeiten kann. Dies machte die Anpassung des Arrays in eine übergeordnete Schachtelung nach Monat und im zweiten Schritt nach Bundesland notwendig. In einer Funktion, die die Bundesländer zu der Ebene mit den konkreten Kategorie-Werten verschachtelt, mussten die vorherigen JavaScript-Objects in einzelne Arrays umgewandelt werden. Die anschließende Funktion zur Geniererung des Barplots kann jeweils nur mit einem Array, welches die Werte für alle Bundesländer zu einem Monat enthält, als Parameter aufgerufen werden.
 - Die von d3.js bereitgestellte Stack()-Function zur Generierung des circular barplots führt zu Fehlern bei mehreren positiven und negativen Werten, da sequentiell die Differenzen zwischen einzelnen Array-Werten subtrahiert werden. Daher war eine Beschränkung auf 2 Kategorien notwendig. Die vorherige Implementierung mit sechs gleichzeitig abgebildeten Kategorien, welche bis auf die verfälschte Berechnung durch die stack()-Funktion, funktionsfähig war, musste verworfen werden.
-- Die asynchrone Funktion "arc", dass die Werte einfärbt und die Positionierung dieser.
+- Die asynchrone Funktion "arc", die die Werte einfügt. Der Ort der Funktionsdeklaration war entscheidend, damit überhaupt etwas angezeigt wurde.
 
 
 
