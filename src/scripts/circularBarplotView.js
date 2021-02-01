@@ -79,8 +79,8 @@ function createCircularBarplot(data){
 
     // set the dimensions and margins of the graph
     var margin = {top: 0, right: 0, bottom: 100, left: 0},
-        width = 330 - margin.left - margin.right,
-        height = 330 - margin.top - margin.bottom,
+        width = 300 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom,
         innerRadius = 30,
         outerRadius = Math.min(width, height) / 2;   // the outerRadius goes from the middle of the SVG area to the border
 
@@ -92,7 +92,7 @@ function createCircularBarplot(data){
         .attr("viewBox", "0 0 700 600")
         .classed("svg-content-responsive", true)
         .append("g")
-        .attr("transform", "translate(" + 370 + "," + 150 + ")"); // Add 100 on Y translation, cause upper bars are longer
+        .attr("transform", "translate(" + 370 + "," + 120 + ")"); // Add 100 on Y translation, cause upper bars are longer
   
     // X scale
     var x = d3.scaleBand()

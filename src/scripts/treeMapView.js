@@ -97,7 +97,7 @@ function createTreeChart(data, monthparam){
               
 
     var blName= data[0].region;
-    //console.log(treemap.leaves());
+
 
     // use this information to add rectangles:
     svg

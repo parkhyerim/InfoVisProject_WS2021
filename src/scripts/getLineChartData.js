@@ -71,11 +71,10 @@ export function FetchData(bundesland, selectedMonth){
                     })
                     .then(response => response.json())
                     .then(data => {
-                        if(data.exceededTransferLimit === true) console.log('alaaarm')
+
                         /** This should now return the data of every single day to guarantee that the TransferLimit of 5000 responses
                           isn't an issue
                         */
-                        //console.log(new Date (data.features[0].attributes.Meldedatum) + selectedMonth[i] + " " +selectedMonth[i+1])
                         const feed = data.features;
                         feed.forEach(elem => {
                           casesData.push(elem.attributes);

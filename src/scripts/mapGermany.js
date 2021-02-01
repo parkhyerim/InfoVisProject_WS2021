@@ -113,6 +113,6 @@ function clickEvent(){
 	} 
 	// Alert when more when the user wants to select more than 4 Bundesländer. This would get too messy for the line chart.
 	else if(clickedBlArray.length == 3){
-		M.toast({html: 'Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.'}, 2000);
+		M.toast({html: 'Du hast bereits 3 Bundesländer ausgewählt. Entferne eins per Klick, um ein neues auswählen zu können.'}, 1000);
 	} 
 }

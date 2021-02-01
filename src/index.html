@@ -161,6 +161,12 @@
                         </div>
 
                         <div class="col s12" id="circularbarplotContainer">
+                            <div class="row " id="iconContainer">
+                                <div class="col s1" >
+                                    <!-- Modal Trigger -->
+                                    <a class="modal-trigger" href="#modalCBP" > <i class="small material-icons">info</i></a>
+                                </div>
+                            </div>
                             <div class = "row" > 
                                 <div id="circularbarplot"> </div>
                             </div>
@@ -178,8 +184,11 @@
         <!-- Modal Structure -->
         <div id="modalTM1" class="modal">
             <div class="modal-content">
-            <h4>Verkehrmittel-Nutzung in Deutschland</h4>
-            <p>Diese Treemap zeigt die prozentuale, monatliche Nutzung verschiedener Vekehrsmittel (Auto, Gehen, Nahverkehr) in ganz Deutschland. Die Werte sind relativ im Verhältnis zum 13. Januar 2020, welcher die 100% Baseline darstellt. Wähle ein Transportmittel.
+            <h4>Verkehrsmittel-Nutzung in Deutschland</h4>
+            <p>Diese Treemap zeigt die prozentuale monatliche Nutzung verschiedener Vekehrsmittel (Auto, Gehen, Nahverkehr) in ganz Deutschland. 
+                Die Werte sind relativ im Verhältnis zum 13. Januar 2020, welcher die 100% Baseline darstellt. 
+                Liegt der Wert beispielsweise über 100%, wurde das entsprechende Verkehrsmittel in dem ausgewählten Monat häufiger genutzt als im Januar 2020.
+                Wähle ein Transportmittel.
             </p>
 
             </div>
@@ -191,8 +200,24 @@
         <!-- Modal Structure -->
         <div id="modalTM2" class="modal">
             <div class="modal-content">
-            <h4>Verkehrmittel-Nutzung in ausgewählten Bundesländern</h4>
-            <p>Diese Treemap zeigt die prozentuale, monatliche Nutzung verschiedener Vekehrsmittel (Auto, Gehen, Nahverkehr) ausgewählter Bundesländer. Die Werte sind relativ im Verhältnis zum 13. Januar 2020, welcher die 100% Baseline darstellt. Wähle bis zu 3 Bundesländer aus.
+            <h4>Verkehrsmittel-Nutzung in ausgewählten Bundesländern</h4>
+            <p>Diese Treemap zeigt die prozentuale monatliche Nutzung verschiedener Vekehrsmittel (Auto, Gehen, Nahverkehr) ausgewählter Bundesländer. 
+                Die Werte sind relativ im Verhältnis zum 13. Januar 2020, welcher die 100% Baseline darstellt.
+                Liegt der Wert beispielsweise über 100%, wurde das entsprechende Verkehrsmittel in dem ausgewählten Monat häufiger genutzt als im Januar 2020.
+                Wähle bis zu 3 Bundesländer aus.
+            </p>
+
+            </div>
+            <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close btn " style="background-color: #0f5858;">Okay</a>
+            </div>
+        </div>
+
+        <!-- Modal Structure -->
+        <div id="modalCBP" class="modal">
+            <div class="modal-content">
+            <h4>Bewegungsmuster in Deutschland</h4>
+            <p>Dieser Barplot zeigt die prozentualen Google-Maps Anfragen zu Wegbeschreibungen. Die Ziele der Anfragen sind Haltestellen und Apotheken. Der Referenzwert ist der Medianwert im Zeitraum vom 3. Januar bis zum 6. Februar 2020.
             </p>
 
             </div>

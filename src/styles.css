@@ -197,7 +197,7 @@ display: table !important;
 
 #iconContainer{
   padding-top: 3.7vh; 
-  height:7vh; 
+  height:6.5vh; 
   margin-bottom:0px;
   display: flex;
   align-items: center;
@@ -289,7 +289,6 @@ display: table !important;
 } 
 
 #BevölkerungsdichteContainer>div>div{
-
   margin: auto;
   padding-bottom: auto;
   
