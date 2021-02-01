@@ -26,7 +26,7 @@ Visualisierungen zu den Auswirkungen der Covid-19-Pandemie auf die Mobilität vo
 - Liniendiagramm mit Corona-Daten der jeweiligen Bundesländer
 
 ## Meilenstein 4:
-- Drop-Down Menü zur Auswahl der anzuzeigenden Monate
+- Buttons zur Auswahl der anzuzeigenden Monate
 - Implementierung einer Deutschlandkarte zur Auswahl der im Liniendiagramm angezeigten Bundesländer
 - Aktualisierung des Liniendiagramms je nach ausgewähltem Monat und Bundesland
 - Treemap mit Mobilitätsdaten
