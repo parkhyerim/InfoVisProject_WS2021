@@ -3,11 +3,12 @@
 
 ## Anzeigen der Visualisierungen
 https://sinaschnebelt.github.io/src/
+
 Alternativ kann die Anwendung auch lokal verwendet werden. d3.js erfordert das Starten eines Servers. Im Terminal kann hierfür zum Beispiel mit Python ein Server per `python -m SimpleHTTPServer 8080` Befehl im Root Directory des Projektes gestartet werden.
 Desweiteren kann bei Visual Studio Code eine Extension (Live Server) verwendet werden.
 
-## Projetitel:
-Visualisierung der gemeldeten Covid19-Infektionen und Mobilitätsdaten
+## Projektitel:
+Auswirkungen der Covid-19 Pandemie auf die Mobilität 2020
 <br/>
 
 ## Ziel
@@ -107,8 +108,20 @@ Getestet in Firefox und Chrome
 
 # Technische Dokumentation und Herausfoderungen
 
-## main.js
+## index.html 
+- Verwendung von Materialize-Grid um alle Komponenten responsive zu machen (Christina)
+- Verwendung von Materialize Modals um Nutzer Treemap verständlich zu machen (Christina)
+- Einbindung von Tabs um zwischen Treemaps zu wechseln (Christina)
+### Herausforderung:
+- Sinnvolle Aufteilung aller Komponenten, um die Daten auf einen Blick sichtbar zu machen
+- Das Anpassen der Größenverhältnisse
 
+## styles.css
+- Stringente Farbgebung (Christina)
+- Responsive Layout (Christina)
+- Highlighting von angeklickten Buttons und Tabs (Christina)
+
+## main.js
 - Einführung der main.js über die die Anwendung zentraler verwaltet werden kann (Christina)
 - Modularer Aufbau der Anwendung und damit die Verwendung von “Import” und “Export” (Christina, Pia)
 - Initialisierung von Treemaps, Linechart, Deutschlandkarte (Sina, Pia, Christina, Hyerim, Laura)
@@ -124,18 +137,6 @@ Getestet in Firefox und Chrome
 - Die korrekte Position für Funktionsaufrufe und dementsprechend der Umgang mit asynchronen Funktionen. Es mussten zahlreiche Fehler, die durch die unterschiedliche schnelle Verfügbarkeit von Daten und Visualisierungen entstanden sind, behoben werden. (Pia)
 - Unterschiedliche Entwicklungsumgebungen haben gruppenintern ab Verwendung von “Import”/”Export” zu verschiedenen Fehlermeldungen geführt, was das Debuggen erschwerte.
 
-## index.html 
-- Verwendung von Materialize-Grid um alle Komponenten responsive zu machen (Christina)
-- Verwendung von Materialize Modals um Nutzer Treemap verständlich zu machen (Christina)
-- Einbindung von Tabs um zwischen Treemaps zu wechseln (Christina)
-### Herausforderung:
-- Sinnvolle Aufteilung aller Komponenten, um die Daten auf einen Blick sichtbar zu machen
-- Das Anpassen der Größenverhältnisse
-
-## styles.css
-- Stringente Farbgebung (Christina)
-- Responsive Layout (Christina)
-- Highlighting von angeklickten Buttons und Tabs (Christina)
 
 ## mapGermany.js:
 
@@ -151,8 +152,8 @@ Getestet in Firefox und Chrome
 - mapGermany.js fungiert als “Single Source of Truth” bezüglich der Farbgebung der Bundesländer in der Legende, im Liniendiagramm und in den Treempas. Die für das Liniendiagramm, die Legende und Fallzahlen zu verwendenden Farben werden in den anderen Dateien mittels getAttribute abgerufen. (Pia)
 - Styling der Landkarte (Pia)
 ### Herausforderungen:
-- Farbgebung: Es darf keine Farbe gleichzeitig in der Karte verwendet werden. Aus diesem Grund wurde letztendlich ein Array verwendet, aus dem die Farben bei Verwendung entfernt und wieder eingefügt werden. (Pia)
-- Überlegung, wie getriggert werden kann, welche Bundesländer aktuell ausgewählt sind. Sowie die letztendliche Implementierung, da die jeweiligen Klassen des Bundeslandes extrahiert und folglich in verschiedenen Arrays gespeichert werden mussten. (Pia)
+- Farbgebung: Es darf keine Farbe gleichzeitig in der Karte verwendet werden. Aus diesem Grund wurde letztendlich ein Array verwendet, aus dem die Farben bei Verwendung entfernt und wieder eingefügt werden. 
+- Überlegung, wie getriggert werden kann, welche Bundesländer aktuell ausgewählt sind. Sowie die letztendliche Implementierung, da die jeweiligen Klassen des Bundeslandes extrahiert und folglich in verschiedenen Arrays gespeichert werden mussten. 
 
 ## lineChartView.js
 
@@ -214,10 +215,10 @@ Getestet in Firefox und Chrome
 - Responsiveness implementiert (Christina)
 - Erstellung der Icons (Laura)
 ###Herausforderungen:
-- Jeder Datensatz zeigte ursprünglich die Prozentwerte der Nutzung eines Transportmittels je Bundesland zu verschiedenen Tagen an. Einige Datensätzen hatten fehlende Werte bei einzelnen Tagen und für den öffentlichen Nahverkehr als Transportmittel waren nur Datensätze zu insgesamt 11 Bundesländern vorhanden. Zu beachten war außerdem, dass verschiedene Monate eine unterschiedliche Anzahl an Tagen haben. Somit war es eine Herausforderung eine geeignete Verschachtelung mehrerer Schleifen zu finden, um die Daten je Bundesland und Transportmittel zu aggregieren und für jedes Bundesland und jeden Monat einen Divisor zu speichern, welcher anschließend den korrekten Durchschnittswert errechnet. (Laura)
+- Jeder Datensatz zeigte ursprünglich die Prozentwerte der Nutzung eines Transportmittels je Bundesland zu verschiedenen Tagen an. Einige Datensätzen hatten fehlende Werte bei einzelnen Tagen und für den öffentlichen Nahverkehr als Transportmittel waren nur Datensätze zu insgesamt 11 Bundesländern vorhanden. Zu beachten war außerdem, dass verschiedene Monate eine unterschiedliche Anzahl an Tagen haben. Somit war es eine Herausforderung eine geeignete Verschachtelung mehrerer Schleifen zu finden, um die Daten je Bundesland und Transportmittel zu aggregieren und für jedes Bundesland und jeden Monat einen Divisor zu speichern, welcher anschließend den korrekten Durchschnittswert errechnet. 
 - Richtiger Durchschnittswert bekommen (fehlende Daten, unterschiedliche Anzahl von Tagen für jeden Monat etc.)
-- d3.js bietet keine automatisierte Funktion, welche Zeilenumbrüche bei zu langen Textfeldern einfügt oder sicherstellt, dass Text nicht über ein “rect”-Feld hinausragt. Lediglich mit “textlength” kann der Text entsprechend gestaucht oder durch Leerzeichen entsprechend gestreckt werden, dass er genau an die Größe des umhüllenden tspan-Elements passt, dies war jedoch visuell eine Verschlechterung. Es musste somit eine Funktion implementiert werden, welche die Bundesländer mit Bindestrichen in mehrere Substrings unterteilt und diese dann einzeln anfügt. (Laura) 
-Geeignete Hierarchie für die Treemap erstellen
+- d3.js bietet keine automatisierte Funktion, welche Zeilenumbrüche bei zu langen Textfeldern einfügt oder sicherstellt, dass Text nicht über ein “rect”-Feld hinausragt. Lediglich mit “textlength” kann der Text entsprechend gestaucht oder durch Leerzeichen entsprechend gestreckt werden, dass er genau an die Größe des umhüllenden tspan-Elements passt, dies war jedoch visuell eine Verschlechterung. Es musste somit eine Funktion implementiert werden, welche die Bundesländer mit Bindestrichen in mehrere Substrings unterteilt und diese dann einzeln anfügt. 
+- Geeignete Hierarchie für die Treemap erstellen
 
 ##circularBarplotView.js
 - Auswahl der Datenquelle, welche Daten zu verschiedenen Mobilitätszielen für jedes Bundesland anzeigt. (Laura)
