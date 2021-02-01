@@ -5,6 +5,7 @@ import { Displaymobilitydata } from './scripts/treeMapView.js';
 import { UpdateSelectedRegionsList } from './scripts/treeMapMobilityView.js';
 import { Covid19casesGermanyMonthly } from './data/covid19Cases.js';
 import { GetOfflineData } from './scripts/dataHelperFunctions.js';
+import { Displaydestinationdata } from './scripts/circularBarplotView.js';
 
 const dateButtons = document.getElementsByClassName('date');
 const transportButton = document.getElementsByClassName('transport')
@@ -34,6 +35,7 @@ function initialiseEvents(){
     })    
 
     Displaymobilitydata(GetDateForFetch());
+    Displaydestinationdata(GetDateForFetch());
     
     ShowDEData(GetDateForFetch(), Covid19casesGermanyMonthly)
 
@@ -59,6 +61,7 @@ function eventListenerDatePicker() {
             UpdateLineChartPathMonth(GetDateForFetch(), selectedBL)
 
             Displaymobilitydata(GetDateForFetch(), document.getElementsByClassName('selectedTransport').name);
+            Displaydestinationdata(GetDateForFetch());
 
             selectedBL.forEach(bl =>{
                 updateTreeMap(bl, undefined)

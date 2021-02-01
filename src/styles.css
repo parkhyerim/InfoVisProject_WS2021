@@ -188,6 +188,13 @@ display: table !important;
   align-items: center;
   justify-content: center;
 }
+
+#circularbarplot{
+  display: flex!important;
+  align-items: center;
+  justify-content: center;
+}
+
 #iconContainer{
   padding-top: 3.7vh; 
   height:7vh; 
