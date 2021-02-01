@@ -179,7 +179,7 @@ Getestet in Firefox und Chrome
   - Wird ein anderes Meldedatum ausgewählt, werden die Fälle aktualisiert.
   - Klickt der Nutzer einen anderen Monat an, wird die Auswahl zurückgesetzt und es kann ein Meldedatum des neuen Monats ausgewählt werden.
 - Die Anzahl der durchschnittlich gemeldeten Covid19 Fälle für die gesamte Bundesrepublik und für die ausgewählten Bundesländer wird unterhalb des Liniendiagramms angezeigt und bei einem Wechsel des Monats aktualisiert. (Pia)
-- Styling des Liniendiagramms (Achsenbeschriftung, Formatierung des ersten und letzten Balkens, damit sie die x-Achse nicht überschreiten)
+- Styling des Liniendiagramms (Achsenbeschriftung, Formatierung des ersten und letzten Balkens, damit sie die x-Achse nicht überschreiten) (Pia)
 ### Herausforderung 
 - Formatierung der Achsen inkl. Speicherung des erforderlichen Wertebereichs
 - Abfrage der vollständigen Daten und die Erstellung eines Objektes, das die Daten beinhaltet
