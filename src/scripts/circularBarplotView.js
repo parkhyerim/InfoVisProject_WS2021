@@ -195,12 +195,8 @@ function createCircularBarplot(data, testdata){
         .attr("d", arc);
 
     var arc = d3.arc()     // imagine your doing a part of a donut plot
-        .innerRadius(innerRadius)
-        .outerRadius(function(d) {
-
-
-            return y(d.total);
-                })
+        .innerRadius(d => y(d[0]))
+        .outerRadius(d => y(d[1]))
         .startAngle(function(d) { return x(d.data.state); })
         .endAngle(function(d) { return x(d.data.state) + x.bandwidth(); })
         .padAngle(0.01)
