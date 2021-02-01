@@ -66,7 +66,6 @@ export function Displaydestinationdata(selectedMonth){
         const arraydata = Object.entries(newarray).map(element => {
             return Object.values(element[1])
         });
-        console.log(arraydata[chosenMonth])
         createCircularBarplot(arraydata[chosenMonth]);
     });
 
@@ -89,37 +88,35 @@ function createCircularBarplot(data){
     var svg = d3.select("#circularbarplot")
         .append("svg")
         .attr("class", "barplot")
-        // .attr("width", width + margin.left + margin.right)
-        // .attr("height", height + margin.top + margin.bottom)
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 700 600")
         .classed("svg-content-responsive", true)
         .append("g")
-        .attr("transform", "translate(" + 370 + "," + 180 + ")"); // Add 100 on Y translation, cause upper bars are longer
+        .attr("transform", "translate(" + 370 + "," + 150 + ")"); // Add 100 on Y translation, cause upper bars are longer
   
     // X scale
     var x = d3.scaleBand()
         .domain(data.map(d => d.state))
-        .range([0, 2 * Math.PI])    // X axis goes from 0 to 2pi = all around the circle. If I stop at 1Pi, it will be around a half circle
-        .align(0)                  // This does nothing ?
+        .range([0, 2 * Math.PI])    
+        .align(0)                  
               
     // Y scale
     var y = d3.scaleRadial()
-        .domain([d3.min(data, d => d.total)-10, d3.max(data, d => d.total)+20]) // Domain of Y is from 0 to the max seen in the data, CAN BE ADAPTED later!!!!
+        .domain([d3.min(data, d => d.total)-10, d3.max(data, d => d.total)+20]) 
         .range([innerRadius, outerRadius])   
 
     // set Z scale
     var z = d3.scaleOrdinal()
         .domain(categories)
-        //.range(d3.schemeSet3)
-        .range(["#abba82", "#037c87"])
+        .range(["#78909c", "#c4d2cc"])
 
     const yAxis = g => g
       .attr("text-anchor", "middle")
       .call(g => g.append("text")
           .attr("y", d => -y(y.ticks().pop()))
           .attr("dy", "-1em")
-           .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+          .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+          .attr("font-size", "10px")
           .attr("fill", "black")
           .text("%"))
       .call(g => g.selectAll("g")
@@ -133,6 +130,7 @@ function createCircularBarplot(data){
           .call(g => g.append("text")
               .attr("y", d => -y(d))
               .attr("dy", "0.35em")
+              .attr("font-size", "10px")
               .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
               .attr("stroke-width", 5)
               .text(y.tickFormat(5, "s"))
@@ -147,13 +145,15 @@ function createCircularBarplot(data){
         .join("g")
           .attr("transform", d => `
             rotate(${((x(d.state) + x.bandwidth() / 2) * 180 / Math.PI - 90)})
-            translate(${y(y.ticks()[y.ticks().length-1])},0)
+            translate(${y(y.ticks()[y.ticks().length-1]+5)},0)
           `)
           //.call(g => g.append("line")
           //   .attr("x2", -5)
           //    .attr("stroke", "#000"))
           .call(g => g.append("text")
               .attr("fill", "black")
+              .attr("font-size", "10px")
+              .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
               .attr("transform", d => (x(d.state) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI
                   ? `rotate(0)translate(${0},${0})`
                   : `rotate(0)translate(${0},${0})`)
@@ -173,6 +173,7 @@ function createCircularBarplot(data){
             .attr("y", 9)
             .attr("dy", "0.35em")
             .style("font-family", "Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell, Helvetica Neue,sans-serif")
+            .attr("font-size", "10px")
             .text(d => {
                 if(d === "grocpharma") return "Apotheke";
                 if(d === "transit") return "Haltestellen";
@@ -194,7 +195,7 @@ function createCircularBarplot(data){
         .join("g")
           .attr("fill", d => {return z(d.key)})
         .selectAll("path")
-        .data(d => {console.log(d);return d})
+        .data(d => {return d})
         .join("path")
           .attr("d", arc);
 
