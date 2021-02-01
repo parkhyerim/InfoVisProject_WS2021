@@ -27,14 +27,14 @@ Visualisierungen zu den Auswirkungen der Covid-19-Pandemie auf die Mobilität vo
 
 ## Meilenstein 4:
 - Drop-Down Menü zur Auswahl der anzuzeigenden Monate
-- Implementierung einer Deutschlandkarte zur Auswahl der in der Liniendiagramm angezeigten Bundesländer
-- Aktualisierung der Liniendiagramm je nach ausgewähltem Monat und Bundesland
+- Implementierung einer Deutschlandkarte zur Auswahl der im Liniendiagramm angezeigten Bundesländer
+- Aktualisierung des Liniendiagramms je nach ausgewähltem Monat und Bundesland
 - Treemap mit Mobilitätsdaten
 - Aktualisierung der Treemap je nach ausgewähltem Monat
 
 ## Meilenstein 5:
 - Treemaps fertigstellen
-- (CSS-)Styling anpassen mit Materialize
+- (CSS-)Styling anpassen (mit Materialize)
 - Liniendiagramm: Achsenbeschriftung, Beschriftung der Linien anpassen bzw. eine Legende implementieren
 - Pop Ups mit Informationen zu den Abbildungen und Daten 
 
@@ -72,27 +72,27 @@ Visualisierungen zu den Auswirkungen der Covid-19-Pandemie auf die Mobilität vo
 - Die Skalierung der y-Achse passt sich an die deutschlandweit gemeldeten Covid19-Fälle an
 - Die x-Achse passt sich an die Meldetdaten an
 - Die Einfärbung der Linien entspricht der Farbe des Bundeslandes in der Deutschlandkarte
-- Unter der Liniendiagramm wird der Monatsdurchschnitt an gemeldeten Infektionen pro Tag für die gesamte Bundesrepublik und die ausgewählten Bundesländer abgebildet
-- Klickt man auf einen Balken färbt sich dieser ein. Neben der Liniendiagramm erscheinen die an dem ausgewählten Tag gemeldeten Infektionen für Deutschland und das jeweilige Bundesland
+- Unter dem Liniendiagramm wird der Monatsdurchschnitt an gemeldeten Infektionen pro Tag für die gesamte Bundesrepublik und die ausgewählten Bundesländer abgebildet
+- Klickt man auf einen Balken färbt sich dieser ein. Neben dem Liniendiagramm erscheinen die an dem ausgewählten Tag gemeldeten Infektionen für Deutschland und das jeweilige Bundesland
 - Datenquelle: https://hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0/geoservice
 
 ## Feature 5: Treemap (Deutschland)
 - Die Treemap errechnet einen Monatsdurchschnitt für jeden auswählbaren Monat für alle 16 Bundesländer
-- Die Werte repräsentieren das Anfragevolumen nach Apple Routenbeschreibung für Autofahrten
+- Die Werte repräsentieren das Anfragevolumen nach Apple Routenbeschreibung
 - Die Baseline der Daten ist der 13. Januar 2020
-- Sobald ein anderer Monat ausgewählt wird, aktualisiert die Treemap
-- Die Einfärbung der einzelnen Bundesländer-Felder ist abhängig von der Prozentzahl. Je höher diese wird, desto dunkler wird das jeweilige Feld.
+- Sobald ein anderer Monat ausgewählt wird, aktualisiert sich die Treemap
+- Die Einfärbung der einzelnen Bundesländer-Felder ist abhängig von der Prozentzahl. Je höher diese wird, desto dunkler wird das jeweilige Feld
 - über 3 selbsterstellte Icons (Gehen, Auto, öffentliche Verkehrsmittel) wird die Anzeige für das jeweilige Fortbewegungsmittel ergänzt
 - Datenquelle: https://covid19.apple.com/mobility
 
 ## Feature 6: Treemap (Bundesland)
 - Die Treemap errechnet einen Monatsdurchschnitt für jeden auswählbaren Monat für die auf der Deutschlandkarte gewählten Bundesländer
 - Sobald Bundesländer (ab)gewählt werden, aktualisiert sich die Treemap
-- Die Werte repräsentieren das Anfragevolumen nach Apple Routenbeschreibung für Autofahrten
+- Die Werte repräsentieren das Anfragevolumen nach Apple Routenbeschreibung
 - Die Baseline der Daten ist der 13. Januar 2020
-- Sobald ein anderer Monat ausgewählt wird, aktualisiert die Treemap
+- Sobald ein anderer Monat ausgewählt wird, aktualisiert sich die Treemap
 - Die Einfärbung der einzelnen Bundesländer-Felder ist abhängig von der Prozentzahl. Je höher diese wird, desto dunkler wird das jeweilige Feld.
-- Die zuordnung zum Fortbewegungsmittel erfolgt per selbsterstelltem Icon. Zusätzlich wird die pozuentuale Anzahl abgebildet
+- Die Zuordnung zum Fortbewegungsmittel erfolgt per selbsterstelltem Icon. Zusätzlich wird die prozuentuale Anzahl abgebildet
 - Die Größe der Kästchen entspricht der Ausprägung des Wertes
 - Datenquelle: https://covid19.apple.com/mobility
 
@@ -134,7 +134,7 @@ Getestet in Firefox und Chrome
 - Verbindung main.js (Checkbox, Monatsselektion, Mutationobserver) mit treeMapMobilityView.js (Hyerim)
 ### Herausforderungen:
 - Funktionsweise des MutationObservers (Pia)
-- Die korrekte Position für Funktionsaufrufe und dementsprechend der Umgang mit asynchronen Funktionen. Es mussten zahlreiche Fehler, die durch die unterschiedliche schnelle Verfügbarkeit von Daten und Visualisierungen entstanden sind, behoben werden. (Pia)
+- Die korrekte Position für Funktionsaufrufe und dementsprechend der Umgang mit asynchronen Funktionen. Es mussten zahlreiche Fehler, die durch die unterschiedlich schnelle Verfügbarkeit von Daten und Visualisierungen entstanden sind, behoben werden. (Pia)
 - Unterschiedliche Entwicklungsumgebungen haben gruppenintern ab Verwendung von “Import”/”Export” zu verschiedenen Fehlermeldungen geführt, was das Debuggen erschwerte.
 
 
@@ -147,7 +147,7 @@ Getestet in Firefox und Chrome
 - Hinzufügen “selected-bl” bei Auswahl eines Bundeslandes und das Entfernen der Klasse beim Abwählen dessen. So können Veränderungen durch Anklicken observiert und Anpassungen der anderen Visualisierungen ausgelöst werden. (Pia)
 - Ein Alert wird angezeigt, wenn bereits drei Bundesländer ausgewählt wurden. Nutzertests ergaben zuvor, dass das Liniendiagramm und die - Treemap bei mehr als drei gleichzeitig ausgewählten Bundesländer zu unübersichtlich wurde. (Pia)
 - Manuelle Anpassung der Geojson Datei mithilfe von https://geojson.io/#map=7/48.575/9.701, sodass die Meeresgebiete nicht mehr in der Darstellung angezeigt werden (Pia)
-- Änderung des einfach alerts in einen ansprechenden Hinweis (Christina)
+- Änderung des alerts in einen ansprechenden Hinweis (Christina)
 - Entfernung der Bundesland-Beschriftung, um die Karte so übersichtlich wie möglich zu gestalten (Pia)
 - mapGermany.js fungiert als “Single Source of Truth” bezüglich der Farbgebung der Bundesländer in der Legende, im Liniendiagramm und in den Treempas. Die für das Liniendiagramm, die Legende und Fallzahlen zu verwendenden Farben werden in den anderen Dateien mittels getAttribute abgerufen. (Pia)
 - Styling der Landkarte (Pia)
@@ -191,7 +191,7 @@ Getestet in Firefox und Chrome
 ## treeMapMobilityView.js
 
 - Erste Implementierung der TreeMap nach Auswahl der Bundesländer und des Monats (Hyerim)
-- Erstellen der arithmetische Funktion des Monatsdurchschnitts nach ausgewählten Regionen und erstellen der map Funktion, sodass der Durchschnittswert mittels Transport berechnet wird  (Hyerim) 
+- Erstellen der arithmetischen Funktion des Monatsdurchschnitts nach ausgewählten Regionen und Erstellen der Map Funktion, sodass der Durchschnittswert mittels Transport berechnet wird  (Hyerim) 
 - Aus- und Abwählen der Bundesländer (Hyerim)
 - Farbe pro Verkehrsmittel inkl. Opacity und Beschriftung (Sina, Hyerim)
 - Hierarchische Strukturierung der Daten für Treemap (Sina)
@@ -206,9 +206,9 @@ Getestet in Firefox und Chrome
 - Die Farbe der in der Treemap angezeigten Bundesländer entspricht der ausgewählten Bundesländer der DE-Karte
 
 ## treeMapView.js
-- Auswahl einer geeigneter Datenquelle für die Treemap, welche Streckenanfragen für jedes Bundesland und verschiedene Transportmittel (Auto, Fußweg, Öffentlicher Nahverkehr) anzeigt (Laura)
+- Auswahl einer geeigneten Datenquelle für die Treemap, welche Streckenanfragen für jedes Bundesland und verschiedene Transportmittel (Auto, Fußweg, Öffentlicher Nahverkehr) anzeigt (Laura)
 - Anpassung der CSV (Vorfiltern und Anpassung der Sprache) (Laura)
-- Konversion des Datumsformats, welches aus der main.js übergeben wird (nach Userauswahl), in den darzustellenden Monat der Treemap (Laura)
+- Konversion des Datum-Formats, welches aus der main.js übergeben wird (nach Userauswahl), in den darzustellenden Monat der Treemap (Laura)
 - Implementierung der TreeMap nach Auswahl der Bundesländer und des Monats (Laura)
 - Implementierung einer ersten Farbskalierung, sodass sich die Farbe eines Rechtecks je nach Prozentwert ändert (Laura)
 - Erstellen der arithmetischen Funktion des Monatsdurchschnitts nach ausgewählten Regionen und Transportmitteln sowie Erstellen der map Funktion, sodass der Durchschnittswert mittels Bundesland berechnet wird  (Laura) 
@@ -217,7 +217,7 @@ Getestet in Firefox und Chrome
 - Erstellung der Icons (Laura)
 ### Herausforderungen:
 - Jeder Datensatz zeigte ursprünglich die Prozentwerte der Nutzung eines Transportmittels je Bundesland zu verschiedenen Tagen an. Einige Datensätzen hatten fehlende Werte bei einzelnen Tagen und für den öffentlichen Nahverkehr als Transportmittel waren nur Datensätze zu insgesamt 11 Bundesländern vorhanden. Zu beachten war außerdem, dass verschiedene Monate eine unterschiedliche Anzahl an Tagen haben. Somit war es eine Herausforderung eine geeignete Verschachtelung mehrerer Schleifen zu finden, um die Daten je Bundesland und Transportmittel zu aggregieren und für jedes Bundesland und jeden Monat einen Divisor zu speichern, welcher anschließend den korrekten Durchschnittswert errechnet. 
-- Richtiger Durchschnittswert bekommen (fehlende Daten, unterschiedliche Anzahl von Tagen für jeden Monat etc.)
+- Richtigen Durchschnittswert bekommen (fehlende Daten, unterschiedliche Anzahl von Tagen für jeden Monat etc.)
 - d3.js bietet keine automatisierte Funktion, welche Zeilenumbrüche bei zu langen Textfeldern einfügt oder sicherstellt, dass Text nicht über ein “rect”-Feld hinausragt. Lediglich mit “textlength” kann der Text entsprechend gestaucht oder durch Leerzeichen entsprechend gestreckt werden, dass er genau an die Größe des umhüllenden tspan-Elements passt, dies war jedoch visuell eine Verschlechterung. Es musste somit eine Funktion implementiert werden, welche die Bundesländer mit Bindestrichen in mehrere Substrings unterteilt und diese dann einzeln anfügt. 
 - Geeignete Hierarchie für die Treemap erstellen
 
